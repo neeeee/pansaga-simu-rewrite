@@ -122,9 +122,7 @@ function runCalculations() {
   // 4. Calculate final primary stats
   for (const stat of PRIMARY_STATS) {
     character.finalStats[stat] =
-      baseStats[stat] +
-      character.addedStats[stat] +
-      (bonuses.stats[stat] || 0);
+      baseStats[stat] + character.addedStats[stat] + (bonuses.stats[stat] || 0);
   }
 
   // 5. Calculate derived stats
@@ -141,15 +139,13 @@ function getCombinedBaseStats() {
   const combined = {};
   const raceStats = gameData.raceBaseStats[character.raceId];
   const jobInfo = gameData.jobs[character.jobId];
-  const jobModifiers =
-    gameData.jobBaseStatModifiers[jobInfo.baseClass];
+  const jobModifiers = gameData.jobBaseStatModifiers[jobInfo.baseClass];
 
   for (const stat of PRIMARY_STATS) {
     combined[stat] = raceStats[stat] + jobModifiers[stat];
   }
   return combined;
 }
-
 
 /**
  * Applies stats from equipped items.
@@ -173,7 +169,7 @@ function applySetBonuses(bonuses) {
   const equippedItemIds = new Set(Object.values(character.equipment));
   for (const set of gameData.setBonuses) {
     const hasAllItems = set.requiredItems.every((itemId) =>
-      equippedItemIds.has(itemId)
+      equippedItemIds.has(itemId),
     );
     if (hasAllItems) {
       bonuses.description.push(set.bonus.description);
@@ -192,7 +188,8 @@ function applySetBonuses(bonuses) {
 function calculateDerivedStats() {
   const stats = character.finalStats;
   const level = character.level;
-  const mod = gameData.jobModifiers[character.jobId] || gameData.jobModifiers[0];
+  const mod =
+    gameData.jobModifiers[character.jobId] || gameData.jobModifiers[0];
 
   // This constant was discovered through your examples. It's a universal
   // base value applied to all characters after other calculations.
@@ -238,7 +235,7 @@ function updateUI(bonuses) {
   for (const stat in elements.outputs) {
     if (elements.outputs[stat] && character.finalStats[stat] !== undefined) {
       elements.outputs[stat].textContent = Math.floor(
-        character.finalStats[stat]
+        character.finalStats[stat],
       );
     }
   }
@@ -254,7 +251,9 @@ function updateUI(bonuses) {
 }
 
 // --- EVENT LISTENERS ---
-document.getElementById("inputs-panel").addEventListener("input", runCalculations);
+document
+  .getElementById("inputs-panel")
+  .addEventListener("input", runCalculations);
 document
   .getElementById("equipment-panel")
   .addEventListener("input", runCalculations);

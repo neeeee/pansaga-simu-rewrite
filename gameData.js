@@ -27,16 +27,25 @@ export const gameData = {
     { id: 2, name: "│  ├─ Juggernaut", baseClass: 0 },
     { id: 3, name: "│  └─ Dragoon", baseClass: 0 },
     { id: 4, name: "└─ Knight", baseClass: 0 },
-    { id: 5, name: "   ├─ General", baseClass: 0 },
-    { id: 6, name: "   └─ Paladin", baseClass: 0 },
+    { id: 5, name: "│  ├─ Warlord", baseClass: 0 },
+    { id: 6, name: "│  └─ Paladin", baseClass: 0 },
     { id: 7, name: "Scout", baseClass: 1 },
     { id: 8, name: "├─ Archer", baseClass: 1 },
     { id: 9, name: "│  ├─ Sniper", baseClass: 1 },
-    { id: 10, name: "│  └─ Predator", baseClass: 1 },
-    // ... and so on for all 28 jobs
+    { id: 10, name: "│ └─ Hunter", baseClass: 1 },
+    { id: 11, name: "└─ Provocateur", baseClass: 1 },
+    { id: 12, name: "│  ├─ Saboteur", baseClass: 1 },
+    { id: 13, name: "│  └─ Assassin", baseClass: 1 },
+    { id: 14, name: "Acolyte", baseClass: 1 },
+    { id: 15, name: "├─ Priest", baseClass: 1 },
+    { id: 16, name: "│ ├─ Cleric", baseClass: 1 },
+    { id: 17, name: "│ └─ Enchanter", baseClass: 1 },
+    { id: 18, name: "└─ Ascetic", baseClass: 1 },
+    { id: 19, name: "│  ├─ Exorcist", baseClass: 1 },
+    { id: 20, name: "│  └─ Monk", baseClass: 1 },
   ],
 
-    jobBaseStatModifiers: {
+  jobBaseStatModifiers: {
     0: { sta: 2, str: 3, agi: -1, dex: 1, spr: -1, int: 0 }, // Warrior-type
     1: { sta: 0, str: 2, agi: 1, dex: 2, spr: -1, int: 0 }, // Scout-type
     2: { sta: 0, str: 2, agi: -1, dex: 0, spr: 1, int: 2 }, // Acolyte-type
