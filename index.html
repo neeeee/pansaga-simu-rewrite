@@ -1,184 +1,158 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Advanced Character Stat Calculator</title>
-        <link rel="stylesheet" href="style.css" />
-    </head>
-    <body>
-        <div class="container">
-            <h1>Advanced Character Stat Calculator</h1>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Advanced Character Stat Calculator</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Advanced Character Stat Calculator</h1>
 
-            <div class="calculator-grid">
-                <!-- INPUTS & CONFIGURATION -->
-                <div class="panel" id="inputs-panel">
-                    <h2>Character Configuration</h2>
-                    <div class="input-group">
-                        <label for="level">Character Level</label>
-                        <input
-                            type="number"
-                            id="level"
-                            value="50"
-                            min="1"
-                            max="55"
-                        />
-                    </div>
-                    <div class="input-group">
-                        <label for="race">Race</label>
-                        <select id="race"></select>
-                    </div>
-                    <div class="input-group">
-                        <label for="job">Class (Job)</label>
-                        <select id="job"></select>
-                    </div>
+      <div class="calculator-grid">
+        <!-- INPUTS & CONFIGURATION -->
+        <div class="panel" id="config-panel">
+          <h2>Character Configuration</h2>
+          <div class="input-group">
+            <label for="level">Character Level</label>
+            <input type="number" id="level" value="1" min="1" max="55" />
+          </div>
+          <div class="input-group">
+            <label for="race">Race</label>
+            <select id="race"></select>
+          </div>
+          <div class="input-group">
+            <label for="job">Class (Job)</label>
+            <select id="job"></select>
+          </div>
 
-                    <h3>Base Stats (Points to Add)</h3>
-                    <div class="input-group">
-                        <label for="base-sta">STA</label>
-                        <input
-                            type="number"
-                            id="base-sta"
-                            class="stat-input"
-                            value="0"
-                        />
-                    </div>
-                    <div class="input-group">
-                        <label for="base-str">STR</label>
-                        <input
-                            type="number"
-                            id="base-str"
-                            class="stat-input"
-                            value="0"
-                        />
-                    </div>
-                    <div class="input-group">
-                        <label for="base-agi">AGI</label>
-                        <input
-                            type="number"
-                            id="base-agi"
-                            class="stat-input"
-                            value="0"
-                        />
-                    </div>
-                    <div class="input-group">
-                        <label for="base-dex">DEX</label>
-                        <input
-                            type="number"
-                            id="base-dex"
-                            class="stat-input"
-                            value="0"
-                        />
-                    </div>
-                    <div class="input-group">
-                        <label for="base-spr">SPR</label>
-                        <input
-                            type="number"
-                            id="base-spr"
-                            class="stat-input"
-                            value="0"
-                        />
-                    </div>
-                    <div class="input-group">
-                        <label for="base-int">INT</label>
-                        <input
-                            type="number"
-                            id="base-int"
-                            class="stat-input"
-                            value="0"
-                        />
-                    </div>
-                </div>
-
-                <!-- EQUIPMENT PANEL -->
-                <div class="panel" id="equipment-panel">
-                    <h2>Equipment</h2>
-                    <div class="input-group">
-                        <label for="equip-weapon">Weapon</label>
-                        <select
-                            id="equip-weapon"
-                            class="equip-selector"
-                        ></select>
-                    </div>
-                    <div class="input-group">
-                        <label for="equip-head">Head</label>
-                        <select id="equip-head" class="equip-selector"></select>
-                    </div>
-                    <div class="input-group">
-                        <label for="equip-torso">Torso</label>
-                        <select
-                            id="equip-torso"
-                            class="equip-selector"
-                        ></select>
-                    </div>
-                    <!-- Add other slots like shield, gloves, etc. here -->
-                    <div id="set-bonus-display">
-                        <h3>Active Set Bonuses</h3>
-                        <ul id="set-bonus-list"></ul>
-                    </div>
-                </div>
-
-                <!-- RESULTS PANEL -->
-                <div class="panel" id="results-panel">
-                    <h2>Character Sheet</h2>
-                    <h3>Primary Stats</h3>
-                    <div class="stat-line">
-                        <span>STA</span
-                        ><span class="stat-value" id="total-sta">10</span>
-                    </div>
-                    <div class="stat-line">
-                        <span>STR</span
-                        ><span class="stat-value" id="total-str">10</span>
-                    </div>
-                    <div class="stat-line">
-                        <span>AGI</span
-                        ><span class="stat-value" id="total-agi">10</span>
-                    </div>
-                    <div class="stat-line">
-                        <span>DEX</span
-                        ><span class="stat-value" id="total-dex">10</span>
-                    </div>
-                    <div class="stat-line">
-                        <span>SPR</span
-                        ><span class="stat-value" id="total-spr">10</span>
-                    </div>
-                    <div class="stat-line">
-                        <span>INT</span
-                        ><span class="stat-value" id="total-int">10</span>
-                    </div>
-
-                    <h3>Derived Stats</h3>
-                    <div class="stat-line">
-                        <span>LP (Health)</span
-                        ><span class="stat-value" id="total-lp">0</span>
-                    </div>
-                    <div class="stat-line">
-                        <span>MP (Mana)</span
-                        ><span class="stat-value" id="total-mp">0</span>
-                    </div>
-                    <div class="stat-line">
-                        <span>Attack (ATK)</span
-                        ><span class="stat-value" id="total-atk">0</span>
-                    </div>
-                    <div class="stat-line">
-                        <span>Defense (DEF)</span
-                        ><span class="stat-value" id="total-def">0</span>
-                    </div>
-                    <div class="stat-line">
-                        <span>Dodge</span
-                        ><span class="stat-value" id="total-dodge">0</span>
-                    </div>
-                    <div class="stat-line">
-                        <span>Accuracy</span
-                        ><span class="stat-value" id="total-acc">0</span>
-                    </div>
-                    <div class="stat-line">
-                        <span>Crit Rate %</span
-                        ><span class="stat-value" id="total-crit">0</span>
-                    </div>
-                </div>
-            </div>
+          <h3>Base Stats (Points to Add)</h3>
+          <div class="input-group">
+            <label for="base-sta">STA</label>
+            <input type="number" id="base-sta" class="stat-input" value="0" />
+          </div>
+          <div class="input-group">
+            <label for="base-str">STR</label>
+            <input type="number" id="base-str" class="stat-input" value="0" />
+          </div>
+          <div class="input-group">
+            <label for="base-agi">AGI</label>
+            <input type="number" id="base-agi" class="stat-input" value="0" />
+          </div>
+          <div class="input-group">
+            <label for="base-dex">DEX</label>
+            <input type="number" id="base-dex" class="stat-input" value="0" />
+          </div>
+          <div class="input-group">
+            <label for="base-spr">SPR</label>
+            <input type="number" id="base-spr" class="stat-input" value="0" />
+          </div>
+          <div class="input-group">
+            <label for="base-int">INT</label>
+            <input type="number" id="base-int" class="stat-input" value="0" />
+          </div>
         </div>
-        <script type="module" src="script.js"></script>
-    </body>
+
+        <!-- POINTS & EQUIPMENT PANEL -->
+        <div class="panel" id="points-and-equipment-panel">
+          <div class="panel points-panel">
+            <h2>Available Points</h2>
+            <div class="stat-line">
+              <span>Status Points</span>
+              <span class="stat-value" id="points-stat">0</span>
+            </div>
+            <div class="stat-line">
+              <span>Skill Points</span>
+              <span class="stat-value" id="points-skill">0</span>
+            </div>
+            <div class="stat-line">
+              <span>Unallocated Points</span>
+              <span class="stat-value" id="points-unallocated">0</span>
+            </div>
+          </div>
+
+          <h2>Equipment</h2>
+          <div class="input-group">
+            <label for="equip-weapon">Weapon</label>
+            <select id="equip-weapon" class="equip-selector"></select>
+          </div>
+          <div class="input-group">
+            <label for="equip-head">Head</label>
+            <select id="equip-head" class="equip-selector"></select>
+          </div>
+          <div class="input-group">
+            <label for="equip-torso">Torso</label>
+            <select id="equip-torso" class="equip-selector"></select>
+          </div>
+          <div id="set-bonus-display">
+            <h3>Active Set Bonuses</h3>
+            <ul id="set-bonus-list"></ul>
+          </div>
+        </div>
+
+        <!-- SKILLS PANEL - MOVED HERE -->
+        <div class="panel" id="skills-panel">
+          <h2>Skills</h2>
+          <div id="skills-display">
+            <!-- Skill categories and rows will be rendered here by JavaScript -->
+          </div>
+        </div>
+
+        <!-- RESULTS PANEL -->
+        <div class="panel" id="results-panel">
+          <h2>Character Sheet</h2>
+          <h3>Primary Stats</h3>
+          <div class="stat-line">
+            <span>STA</span><span class="stat-value" id="total-sta">10</span>
+          </div>
+          <div class="stat-line">
+            <span>STR</span><span class="stat-value" id="total-str">10</span>
+          </div>
+          <div class="stat-line">
+            <span>AGI</span><span class="stat-value" id="total-agi">10</span>
+          </div>
+          <div class="stat-line">
+            <span>DEX</span><span class="stat-value" id="total-dex">10</span>
+          </div>
+          <div class="stat-line">
+            <span>SPR</span><span class="stat-value" id="total-spr">10</span>
+          </div>
+          <div class="stat-line">
+            <span>INT</span><span class="stat-value" id="total-int">10</span>
+          </div>
+
+          <h3>Derived Stats</h3>
+          <div class="stat-line">
+            <span>LP (Health)</span
+            ><span class="stat-value" id="total-lp">0</span>
+          </div>
+          <div class="stat-line">
+            <span>MP (Mana)</span
+            ><span class="stat-value" id="total-mp">0</span>
+          </div>
+          <div class="stat-line">
+            <span>Attack (ATK)</span
+            ><span class="stat-value" id="total-atk">0</span>
+          </div>
+          <div class="stat-line">
+            <span>Defense (DEF)</span
+            ><span class="stat-value" id="total-def">0</span>
+          </div>
+          <div class="stat-line">
+            <span>Dodge</span><span class="stat-value" id="total-dodge">0</span>
+          </div>
+          <div class="stat-line">
+            <span>Accuracy</span
+            ><span class="stat-value" id="total-acc">0</span>
+          </div>
+          <div class="stat-line">
+            <span>Crit Rate %</span
+            ><span class="stat-value" id="total-crit">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="script.js"></script>
+  </body>
 </html>

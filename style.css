@@ -27,7 +27,7 @@ h3 {
 .calculator-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 10px;
 }
 
 .panel {
@@ -35,6 +35,134 @@ h3 {
   border: 1px solid #ddd;
   border-radius: 5px;
   background-color: #fafafa;
+}
+
+/* Specific Panel Adjustments */
+#config-panel {
+  grid-column: 1 / 2; /* Spans first column */
+}
+
+#points-and-equipment-panel {
+  grid-column: 2 / 3; /* Spans second column */
+}
+
+#skills-panel {
+  grid-column: 3 / 4; /* Spans third column */
+  background-color: #e6ffe6; /* Light green background for skills panel */
+}
+
+#results-panel {
+  grid-column: 1 / span 3; /* Spans all three columns below the first row */
+}
+
+/* Points Panel Styling */
+.points-panel {
+  margin-bottom: 20px;
+  background-color: #e9ecef;
+}
+
+.stat-value.overspent {
+  color: #e63946; /* A distinct red for warnings */
+}
+
+/* Skill Panel Styling */
+.skill-category {
+  background-color: #aed6a1; /* Darker green for category headers */
+  padding: 5px 10px;
+  margin-bottom: 5px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 3px;
+}
+
+.skill-row {
+  display: flex;
+  align-items: center;
+  padding: 3px 5px;
+  margin-bottom: 2px;
+  background-color: #f0fff0; /* Lighter green for skill rows */
+  border: 1px solid #d4edda;
+  border-radius: 3px;
+}
+
+.skill-name {
+  flex-basis: 60px; /* Adjust as needed */
+  text-align: left;
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+.skill-bar-container {
+  flex-grow: 1;
+  height: 12px;
+  background-color: #ccc;
+  position: relative;
+  margin: 0 5px;
+  border-radius: 2px;
+  overflow: hidden; /* Ensure bars stay within bounds */
+}
+
+.skill-adeptness-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: #33b5e5; /* Blue color for adeptness */
+  width: 0%; /* Will be set by JS */
+  z-index: 1;
+}
+
+.skill-potential-line {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background-color: #007bff; /* Darker blue for potential line */
+  width: 2px;
+  left: 0%; /* Will be set by JS */
+  z-index: 2;
+}
+
+.skill-level-display {
+  width: 50px;
+  text-align: right;
+  font-family: monospace;
+  font-size: 0.85em;
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+.skill-controls {
+  display: flex;
+  gap: 2px;
+  margin-left: 5px;
+}
+
+.skill-controls button {
+  background-color: #4caf50; /* Green */
+  border: none;
+  color: white;
+  padding: 2px 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.skill-controls button:hover {
+  background-color: #45a049;
+}
+
+.skill-cost {
+  width: 30px;
+  text-align: right;
+  font-family: monospace;
+  font-size: 0.8em;
+  margin-left: 5px;
+  color: #666;
 }
 
 .input-group {
@@ -79,4 +207,8 @@ h3 {
   padding-left: 0;
   font-size: 0.9em;
   color: #2a9d8f;
+}
+
+.stat-value.overspent {
+  color: #e63946; /* A distinct red for warnings */
 }

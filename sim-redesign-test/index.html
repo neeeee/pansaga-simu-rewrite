@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pandora Saga Simulator</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Pandora Saga Simulator a2.01</h1>
+
+      <!-- TOP SELECTIONS (Race, Racial Skill, Job) -->
+      <div class="top-selectors-row">
+        <div class="selector-group">
+          <span>Race</span>
+          <select id="race"></select>
+          <span class="selector-display" id="display-race">Human</span>
+        </div>
+        <div class="selector-group">
+          <span>Skill</span>
+          <select id="racial-skill"></select>
+          <span class="selector-display" id="display-racial-skill">Fighting Spirit</span>
+        </div>
+        <div class="selector-group">
+          <span>Job</span>
+          <select id="job"></select>
+          <span class="selector-display" id="display-job">Monk</span>
+        </div>
+      </div>
+
+      <div class="calculator-grid">
+        <!-- LEFT PANEL: Level & Base Stats -->
+        <div class="panel panel-left">
+          <div class="stat-row-top">
+            <span>Level</span>
+            <input type="number" id="level" value="1" min="1" max="55" />
+          </div>
+          <div class="stat-row-top">
+            <span>Status</span>
+            <span class="stat-display" id="points-stat">504/504</span>
+          </div>
+          <div class="stat-row-top">
+            <span>Skill</span>
+            <span class="stat-display" id="points-skill">119/119</span>
+          </div>
+          <div class="stat-row-top">
+            <span>???</span>
+            <span class="stat-display" id="points-unallocated">0/0</span>
+          </div>
+
+          <!-- Individual Stat Inputs -->
+           <hr>
+          <div class="stat-input-row">
+            <span>STA</span>
+            <input type="number" id="base-sta" class="stat-input" value="0" min="0" />
+          </div>
+          <div class="stat-input-row">
+            <span>STR</span>
+            <input type="number" id="base-str" class="stat-input" value="0" min="0" />
+          </div>
+          <div class="stat-input-row">
+            <span>AGI</span>
+            <input type="number" id="base-agi" class="stat-input" value="0" min="0" />
+          </div>
+          <div class="stat-input-row">
+            <span>DEX</span>
+            <input type="number" id="base-dex" class="stat-input" value="0" min="0" />
+          </div>
+          <div class="stat-input-row">
+            <span>SPR</span>
+            <input type="number" id="base-spr" class="stat-input" value="0" min="0" />
+          </div>
+          <div class="stat-input-row">
+            <span>INT</span>
+            <input type="number" id="base-int" class="stat-input" value="0" min="0" />
+          </div>
+        </div>
+
+        <!-- MIDDLE PANEL: Derived Stats & Equipment -->
+        <div class="panel panel-middle">
+          <!-- Derived Stats -->
+          <div class="derived-stats-section">
+            <div class="derived-row">
+              <span>LP</span>
+              <span id="total-lp">3,039</span>
+              <span>MP</span>
+              <span id="total-mp">625</span>
+            </div>
+            <div class="derived-row">
+              <span>POT</span>
+              <span>100%</span>
+              <span>%LP Heal</span>
+              <span>100%</span>
+              <span>Red MP</span>
+              <span>100%</span>
+            </div>
+            <div class="derived-row">
+              <span>MaxATK</span>
+              <span id="total-atk">4</span>
+              <span>Front+</span>
+              <span>0%</span>
+              <span>Back+</span>
+              <span>15%</span>
+            </div>
+            <div class="derived-row">
+              <span>MATK</span>
+              <span id="total-matk">101%</span>
+            </div>
+            <div class="derived-row">
+              <span>DEF</span>
+              <span id="total-def">0</span>
+              <span>R/Front</span>
+              <span>0%</span>
+              <span>R/Back</span>
+              <span>0%</span>
+            </div>
+            <div class="derived-row">
+              <span>Phy RES</span>
+              <span>0%</span>
+              <span>Phy RES</span>
+              <span>0%</span>
+              <span>Mag RES</span>
+              <span>0%</span>
+            </div>
+            <div class="derived-row">
+              <span>Accuracy</span>
+              <span id="total-acc">55</span>
+              <span>Ac/Front</span>
+              <span id="total-acc-front">55</span>
+            </div>
+            <div class="derived-row">
+              <span>Cri</span>
+              <span id="total-crit">1%</span>
+              <span>Cri DAM</span>
+              <span>100%</span>
+            </div>
+            <div class="derived-row">
+              <span>Cri RES</span>
+              <span>0%</span>
+              <span>CDAM RES</span>
+              <span>100%</span>
+            </div>
+            <div class="derived-row">
+              <span>Dodge</span>
+              <span id="total-dodge">54</span>
+              <span>Mel EVA</span>
+              <span>0%</span>
+              <span>Ran EVA</span>
+              <span>0%</span>
+              <span>Mag EVA</span>
+              <span>0%</span>
+            </div>
+            <div class="derived-row">
+              <span>Melee</span>
+              <span>---</span>
+              <span>Range</span>
+              <span>---</span>
+              <span>Fire R</span>
+              <span>0%</span>
+            </div>
+            <div class="derived-row">
+              <span>ATK SPD</span>
+              <span>100%</span>
+              <span>Cast SPD</span>
+              <span>100%</span>
+              <span>CastTime</span>
+              <span>100%</span>
+              <span>Thund R</span>
+              <span>0%</span>
+            </div>
+            <div class="derived-row">
+              <span>Cooldown</span>
+              <span>100%</span>
+              <span>Poison R</span>
+              <span>0%</span>
+            </div>
+            <div class="derived-row">
+              <span>Move SPD</span>
+              <span>100%</span>
+              <span>TownMSP</span>
+              <span>100%</span>
+              <span>Charm R</span>
+              <span>0%</span>
+            </div>
+            <div class="derived-row">
+              <span>Light R</span>
+              <span>0%</span>
+            </div>
+            <div class="derived-row">
+              <span>Dark R</span>
+              <span>0%</span>
+            </div>
+            <div class="derived-row">
+              <span>PDe-B R</span>
+              <span>0%</span>
+              <span>MDe-B R</span>
+              <span>0%</span>
+              <span>Magic R</span>
+              <span>0%</span>
+            </div>
+            <!-- Horsemanship -->
+            <div class="horsemanship-row">
+              <span>Horsemanship</span>
+              <span class="re-horse">Re Horse</span>
+              <span id="total-re-horse">10%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT PANEL: Skills -->
+        <div class="panel panel-right">
+          <h2>Skills</h2>
+          <div id="skills-display">
+            <!-- Skills rendered by JS -->
+          </div>
+        </div>
+
+        <!-- BOTTOM PANEL: Equipment & Set Bonuses -->
+        <div class="panel panel-bottom">
+          <h2>Equipment</h2>
+          <div class="equipment-selectors-grid">
+            <div class="input-group">
+              <label for="equip-weapon">Weapon</label>
+              <select id="equip-weapon" class="equip-selector"></select>
+            </div>
+            <div class="input-group">
+              <label for="equip-head">Head</label>
+              <select id="equip-head" class="equip-selector"></select>
+            </div>
+            <div class="input-group">
+              <label for="equip-torso">Torso</label>
+              <select id="equip-torso" class="equip-selector"></select>
+            </div>
+          </div>
+          <div id="set-bonus-display">
+            <h3>Active Set Bonuses</h3>
+            <ul id="set-bonus-list"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="script.js"></script>
+  </body>
+</html>
