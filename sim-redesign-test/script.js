@@ -7,10 +7,10 @@ const PRIMARY_STATS = ["sta", "str", "agi", "dex", "spr", "int"];
 
 // --- CHARACTER STATE ---
 const character = {
-  level: 50, // Default to 50 for the image
+  level: 1, // Default to 50 for the image
   raceId: 0, // Default Human
   racialSkillId: 0, // Default Fighting Spirit
-  jobId: 19, // Default Monk (job ID 19)
+  jobId: 0, // Default Monk (job ID 19)
   addedStats: { sta: 0, str: 0, agi: 0, dex: 0, spr: 0, int: 0 }, // Set to 0 added for the image
   equipment: {
     weapon: "weapon-none",
@@ -88,8 +88,8 @@ function initializeSkills() {
   const jobInfo = gameData.jobs[character.jobId];
   const baseClassType = jobInfo.baseClass; // e.g., 0 for Warrior, 1 for Scout
 
-  for (const categoryId in gameData.skills) {
-    const category = gameData.skills[categoryId];
+  for (const id in skills) {
+    const category = skills[id];
     for (const skillData of category.skills) {
       // Get the base adeptness and potential for this job for this skill
       // This maps from the original Skill['D'][baseClassType][skillId] and Skill['P'][jobId][skillId]
@@ -99,32 +99,6 @@ function initializeSkills() {
 
       // Placeholder logic for base skill levels based on job for the image example
       // In a full implementation, you'd map Skill['D'] and Skill['P'] arrays here
-      if (skillData.id === 3) {
-        // Cleave
-        baseAdeptness =
-          character.jobId === 19 && character.level >= 15 ? 15 : 0; // Monk Lv15 Cleave
-      } else if (skillData.id === 4) {
-        // Bash
-        baseAdeptness = character.jobId === 19 && character.level >= 2 ? 2 : 0; // Monk Lv2 Bash (example)
-      } else if (skillData.id === 5) {
-        // Defend
-        baseAdeptness = character.jobId === 19 && character.level >= 2 ? 2 : 0; // Monk Lv2 Defend (example)
-      } else if (skillData.id === 13) {
-        // Banevolence
-        baseAdeptness = character.jobId === 19 && character.level >= 5 ? 5 : 0; // Monk Lv5 Banevolence
-      } else if (skillData.id === 14) {
-        // Blessing
-        baseAdeptness = character.jobId === 19 && character.level >= 5 ? 5 : 0; // Monk Lv5 Blessing
-      } else if (skillData.id === 15) {
-        // Exorcism
-        baseAdeptness = character.jobId === 19 && character.level >= 5 ? 5 : 0; // Monk Lv5 Exorcism
-        basePotential =
-          character.jobId === 19 && character.level >= 60 ? 60 : 0; // Monk Lv60 Exorcism (example for higher levels)
-      } else if (skillData.id === 24) {
-        // Horsemanship
-        basePotential =
-          character.jobId === 19 && character.level >= 10 ? 10 : 0; // Monk Lv10 Horsemanship
-      }
 
       character.skills[skillData.id] = {
         adeptness: baseAdeptness, // Player-added points, not base. For image, starts with current display.
@@ -349,7 +323,7 @@ function populateDropdowns() {
 
   // Equipment
   const itemsBySlot = {};
-  for (const item of Object.values(gameData.items)) {
+  for (const item of Object.values(items.items)) {
     if (!itemsBySlot[item.slot]) itemsBySlot[item.slot] = [];
     itemsBySlot[item.slot].push(item);
   }
@@ -390,10 +364,6 @@ function populateRacialSkillDropdown() {
   // Determine the default selected racial skill based on the *job*
   // This logic is complex in the original, often tied to job-specific skill trees
   // For the purpose of the image, we'll hardcode based on the Monk example: Fighting Spirit (Human)
-  if (currentRaceId === 0 && currentJobId === 19) {
-    // Human Monk
-    defaultRacialSkillId = 0; // Fighting Spirit
-  }
 
   elements.racialSkill.innerHTML = racialSkillsForRace
     .map((skillName, index) => `<option value="${index}">${skillName}</option>`)
