@@ -1,315 +1,314 @@
 body {
-  font-family: monospace; /* Monospace font for retro feel */
-  background-color: #e6e6e6; /* Lighter background */
-  color: #000;
-  line-height: 1.4;
-  padding: 10px;
-  font-size: 13px; /* Slightly smaller font to fit more */
+    font-family: monospace; /* Monospace font for retro feel */
+    background-color: #e6e6e6; /* Lighter background */
+    color: #000;
+    line-height: 1.4;
+    padding: 10px;
+    font-size: 13px; /* Slightly smaller font to fit more */
 }
 
 .container {
-  width: 984px;
-  margin: auto;
-  background: #c0d9a9; /* Main background color from image */
-  border: 2px solid #555;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  display: flex;
-  flex-direction: column;
+    width: 984px;
+    margin: auto;
+    background: #c0d9a9; /* Main background color from image */
+    border: 2px solid #555;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
 }
 
 h1 {
-  font-size: 1.2em;
-  text-align: center;
-  color: #000;
-  margin: 5px 0;
-  padding: 0;
+    font-size: 1.2em;
+    text-align: center;
+    color: #000;
+    margin: 5px 0;
+    padding: 0;
 }
 
 /* --- Top Selector Row (Race, Skill, Job) --- */
 .top-selectors-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 5px 10px;
-  background-color: #aed6a1; /* Header green */
-  border-bottom: 1px solid #777;
-  font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
+    background-color: #aed6a1; /* Header green */
+    border-bottom: 1px solid #777;
+    font-weight: bold;
 }
 
 .selector-group {
-  display: flex;
-  align-items: center;
-  gap: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .selector-group select {
-  padding: 1px;
-  border: 1px solid #777;
-  background-color: #fff;
-  font-family: monospace;
-  font-size: 1em;
+    padding: 1px;
+    border: 1px solid #777;
+    background-color: #fff;
+    font-family: monospace;
+    font-size: 1em;
 }
 
 .selector-group .selector-display {
-  background-color: #d4edda; /* Light green display */
-  border: 1px solid #777;
-  padding: 1px 5px;
-  min-width: 80px; /* Adjust as needed */
-  text-align: center;
+    background-color: #d4edda; /* Light green display */
+    border: 1px solid #777;
+    padding: 1px 5px;
+    min-width: 80px; /* Adjust as needed */
+    text-align: center;
 }
 
 /* --- Main Calculator Grid --- */
 .calculator-grid {
-  display: grid;
-  grid-template-columns: 180px 330px 454px; /* Fixed left/right, flexible middle */
-  grid-template-rows: auto 1fr; /* Top row auto, bottom row takes remaining space */
-  gap: 5px; /* Gap between panels */
-  padding: 5px;
-  align-items: start; /* Align panels to the top */
-  width: 100%;
-  box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 180px 330px 454px; /* Fixed left/right, flexible middle */
+    grid-template-rows: auto 1fr; /* Top row auto, bottom row takes remaining space */
+    gap: 5px; /* Gap between panels */
+    padding: 5px;
+    align-items: start; /* Align panels to the top */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .panel {
-  background-color: #d4edda; /* General panel background from image */
-  border: 1px solid #777; /* Panel borders */
-  padding: 5px; /* Consistent padding inside panels */
+    background-color: #d4edda; /* General panel background from image */
+    border: 1px solid #777; /* Panel borders */
+    padding: 5px; /* Consistent padding inside panels */
 }
 
 /* Specific Panel Placements (based on image) */
 .panel-left {
-  grid-column: 1;
-  grid-row: 1; /* Top-left panel */
+    grid-column: 1;
+    grid-row: 1; /* Top-left panel */
 }
 
 .panel-middle {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  box-sizing: border-box;
-  overflow-x: auto;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: auto;
 }
 
 .panel-right {
-  grid-column: 3;
-  grid-row: 1; /* Top-right panel */
+    grid-column: 3;
+    grid-row: 1; /* Top-right panel */
 }
 
 .panel-bottom {
-  grid-column: 1 / span 3; /* Bottom panel spans all 3 columns */
-  grid-row: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px; /* Gap between equipment selectors and set bonuses */
+    grid-column: 1 / span 3; /* Bottom panel spans all 3 columns */
+    grid-row: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px; /* Gap between equipment selectors and set bonuses */
 }
 
 /* --- Left Panel (Level & Stats) --- */
 .panel-left .stat-row-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 3px;
-  font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3px;
+    font-weight: bold;
 }
 
 .panel-left .stat-row-top input {
-  width: 50px; /* Smaller input for level */
-  padding: 1px;
-  border: 1px solid #777;
-  background-color: #fff;
-  font-family: monospace;
+    width: 50px; /* Smaller input for level */
+    padding: 1px;
+    border: 1px solid #777;
+    background-color: #fff;
+    font-family: monospace;
 }
 
 .panel-left .stat-row-top .stat-display {
-  background-color: #fff;
-  border: 1px solid #777;
-  padding: 1px 5px;
-  min-width: 60px;
-  text-align: right;
-  font-size: 0.9em;
+    background-color: #fff;
+    border: 1px solid #777;
+    padding: 1px 5px;
+    min-width: 60px;
+    text-align: right;
+    font-size: 0.9em;
 }
 
 .panel-left h3 {
-  font-size: 1em;
-  margin: 10px 0 5px 0;
-  text-align: center;
-  border-bottom: 1px dashed #777; /* Dashed line for section header */
-  padding-bottom: 3px;
+    font-size: 1em;
+    margin: 10px 0 5px 0;
+    text-align: center;
+    border-bottom: 1px dashed #777; /* Dashed line for section header */
+    padding-bottom: 3px;
 }
 
 .stat-input-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 3px;
-  font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3px;
+    font-weight: bold;
 }
 
 .stat-input-row input {
-  width: 50px;
-  padding: 1px;
-  border: 1px solid #777;
-  background-color: #fff;
-  font-family: monospace;
+    width: 50px;
+    padding: 1px;
+    border: 1px solid #777;
+    background-color: #fff;
+    font-family: monospace;
 }
 
 /* --- Middle Panel (Derived Stats) --- */
 .derived-stats-section {
-  font-size: 0.9em;
-  width: 100%;
-  box-sizing: border-box;
-  overflow-x: auto;
+    font-size: 0.9em;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: auto;
 }
 
 .derived-row-column span:nth-child(odd) {
-  display: inline-block;
-  min-width: 53px;
-  max-width: 53px;
-  min-height: 17px;
-  max-height: 17px;
-  text-align: left; /* Labels align left */
-  font-weight: bold;
+    display: inline-block;
+    min-width: 53px;
+    max-width: 53px;
+    min-height: 17px;
+    max-height: 17px;
+    text-align: left; /* Labels align left */
+    font-weight: bold;
 }
 
 .derived-row-column span:nth-child(even) {
-  display: inline-block;
-  min-width: 43px;
-  max-width: 43px;
-  min-height: 17px;
-  max-height: 17px;
-  padding-left: 5px;
-  padding-top: 1px;
-  background-color: #fff; /* White background for values */
-  box-sizing: border-box;
+    display: inline-block;
+    min-width: 43px;
+    max-width: 43px;
+    min-height: 17px;
+    max-height: 17px;
+    padding-left: 5px;
+    padding-top: 1px;
+    background-color: #fff; /* White background for values */
+    box-sizing: border-box;
 }
 
 .derived-row-column {
-  display: flex;
-  flex-direction: row;
-  min-width: 96px;
-  max-width: 96px;
-  height: 17px;
-  margin-left: 5px;
+    display: flex;
+    flex-direction: row;
+    min-width: 96px;
+    max-width: 96px;
+    height: 17px;
+    margin-left: 5px;
 }
 
-.spacer-item, .derived-row-column-spacer {
-  min-width: 96px;
-  max-width: 96px;
-  height: 17px;
-  margin-left: 5px;
-  background-color: rgba(0,0,0,0.0);
+.spacer-item,
+.derived-row-column-spacer {
+    min-width: 96px;
+    max-width: 96px;
+    height: 17px;
+    margin-left: 5px;
+    background-color: rgba(0, 0, 0, 0);
 }
-
-
 
 /* Specific alignment for Horsemanship row */
 .horsemanship-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 5px;
-  border-top: 1px dashed #777; /* Separator line */
-  margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 5px;
+    border-top: 1px dashed #777; /* Separator line */
+    margin-top: 5px;
 }
 .horsemanship-row span {
-  font-weight: bold;
+    font-weight: bold;
 }
 .horsemanship-row span.re-horse {
-  background-color: #fff;
-  border: 1px solid #777;
-  padding: 1px 5px;
+    background-color: #fff;
+    border: 1px solid #777;
+    padding: 1px 5px;
 }
 .horsemanship-row span#total-re-horse {
-  background-color: #fff;
-  border: 1px solid #777;
-  padding: 1px 5px;
-  min-width: 30px;
-  text-align: right;
+    background-color: #fff;
+    border: 1px solid #777;
+    padding: 1px 5px;
+    min-width: 30px;
+    text-align: right;
 }
 
 /* --- Right Panel (Skills) --- */
 #skills-panel {
-  padding: 5px; /* Skills panel has less padding from image */
-  background-color: #d4edda;
+    padding: 5px; /* Skills panel has less padding from image */
+    background-color: #d4edda;
 }
 
 #skills-panel h2 {
-  font-size: 1em;
-  margin: 0 0 5px 0;
-  text-align: center;
-  border-bottom: 1px dashed #777;
-  padding-bottom: 3px;
+    font-size: 1em;
+    margin: 0 0 5px 0;
+    text-align: center;
+    border-bottom: 1px dashed #777;
+    padding-bottom: 3px;
 }
 
 .skill-category {
-  background-color: #aed6a1; /* Darker green for category headers */
-  padding: 2px 5px; /* Tighter padding */
-  margin-bottom: 2px; /* Smaller margin */
-  font-weight: bold;
-  display: flex;
-  justify-content: space-between;
-  border-radius: 2px;
-  font-size: 0.95em;
+    background-color: #aed6a1; /* Darker green for category headers */
+    padding: 2px 5px; /* Tighter padding */
+    margin-bottom: 2px; /* Smaller margin */
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 2px;
+    font-size: 0.95em;
 }
 
-
-
 .skill-name {
-  flex-basis: 45px; /* Shorter name column */
-  text-align: left;
-  font-weight: bold;
-  white-space: nowrap; /* Prevent wrapping */
-  overflow: hidden; /* Hide overflow */
-  text-overflow: ellipsis; /* Add ellipsis for overflow */
+    flex-basis: 45px; /* Shorter name column */
+    text-align: left;
+    font-weight: bold;
+    white-space: nowrap; /* Prevent wrapping */
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Add ellipsis for overflow */
 }
 
 .skill-bar-container {
-  flex-grow: 1;
-  height: 8px; /* Thinner bar */
-  background-color: #ccc;
-  position: relative;
-  margin: 0 3px; /* Tighter margin */
-  border-radius: 1px; /* Smaller radius */
-  overflow: hidden;
-  border: 1px solid #888; /* Bar border */
+    flex-grow: 1;
+    height: 8px; /* Thinner bar */
+    background-color: #ccc;
+    position: relative;
+    margin: 0 3px; /* Tighter margin */
+    border-radius: 1px; /* Smaller radius */
+    overflow: hidden;
+    border: 1px solid #888; /* Bar border */
 }
 
 .skill-adeptness-bar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  background-color: #33b5e5; /* Blue color for adeptness */
-  width: 0%;
-  z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #33b5e5; /* Blue color for adeptness */
+    width: 0%;
+    z-index: 1;
 }
 
 .skill-potential-line {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  background-color: #007bff; /* Darker blue for potential line */
-  width: 1px; /* Thinner line */
-  left: 0%;
-  z-index: 2;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    background-color: #007bff; /* Darker blue for potential line */
+    width: 1px; /* Thinner line */
+    left: 0%;
+    z-index: 2;
 }
 
 .skill-level-display {
-  width: 35px; /* Smaller width for levels */
-  text-align: right;
-  font-family: monospace;
-  font-size: 0.8em; /* Smaller font */
-  font-weight: bold;
-  margin-left: 2px; /* Tighter margin */
+    width: 35px; /* Smaller width for levels */
+    text-align: right;
+    font-family: monospace;
+    font-size: 0.8em; /* Smaller font */
+    font-weight: bold;
+    margin-left: 2px; /* Tighter margin */
 }
 
 /* Remove skill controls buttons as per image */
-.skill-controls, .skill-cost {
-  display: none; /* Hide these controls for now */
+.skill-controls,
+.skill-cost {
+    display: none; /* Hide these controls for now */
 }
 
 /* --- Bottom Panel (Equipment & Set Bonuses) --- */
-.panel-bottom h2, .panel-bottom h3 {
+.panel-bottom h2,
+.panel-bottom h3 {
     font-size: 1em;
     margin: 5px 0;
     text-align: center;
@@ -319,10 +318,13 @@ h1 {
 }
 
 .equipment-selectors-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 columns for equipment dropdowns */
-  gap: 5px 10px; /* Row and column gap */
-  width: 100%;
+    display: grid;
+    grid-template-columns: repeat(
+        3,
+        1fr
+    ); /* 3 columns for equipment dropdowns */
+    gap: 5px 10px; /* Row and column gap */
+    width: 100%;
 }
 
 .equipment-selectors-grid .input-group {
@@ -345,24 +347,24 @@ h1 {
 }
 
 #set-bonus-display {
-  width: 90%;
-  background-color: #e0f2d4; /* Lighter background for bonuses */
-  border: 1px solid #777;
-  padding: 5px;
-  margin-top: 5px; /* Space from equipment */
+    width: 90%;
+    background-color: #e0f2d4; /* Lighter background for bonuses */
+    border: 1px solid #777;
+    padding: 5px;
+    margin-top: 5px; /* Space from equipment */
 }
 
 #set-bonus-list {
-  list-style-type: none;
-  padding-left: 0;
-  font-size: 0.85em;
-  color: #0056b3; /* A blue color for bonuses */
-  margin: 0;
+    list-style-type: none;
+    padding-left: 0;
+    font-size: 0.85em;
+    color: #0056b3; /* A blue color for bonuses */
+    margin: 0;
 }
 
 /* General Input and Display consistency */
 .stat-value.overspent {
-  color: #e63946;
+    color: #e63946;
 }
 
 /* Hide default scroll bars for select elements if possible */
@@ -370,7 +372,7 @@ select {
     -moz-appearance: none; /* Firefox */
     -webkit-appearance: none; /* Safari and Chrome */
     appearance: none;
-    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000%22%20d%3D%22M287%2C197.3L146.2%2C56.6L5.4%2C197.3H287z%22%2F%3E%3C%2Fsvg%3E');
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000%22%20d%3D%22M287%2C197.3L146.2%2C56.6L5.4%2C197.3H287z%22%2F%3E%3C%2Fsvg%3E");
     background-repeat: no-repeat;
     background-position: right 5px top 50%;
     background-size: 8px auto;
@@ -378,68 +380,69 @@ select {
 
 /* --- Unified Row Style --- */
 .sim-row {
-  height: 1.5em;
-  display: flex;
-  align-items: center;
-  font-size: 0.95em;
-  margin: 0;
-  padding: 0 4px;
-  box-sizing: border-box;
+    height: 1.5em;
+    display: flex;
+    align-items: center;
+    font-size: 0.95em;
+    margin: 0;
+    padding: 0 4px;
+    box-sizing: border-box;
 }
 
 /* Update stat, derived, and skill rows to use .sim-row */
 .panel-left .stat-row-top,
 .stat-input-row,
 .derived-row {
-  height: 1.5em;
-  display: flex;
-  align-items: center;
-  font-size: 0.95em;
-  margin: 0.5em;
-  padding: 0 4px;
-  box-sizing: border-box;
+    height: 1.5em;
+    display: flex;
+    align-items: center;
+    font-size: 0.95em;
+    margin: 0.5em;
+    padding: 0 4px;
+    box-sizing: border-box;
 }
 
 .skill-row {
-  display: grid;
-  grid-template-columns: 20% 30% 10% 40%;
-  grid-template-rows: repeat(1, 1fr);
-  gap: 1px;  padding: 1px 2px; /* Very tight padding for skill rows */
-  height: 1.5em;
-  box-sizing: border-box;
-  margin-bottom: 1px; /* Very small margin */
-  background-color: #e0f2d4; /* Lighter green for skill rows */
-  border: 1px solid #bbd0ae; /* Subtler border */
-  border-radius: 2px;
-  font-size: 0.9em;
+    display: grid;
+    grid-template-columns: 20% 30% 10% 40%;
+    grid-template-rows: repeat(1, 1fr);
+    gap: 1px;
+    padding: 1px 2px; /* Very tight padding for skill rows */
+    height: 1.5em;
+    box-sizing: border-box;
+    margin-bottom: 1px; /* Very small margin */
+    background-color: #e0f2d4; /* Lighter green for skill rows */
+    border: 1px solid #bbd0ae; /* Subtler border */
+    border-radius: 2px;
+    font-size: 0.9em;
 }
 /* Remove conflicting paddings/margins */
 .panel-left .stat-row-top,
 .stat-input-row,
 .derived-row,
 .skill-row {
-  padding-top: 0;
-  padding-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 /* Remove extra margin from .stat-input-row */
 .stat-input-row {
-  margin-bottom: 0;
+    margin-bottom: 0;
 }
 
 /* Remove extra margin from .panel-left .stat-row-top */
 .panel-left .stat-row-top {
-  margin-bottom: 0;
+    margin-bottom: 0;
 }
 
 /* Remove extra margin from .derived-row */
 .derived-row {
-  margin-bottom: 0;
+    margin-bottom: 0;
 }
 
 /* Optionally, make .panel use grid for inner content */
 .panel {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }

@@ -1,4 +1,6 @@
 import { gameData } from "./gameData.js";
+import { skills } from "./jobSkillValues.js";
+import { items } from "./equipData.js";
 
 // --- CONSTANTS ---
 const PRIMARY_STATS = ["sta", "str", "agi", "dex", "spr", "int"];
@@ -97,23 +99,32 @@ function initializeSkills() {
 
       // Placeholder logic for base skill levels based on job for the image example
       // In a full implementation, you'd map Skill['D'] and Skill['P'] arrays here
-      if (skillData.id === 3) { // Cleave
-          baseAdeptness = (character.jobId === 19 && character.level >= 15) ? 15 : 0; // Monk Lv15 Cleave
-      } else if (skillData.id === 4) { // Bash
-          baseAdeptness = (character.jobId === 19 && character.level >= 2) ? 2 : 0; // Monk Lv2 Bash (example)
-      } else if (skillData.id === 5) { // Defend
-          baseAdeptness = (character.jobId === 19 && character.level >= 2) ? 2 : 0; // Monk Lv2 Defend (example)
-      } else if (skillData.id === 13) { // Banevolence
-          baseAdeptness = (character.jobId === 19 && character.level >= 5) ? 5 : 0; // Monk Lv5 Banevolence
-      } else if (skillData.id === 14) { // Blessing
-          baseAdeptness = (character.jobId === 19 && character.level >= 5) ? 5 : 0; // Monk Lv5 Blessing
-      } else if (skillData.id === 15) { // Exorcism
-          baseAdeptness = (character.jobId === 19 && character.level >= 5) ? 5 : 0; // Monk Lv5 Exorcism
-          basePotential = (character.jobId === 19 && character.level >= 60) ? 60 : 0; // Monk Lv60 Exorcism (example for higher levels)
-      } else if (skillData.id === 24) { // Horsemanship
-          basePotential = (character.jobId === 19 && character.level >= 10) ? 10 : 0; // Monk Lv10 Horsemanship
+      if (skillData.id === 3) {
+        // Cleave
+        baseAdeptness =
+          character.jobId === 19 && character.level >= 15 ? 15 : 0; // Monk Lv15 Cleave
+      } else if (skillData.id === 4) {
+        // Bash
+        baseAdeptness = character.jobId === 19 && character.level >= 2 ? 2 : 0; // Monk Lv2 Bash (example)
+      } else if (skillData.id === 5) {
+        // Defend
+        baseAdeptness = character.jobId === 19 && character.level >= 2 ? 2 : 0; // Monk Lv2 Defend (example)
+      } else if (skillData.id === 13) {
+        // Banevolence
+        baseAdeptness = character.jobId === 19 && character.level >= 5 ? 5 : 0; // Monk Lv5 Banevolence
+      } else if (skillData.id === 14) {
+        // Blessing
+        baseAdeptness = character.jobId === 19 && character.level >= 5 ? 5 : 0; // Monk Lv5 Blessing
+      } else if (skillData.id === 15) {
+        // Exorcism
+        baseAdeptness = character.jobId === 19 && character.level >= 5 ? 5 : 0; // Monk Lv5 Exorcism
+        basePotential =
+          character.jobId === 19 && character.level >= 60 ? 60 : 0; // Monk Lv60 Exorcism (example for higher levels)
+      } else if (skillData.id === 24) {
+        // Horsemanship
+        basePotential =
+          character.jobId === 19 && character.level >= 10 ? 10 : 0; // Monk Lv10 Horsemanship
       }
-
 
       character.skills[skillData.id] = {
         adeptness: baseAdeptness, // Player-added points, not base. For image, starts with current display.
@@ -136,9 +147,9 @@ function renderSkillsPanel() {
 
     // Calculate actual category sums based on current character skills
     for (const skillData of category.skills) {
-        const currentSkill = character.skills[skillData.id];
-        categoryAdeptnessSum += currentSkill.adeptness;
-        categoryPotentialSum += currentSkill.potential;
+      const currentSkill = character.skills[skillData.id];
+      categoryAdeptnessSum += currentSkill.adeptness;
+      categoryPotentialSum += currentSkill.potential;
     }
 
     // Category Header
@@ -147,23 +158,27 @@ function renderSkillsPanel() {
     let categoryHeaderAdeptness = "";
     let categoryHeaderPotential = "";
 
-    if (categoryId == 0) { // Melee
-        categoryHeaderAdeptness = "4";
-        categoryHeaderPotential = "130";
-    } else if (categoryId == 6) { // Technique
-        categoryHeaderAdeptness = "0";
-        categoryHeaderPotential = "55";
-    } else if (categoryId == 12) { // Grace
-        categoryHeaderAdeptness = "15";
-        categoryHeaderPotential = "115";
-    } else if (categoryId == 17) { // Magic
-        categoryHeaderAdeptness = "0";
-        categoryHeaderPotential = "0";
-    } else if (categoryId == 22) { // Special
-        categoryHeaderAdeptness = "0";
-        categoryHeaderPotential = "10";
+    if (categoryId == 0) {
+      // Melee
+      categoryHeaderAdeptness = "4";
+      categoryHeaderPotential = "130";
+    } else if (categoryId == 6) {
+      // Technique
+      categoryHeaderAdeptness = "0";
+      categoryHeaderPotential = "55";
+    } else if (categoryId == 12) {
+      // Grace
+      categoryHeaderAdeptness = "15";
+      categoryHeaderPotential = "115";
+    } else if (categoryId == 17) {
+      // Magic
+      categoryHeaderAdeptness = "0";
+      categoryHeaderPotential = "0";
+    } else if (categoryId == 22) {
+      // Special
+      categoryHeaderAdeptness = "0";
+      categoryHeaderPotential = "10";
     }
-
 
     html += `<div class="sim-row skill-category">
                 <span>${category.name}</span>
@@ -185,30 +200,37 @@ function renderSkillsPanel() {
       let initialAdeptnessBarWidth = 0;
       let initialPotentialLinePos = 0;
 
-      if (skillData.id === 3) { // Cleave
+      if (skillData.id === 3) {
+        // Cleave
         initialAdeptnessBarWidth = (0 / gameData.maxSkillValue) * 100; // Base Adeptness from Job (example)
         initialPotentialLinePos = (15 / gameData.maxSkillValue) * 100; // Base Potential from Job (example)
-      } else if (skillData.id === 4) { // Bash
+      } else if (skillData.id === 4) {
+        // Bash
         initialAdeptnessBarWidth = (2 / gameData.maxSkillValue) * 100;
         initialPotentialLinePos = (90 / gameData.maxSkillValue) * 100;
-      } else if (skillData.id === 5) { // Defend
+      } else if (skillData.id === 5) {
+        // Defend
         initialAdeptnessBarWidth = (2 / gameData.maxSkillValue) * 100;
         initialPotentialLinePos = (25 / gameData.maxSkillValue) * 100;
-      } else if (skillData.id === 11) { // Dodge
+      } else if (skillData.id === 11) {
+        // Dodge
         initialPotentialLinePos = (55 / gameData.maxSkillValue) * 100;
-      } else if (skillData.id === 13) { // Banevolence
+      } else if (skillData.id === 13) {
+        // Banevolence
         initialAdeptnessBarWidth = (5 / gameData.maxSkillValue) * 100;
         initialPotentialLinePos = (30 / gameData.maxSkillValue) * 100;
-      } else if (skillData.id === 14) { // Blessing
+      } else if (skillData.id === 14) {
+        // Blessing
         initialAdeptnessBarWidth = (5 / gameData.maxSkillValue) * 100;
         initialPotentialLinePos = (25 / gameData.maxSkillValue) * 100;
-      } else if (skillData.id === 15) { // Exorcism
+      } else if (skillData.id === 15) {
+        // Exorcism
         initialAdeptnessBarWidth = (5 / gameData.maxSkillValue) * 100;
         initialPotentialLinePos = (60 / gameData.maxSkillValue) * 100;
-      } else if (skillData.id === 24) { // Horsemanship
+      } else if (skillData.id === 24) {
+        // Horsemanship
         initialPotentialLinePos = (10 / gameData.maxSkillValue) * 100;
       }
-
 
       html += `
         <div class="sim-row skill-row">
@@ -306,7 +328,6 @@ function handleSkillButtonClick(event) {
   runCalculations(); // Recalculate and re-render
 }
 
-
 /**
  * Populates UI dropdowns from the gameData object.
  */
@@ -369,16 +390,13 @@ function populateRacialSkillDropdown() {
   // Determine the default selected racial skill based on the *job*
   // This logic is complex in the original, often tied to job-specific skill trees
   // For the purpose of the image, we'll hardcode based on the Monk example: Fighting Spirit (Human)
-  if (currentRaceId === 0 && currentJobId === 19) { // Human Monk
-      defaultRacialSkillId = 0; // Fighting Spirit
+  if (currentRaceId === 0 && currentJobId === 19) {
+    // Human Monk
+    defaultRacialSkillId = 0; // Fighting Spirit
   }
 
-
   elements.racialSkill.innerHTML = racialSkillsForRace
-    .map(
-      (skillName, index) =>
-        `<option value="${index}">${skillName}</option>`
-    )
+    .map((skillName, index) => `<option value="${index}">${skillName}</option>`)
     .join("");
 
   elements.racialSkill.value = defaultRacialSkillId; // Set the default based on job
@@ -386,10 +404,10 @@ function populateRacialSkillDropdown() {
 
   // Update display text
   elements.displayRace.textContent = gameData.races[currentRaceId].name;
-  elements.displayRacialSkill.textContent = racialSkillsForRace[character.racialSkillId] || '';
+  elements.displayRacialSkill.textContent =
+    racialSkillsForRace[character.racialSkillId] || "";
   elements.displayJob.textContent = gameData.jobs[currentJobId].name;
 }
-
 
 function readInputs() {
   character.level = parseInt(elements.level.value, 10);
@@ -400,7 +418,7 @@ function readInputs() {
   for (const stat of PRIMARY_STATS) {
     character.addedStats[stat] = Math.max(
       0,
-      parseInt(elements.addedStatInputs[stat].value, 10) || 0
+      parseInt(elements.addedStatInputs[stat].value, 10) || 0,
     );
   }
 
@@ -427,9 +445,7 @@ function runCalculations() {
 
   for (const stat of PRIMARY_STATS) {
     const total =
-      baseStats[stat] +
-      character.addedStats[stat] +
-      (bonuses.stats[stat] || 0);
+      baseStats[stat] + character.addedStats[stat] + (bonuses.stats[stat] || 0);
     character.finalStats[stat] = Math.min(gameData.maxStatValue, total);
   }
 
@@ -441,8 +457,7 @@ function getCombinedBaseStats() {
   const combined = {};
   const raceStats = gameData.raceBaseStats[character.raceId];
   const jobInfo = gameData.jobs[character.jobId];
-  const jobModifiers =
-    gameData.jobBaseStatModifiers[jobInfo.baseClass]; // Use baseClass from jobInfo
+  const jobModifiers = gameData.jobBaseStatModifiers[jobInfo.baseClass]; // Use baseClass from jobInfo
 
   for (const stat of PRIMARY_STATS) {
     combined[stat] = raceStats[stat] + jobModifiers[stat];
@@ -472,7 +487,7 @@ function applySetBonuses(bonuses) {
   const equippedItemIds = new Set(Object.values(character.equipment));
   for (const set of gameData.setBonuses) {
     const hasAllItems = set.requiredItems.every((itemId) =>
-      equippedItemIds.has(itemId)
+      equippedItemIds.has(itemId),
     );
     if (hasAllItems) {
       bonuses.description.push(set.bonus.description);
@@ -559,7 +574,6 @@ function calculateDerivedStats() {
   }
   stats.matk = matkValue;
 
-
   const agiBonus = getAgilityDodgeBonus(stats.agi);
   stats.dodge = level + stats.agi + agiBonus;
 
@@ -600,7 +614,7 @@ function calculateSpentStatPoints(baseStats) {
     if (endValue > gameData.maxStatValue) {
       character.addedStats[stat] = Math.max(
         0,
-        gameData.maxStatValue - startValue
+        gameData.maxStatValue - startValue,
       );
       elements.addedStatInputs[stat].value = character.addedStats[stat];
       const cappedEndValue = startValue + character.addedStats[stat];
@@ -625,53 +639,59 @@ function updateUI(bonuses) {
   const selectedRace = gameData.races[character.raceId];
   const selectedJob = gameData.jobs[character.jobId];
 
-  elements.displayRace.textContent = selectedRace ? selectedRace.name : '';
+  elements.displayRace.textContent = selectedRace ? selectedRace.name : "";
   // Ensure racial skill name is retrieved correctly
-  const racialSkillsForCurrentRace = gameData.racialSkills[character.raceId] || [];
-  elements.displayRacialSkill.textContent = racialSkillsForCurrentRace[character.racialSkillId]?.name || '';
-  elements.displayJob.textContent = selectedJob ? selectedJob.name : '';
+  const racialSkillsForCurrentRace =
+    gameData.racialSkills[character.raceId] || [];
+  elements.displayRacialSkill.textContent =
+    racialSkillsForCurrentRace[character.racialSkillId]?.name || "";
+  elements.displayJob.textContent = selectedJob ? selectedJob.name : "";
 
   // Update primary stat displays
   for (const stat of PRIMARY_STATS) {
     const totalElement = elements.outputs[stat];
     if (totalElement) {
-        const combinedBase = getCombinedBaseStats()[stat]; // Get base stat after race/job modifiers
-        const added = character.addedStats[stat];
-        const final = character.finalStats[stat];
+      const combinedBase = getCombinedBaseStats()[stat]; // Get base stat after race/job modifiers
+      const added = character.addedStats[stat];
+      const final = character.finalStats[stat];
 
-        // Format as "Final (Added)" or "Final (Base)" if no points added
-        totalElement.innerHTML = `${final} (${added > 0 ? added : combinedBase})`;
+      // Format as "Final (Added)" or "Final (Base)" if no points added
+      totalElement.innerHTML = `${final} (${added > 0 ? added : combinedBase})`;
     }
-}
+  }
   // Update other outputs
   elements.outputs.lp.textContent = Math.floor(character.finalStats.lp);
   elements.outputs.mp.textContent = Math.floor(character.finalStats.mp);
   elements.outputs.atk.textContent = Math.floor(character.finalStats.atk);
   elements.outputs.def.textContent = Math.floor(character.finalStats.def);
-  elements.outputs.matk.textContent = Math.floor(character.finalStats.matk) + "%"; // MATK as percentage
+  elements.outputs.matk.textContent =
+    Math.floor(character.finalStats.matk) + "%"; // MATK as percentage
   elements.outputs.dodge.textContent = Math.floor(character.finalStats.dodge);
   elements.outputs.acc.textContent = Math.floor(character.finalStats.acc);
-  elements.outputs.accFront.textContent = Math.floor(character.finalStats.accFront);
-  elements.outputs.crit.textContent = Math.floor(character.finalStats.crit) + "%";
-  elements.outputs.reHorse.textContent = Math.floor(character.finalStats.reHorse) + "%";
-
+  elements.outputs.accFront.textContent = Math.floor(
+    character.finalStats.accFront,
+  );
+  elements.outputs.crit.textContent =
+    Math.floor(character.finalStats.crit) + "%";
+  elements.outputs.reHorse.textContent =
+    Math.floor(character.finalStats.reHorse) + "%";
 
   elements.points.stat.textContent = `${character.points.totalStat - character.points.spentStat}/${character.points.totalStat}`;
   elements.points.stat.classList.toggle(
     "overspent",
-    character.points.totalStat < character.points.spentStat
+    character.points.totalStat < character.points.spentStat,
   );
 
   elements.points.skill.textContent = `${character.points.totalSkill - character.points.spentSkill}/${character.points.totalSkill}`;
   elements.points.skill.classList.toggle(
     "overspent",
-    character.points.totalSkill < character.points.spentSkill
+    character.points.totalSkill < character.points.spentSkill,
   );
 
   elements.points.unallocated.textContent = `${character.points.totalUnallocated - character.points.spentUnallocated}/${character.points.totalUnallocated}`;
   elements.points.unallocated.classList.toggle(
     "overspent",
-    character.points.totalUnallocated < character.points.spentUnallocated
+    character.points.totalUnallocated < character.points.spentUnallocated,
   );
 
   if (bonuses.description.length > 0) {
@@ -687,12 +707,12 @@ function updateUI(bonuses) {
 
 // --- Event Listeners and Initial Population (Same as before) ---
 document.getElementById("race").addEventListener("change", runCalculations);
-document.getElementById("racial-skill").addEventListener("change", runCalculations); // NEW listener
+document
+  .getElementById("racial-skill")
+  .addEventListener("change", runCalculations); // NEW listener
 document.getElementById("job").addEventListener("change", runCalculations); // Add listener for job changes
 
-document
-  .getElementById("level")
-  .addEventListener("input", runCalculations); // Add listener for level changes
+document.getElementById("level").addEventListener("input", runCalculations); // Add listener for level changes
 
 for (const statInput of Object.values(elements.addedStatInputs)) {
   statInput.addEventListener("input", runCalculations);
@@ -712,7 +732,6 @@ document.addEventListener("DOMContentLoaded", () => {
   elements.addedStatInputs.dex.value = character.addedStats.dex;
   elements.addedStatInputs.spr.value = character.addedStats.spr;
   elements.addedStatInputs.int.value = character.addedStats.int;
-
 
   populateDropdowns();
   initializeSkills();
