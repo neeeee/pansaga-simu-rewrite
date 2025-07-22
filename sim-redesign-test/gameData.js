@@ -168,36 +168,54 @@ export const gameData = {
     { id: 5, name: "Lapin" },
   ],
   racialSkills: {
-    0: { name: "Human", skills: [
-      { id: 0, name: "Fighting Spirit", effect: "placeholder"},
-      { id: 1, name: "Adaptibility", effect: "placeholder"},
-      { id: 2, name: "Alchemy", effect: "placeholder"},
-    ]},
-    1: { name: "Elf", skills: [
-      { id: 0, name: "Eagle Eye", effect: "placeholder"},
-      { id: 1, name: "Nature's Harmony", effect: "placeholder"},
-      { id: 2, name: "Steadfastness", effect: "placeholder"},
-    ]},
-    2: { name: "Dwarf", skills: [
-      { id: 0, name: "StrongHearted", effect: "placeholder"},
-      { id: 1, name: "Filial Piety", effect: "placeholder"},
-      { id: 2, name: "Dwarf Spirit", effect: "placeholder"},
-    ]},
-    3: { name: "Myrine", skills: [
-      { id: 0, name: "Acute Senses", effect: "placeholder"},
-      { id: 1, name: "Calmness", effect: "placeholder"},
-      { id: 2, name: "Sharpness", effect: "placeholder"},
-    ]},
-    4: { name: "Enkidu", skills: [
-      { id: 0, name: "Stone Skin", effect: "placeholder"},
-      { id: 1, name: "Strong Arm", effect: "placeholder"},
-      { id: 2, name: "Lapin Support", effect: "placeholder"},
-    ]},
-    5: { name: "Lapin", skills: [
-      { id: 0, name: "Magic Resistance", effect: "placeholder"},
-      { id: 1, name: "Inner Light", effect: "placeholder"},
-      { id: 2, name: "Enkidu Support", effect: "placeholder"},
-    ]},
+    0: {
+      name: "Human",
+      skills: [
+        { id: 0, name: "Fighting Spirit", effect: "placeholder" },
+        { id: 1, name: "Adaptibility", effect: "placeholder" },
+        { id: 2, name: "Alchemy", effect: "placeholder" },
+      ],
+    },
+    1: {
+      name: "Elf",
+      skills: [
+        { id: 0, name: "Eagle Eye", effect: "placeholder" },
+        { id: 1, name: "Nature's Harmony", effect: "placeholder" },
+        { id: 2, name: "Steadfastness", effect: "placeholder" },
+      ],
+    },
+    2: {
+      name: "Dwarf",
+      skills: [
+        { id: 0, name: "StrongHearted", effect: "placeholder" },
+        { id: 1, name: "Filial Piety", effect: "placeholder" },
+        { id: 2, name: "Dwarf Spirit", effect: "placeholder" },
+      ],
+    },
+    3: {
+      name: "Myrine",
+      skills: [
+        { id: 0, name: "Acute Senses", effect: "placeholder" },
+        { id: 1, name: "Calmness", effect: "placeholder" },
+        { id: 2, name: "Sharpness", effect: "placeholder" },
+      ],
+    },
+    4: {
+      name: "Enkidu",
+      skills: [
+        { id: 0, name: "Stone Skin", effect: "placeholder" },
+        { id: 1, name: "Strong Arm", effect: "placeholder" },
+        { id: 2, name: "Lapin Support", effect: "placeholder" },
+      ],
+    },
+    5: {
+      name: "Lapin",
+      skills: [
+        { id: 0, name: "Magic Resistance", effect: "placeholder" },
+        { id: 1, name: "Inner Light", effect: "placeholder" },
+        { id: 2, name: "Enkidu Support", effect: "placeholder" },
+      ],
+    },
   },
   raceBaseStats: {
     0: { sta: 5, str: 5, agi: 5, dex: 5, spr: 5, int: 5 }, // Human
@@ -285,55 +303,785 @@ export const gameData = {
     27: [151, 195, 3.339, 11.23, 5.26, 10.14], // Calamity
   },
   skills: {
-    // Melee Category (ID 0)
-    0: {
-      name: "Melee",
-      skills: [
-        { id: 1, name: "Slas", minAdeptness: 5, maxPotential: 25 },
-        { id: 2, name: "Thru", minAdeptness: 2, maxPotential: 25 },
-        { id: 3, name: "Clea", minAdeptness: 5, maxPotential: 25 },
-        { id: 4, name: "Bash", minAdeptness: 2, maxPotential: 20 },
-        { id: 5, name: "Defe", minAdeptness: 4, maxPotential: 25 },
-      ],
+    warrior: {
+      // Melee Category (ID 0)
+      0: {
+        name: "Melee",
+        skills: [
+          { id: 1, name: "Slas", minAdeptness: 5, maxPotential: 25 },
+          { id: 2, name: "Thru", minAdeptness: 2, maxPotential: 25 },
+          { id: 3, name: "Clea", minAdeptness: 5, maxPotential: 25 },
+          { id: 4, name: "Bash", minAdeptness: 2, maxPotential: 20 },
+          { id: 5, name: "Defe", minAdeptness: 4, maxPotential: 25 },
+        ],
+      },
+      // Technique Category (ID 6)
+      6: {
+        name: "Technique",
+        skills: [
+          { id: 7, name: "Shot", minAdeptness: 5, maxPotential: 25 },
+          { id: 8, name: "Alch", minAdeptness: 4, maxPotential: 20 },
+          { id: 9, name: "Assa", minAdeptness: 3, maxPotential: 25 },
+          { id: 10, name: "Trap", minAdeptness: 0, maxPotential: 20 },
+          { id: 11, name: "Dodg", minAdeptness: 3, maxPotential: 25 },
+        ],
+      },
+      // Grace Category (ID 12)
+      12: {
+        name: "Prayer",
+        skills: [
+          { id: 13, name: "Bane", minAdeptness: 5, maxPotential: 25 },
+          { id: 14, name: "Bles", minAdeptness: 5, maxPotential: 25 },
+          { id: 15, name: "Exor", minAdeptness: 5, maxPotential: 25 },
+          { id: 16, name: "Hymn", minAdeptness: 0, maxPotential: 0 }, // Hymn is unique, often starts at 0/0 and is increased by job/racial skills
+        ],
+      },
+      // Magic Category (ID 17)
+      17: {
+        name: "Magic",
+        skills: [
+          { id: 18, name: "Elem", minAdeptness: 5, maxPotential: 25 },
+          { id: 19, name: "Invo", minAdeptness: 5, maxPotential: 25 },
+          { id: 20, name: "Dark", minAdeptness: 5, maxPotential: 20 },
+          { id: 21, name: "Conf", minAdeptness: 5, maxPotential: 25 },
+        ],
+      },
+      // Special Category (ID 22)
+      22: {
+        name: "Special",
+        skills: [
+          { id: 23, name: "Raci", minAdeptness: 0, maxPotential: 0 },
+          { id: 24, name: "Hors", minAdeptness: 0, maxPotential: 10 },
+        ],
+      },
     },
-    // Technique Category (ID 6)
-    6: {
-      name: "Technique",
-      skills: [
-        { id: 7, name: "Shot", minAdeptness: 5, maxPotential: 25 },
-        { id: 8, name: "Alch", minAdeptness: 4, maxPotential: 20 },
-        { id: 9, name: "Assa", minAdeptness: 3, maxPotential: 25 },
-        { id: 10, name: "Trap", minAdeptness: 0, maxPotential: 20 },
-        { id: 11, name: "Dodg", minAdeptness: 3, maxPotential: 25 },
-      ],
+    gladiator: {
+      // Melee Category (ID 0)
+      0: {
+        name: "Melee",
+        skills: [
+          { id: 1, name: "Slas", minAdeptness: 5, maxPotential: 25 },
+          { id: 2, name: "Thru", minAdeptness: 2, maxPotential: 25 },
+          { id: 3, name: "Clea", minAdeptness: 5, maxPotential: 25 },
+          { id: 4, name: "Bash", minAdeptness: 2, maxPotential: 20 },
+          { id: 5, name: "Defe", minAdeptness: 4, maxPotential: 25 },
+        ],
+      },
+      // Technique Category (ID 6)
+      6: {
+        name: "Technique",
+        skills: [
+          { id: 7, name: "Shot", minAdeptness: 5, maxPotential: 25 },
+          { id: 8, name: "Alch", minAdeptness: 4, maxPotential: 20 },
+          { id: 9, name: "Assa", minAdeptness: 3, maxPotential: 25 },
+          { id: 10, name: "Trap", minAdeptness: 0, maxPotential: 20 },
+          { id: 11, name: "Dodg", minAdeptness: 3, maxPotential: 25 },
+        ],
+      },
+      // Grace Category (ID 12)
+      12: {
+        name: "Prayer",
+        skills: [
+          { id: 13, name: "Bane", minAdeptness: 5, maxPotential: 25 },
+          { id: 14, name: "Bles", minAdeptness: 5, maxPotential: 25 },
+          { id: 15, name: "Exor", minAdeptness: 5, maxPotential: 25 },
+          { id: 16, name: "Hymn", minAdeptness: 0, maxPotential: 0 }, // Hymn is unique, often starts at 0/0 and is increased by job/racial skills
+        ],
+      },
+      // Magic Category (ID 17)
+      17: {
+        name: "Magic",
+        skills: [
+          { id: 18, name: "Elem", minAdeptness: 5, maxPotential: 25 },
+          { id: 19, name: "Invo", minAdeptness: 5, maxPotential: 25 },
+          { id: 20, name: "Dark", minAdeptness: 5, maxPotential: 20 },
+          { id: 21, name: "Conf", minAdeptness: 5, maxPotential: 25 },
+        ],
+      },
+      // Special Category (ID 22)
+      22: {
+        name: "Special",
+        skills: [
+          { id: 23, name: "Raci", minAdeptness: 0, maxPotential: 0 },
+          { id: 24, name: "Hors", minAdeptness: 0, maxPotential: 10 },
+        ],
+      },
     },
-    // Grace Category (ID 12)
-    12: {
-      name: "Grace",
-      skills: [
-        { id: 13, name: "Bane", minAdeptness: 5, maxPotential: 25 },
-        { id: 14, name: "Bles", minAdeptness: 5, maxPotential: 25 },
-        { id: 15, name: "Exor", minAdeptness: 5, maxPotential: 25 },
-        { id: 16, name: "Hymn", minAdeptness: 0, maxPotential: 0 }, // Hymn is unique, often starts at 0/0 and is increased by job/racial skills
-      ],
+    knight: {
+      // Melee Category (ID 0)
+      0: {
+        name: "Melee",
+        skills: [
+          { id: 1, name: "Slas", minAdeptness: 5, maxPotential: 25 },
+          { id: 2, name: "Thru", minAdeptness: 2, maxPotential: 25 },
+          { id: 3, name: "Clea", minAdeptness: 5, maxPotential: 25 },
+          { id: 4, name: "Bash", minAdeptness: 2, maxPotential: 20 },
+          { id: 5, name: "Defe", minAdeptness: 4, maxPotential: 25 },
+        ],
+      },
+      // Technique Category (ID 6)
+      6: {
+        name: "Technique",
+        skills: [
+          { id: 7, name: "Shot", minAdeptness: 5, maxPotential: 25 },
+          { id: 8, name: "Alch", minAdeptness: 4, maxPotential: 20 },
+          { id: 9, name: "Assa", minAdeptness: 3, maxPotential: 25 },
+          { id: 10, name: "Trap", minAdeptness: 0, maxPotential: 20 },
+          { id: 11, name: "Dodg", minAdeptness: 3, maxPotential: 25 },
+        ],
+      },
+      // Grace Category (ID 12)
+      12: {
+        name: "Prayer",
+        skills: [
+          { id: 13, name: "Bane", minAdeptness: 5, maxPotential: 25 },
+          { id: 14, name: "Bles", minAdeptness: 5, maxPotential: 25 },
+          { id: 15, name: "Exor", minAdeptness: 5, maxPotential: 25 },
+          { id: 16, name: "Hymn", minAdeptness: 0, maxPotential: 0 }, // Hymn is unique, often starts at 0/0 and is increased by job/racial skills
+        ],
+      },
+      // Magic Category (ID 17)
+      17: {
+        name: "Magic",
+        skills: [
+          { id: 18, name: "Elem", minAdeptness: 5, maxPotential: 25 },
+          { id: 19, name: "Invo", minAdeptness: 5, maxPotential: 25 },
+          { id: 20, name: "Dark", minAdeptness: 5, maxPotential: 20 },
+          { id: 21, name: "Conf", minAdeptness: 5, maxPotential: 25 },
+        ],
+      },
+      // Special Category (ID 22)
+      22: {
+        name: "Special",
+        skills: [
+          { id: 23, name: "Raci", minAdeptness: 0, maxPotential: 0 },
+          { id: 24, name: "Hors", minAdeptness: 0, maxPotential: 10 },
+        ],
+      },
     },
-    // Magic Category (ID 17)
-    17: {
-      name: "Magic",
-      skills: [
-        { id: 18, name: "Elem", minAdeptness: 5, maxPotential: 25 },
-        { id: 19, name: "Invo", minAdeptness: 5, maxPotential: 25 },
-        { id: 20, name: "Dark", minAdeptness: 5, maxPotential: 20 },
-        { id: 21, name: "Conf", minAdeptness: 5, maxPotential: 25 },
-      ],
+    juggernaut: {
+      // Melee Category (ID 0)
+      0: {
+        name: "Melee",
+        skills: [
+          { id: 1, name: "Slas", minAdeptness: 5, maxPotential: 25 },
+          { id: 2, name: "Thru", minAdeptness: 2, maxPotential: 25 },
+          { id: 3, name: "Clea", minAdeptness: 5, maxPotential: 25 },
+          { id: 4, name: "Bash", minAdeptness: 2, maxPotential: 20 },
+          { id: 5, name: "Defe", minAdeptness: 4, maxPotential: 25 },
+        ],
+      },
+      // Technique Category (ID 6)
+      6: {
+        name: "Technique",
+        skills: [
+          { id: 7, name: "Shot", minAdeptness: 5, maxPotential: 25 },
+          { id: 8, name: "Alch", minAdeptness: 4, maxPotential: 20 },
+          { id: 9, name: "Assa", minAdeptness: 3, maxPotential: 25 },
+          { id: 10, name: "Trap", minAdeptness: 0, maxPotential: 20 },
+          { id: 11, name: "Dodg", minAdeptness: 3, maxPotential: 25 },
+        ],
+      },
+      // Grace Category (ID 12)
+      12: {
+        name: "Prayer",
+        skills: [
+          { id: 13, name: "Bane", minAdeptness: 5, maxPotential: 25 },
+          { id: 14, name: "Bles", minAdeptness: 5, maxPotential: 25 },
+          { id: 15, name: "Exor", minAdeptness: 5, maxPotential: 25 },
+          { id: 16, name: "Hymn", minAdeptness: 0, maxPotential: 0 }, // Hymn is unique, often starts at 0/0 and is increased by job/racial skills
+        ],
+      },
+      // Magic Category (ID 17)
+      17: {
+        name: "Magic",
+        skills: [
+          { id: 18, name: "Elem", minAdeptness: 5, maxPotential: 25 },
+          { id: 19, name: "Invo", minAdeptness: 5, maxPotential: 25 },
+          { id: 20, name: "Dark", minAdeptness: 5, maxPotential: 20 },
+          { id: 21, name: "Conf", minAdeptness: 5, maxPotential: 25 },
+        ],
+      },
+      // Special Category (ID 22)
+      22: {
+        name: "Special",
+        skills: [
+          { id: 23, name: "Raci", minAdeptness: 0, maxPotential: 0 },
+          { id: 24, name: "Hors", minAdeptness: 0, maxPotential: 10 },
+        ],
+      },
     },
-    // Special Category (ID 22)
-    22: {
-      name: "Special",
-      skills: [
-        { id: 23, name: "Raci", minAdeptness: 0, maxPotential: 0 },
-        { id: 24, name: "Hors", minAdeptness: 0, maxPotential: 10 },
-      ],
+    dragoon: {
+      // Melee Category (ID 0)
+      0: {
+        name: "Melee",
+        skills: [
+          { id: 1, name: "Slas", minAdeptness: 5, maxPotential: 25 },
+          { id: 2, name: "Thru", minAdeptness: 2, maxPotential: 25 },
+          { id: 3, name: "Clea", minAdeptness: 5, maxPotential: 25 },
+          { id: 4, name: "Bash", minAdeptness: 2, maxPotential: 20 },
+          { id: 5, name: "Defe", minAdeptness: 4, maxPotential: 25 },
+        ],
+      },
+      // Technique Category (ID 6)
+      6: {
+        name: "Technique",
+        skills: [
+          { id: 7, name: "Shot", minAdeptness: 5, maxPotential: 25 },
+          { id: 8, name: "Alch", minAdeptness: 4, maxPotential: 20 },
+          { id: 9, name: "Assa", minAdeptness: 3, maxPotential: 25 },
+          { id: 10, name: "Trap", minAdeptness: 0, maxPotential: 20 },
+          { id: 11, name: "Dodg", minAdeptness: 3, maxPotential: 25 },
+        ],
+      },
+      // Grace Category (ID 12)
+      12: {
+        name: "Prayer",
+        skills: [
+          { id: 13, name: "Bane", minAdeptness: 5, maxPotential: 25 },
+          { id: 14, name: "Bles", minAdeptness: 5, maxPotential: 25 },
+          { id: 15, name: "Exor", minAdeptness: 5, maxPotential: 25 },
+          { id: 16, name: "Hymn", minAdeptness: 0, maxPotential: 0 }, // Hymn is unique, often starts at 0/0 and is increased by job/racial skills
+        ],
+      },
+      // Magic Category (ID 17)
+      17: {
+        name: "Magic",
+        skills: [
+          { id: 18, name: "Elem", minAdeptness: 5, maxPotential: 25 },
+          { id: 19, name: "Invo", minAdeptness: 5, maxPotential: 25 },
+          { id: 20, name: "Dark", minAdeptness: 5, maxPotential: 20 },
+          { id: 21, name: "Conf", minAdeptness: 5, maxPotential: 25 },
+        ],
+      },
+      // Special Category (ID 22)
+      22: {
+        name: "Special",
+        skills: [
+          { id: 23, name: "Raci", minAdeptness: 0, maxPotential: 0 },
+          { id: 24, name: "Hors", minAdeptness: 0, maxPotential: 10 },
+        ],
+      },
+    },
+    paladin: {
+      // Melee Category (ID 0)
+      0: {
+        name: "Melee",
+        skills: [
+          { id: 1, name: "Slas", minAdeptness: 5, maxPotential: 25 },
+          { id: 2, name: "Thru", minAdeptness: 2, maxPotential: 25 },
+          { id: 3, name: "Clea", minAdeptness: 5, maxPotential: 25 },
+          { id: 4, name: "Bash", minAdeptness: 2, maxPotential: 20 },
+          { id: 5, name: "Defe", minAdeptness: 4, maxPotential: 25 },
+        ],
+      },
+      // Technique Category (ID 6)
+      6: {
+        name: "Technique",
+        skills: [
+          { id: 7, name: "Shot", minAdeptness: 5, maxPotential: 25 },
+          { id: 8, name: "Alch", minAdeptness: 4, maxPotential: 20 },
+          { id: 9, name: "Assa", minAdeptness: 3, maxPotential: 25 },
+          { id: 10, name: "Trap", minAdeptness: 0, maxPotential: 20 },
+          { id: 11, name: "Dodg", minAdeptness: 3, maxPotential: 25 },
+        ],
+      },
+      // Grace Category (ID 12)
+      12: {
+        name: "Prayer",
+        skills: [
+          { id: 13, name: "Bane", minAdeptness: 5, maxPotential: 25 },
+          { id: 14, name: "Bles", minAdeptness: 5, maxPotential: 25 },
+          { id: 15, name: "Exor", minAdeptness: 5, maxPotential: 25 },
+          { id: 16, name: "Hymn", minAdeptness: 0, maxPotential: 0 }, // Hymn is unique, often starts at 0/0 and is increased by job/racial skills
+        ],
+      },
+      // Magic Category (ID 17)
+      17: {
+        name: "Magic",
+        skills: [
+          { id: 18, name: "Elem", minAdeptness: 5, maxPotential: 25 },
+          { id: 19, name: "Invo", minAdeptness: 5, maxPotential: 25 },
+          { id: 20, name: "Dark", minAdeptness: 5, maxPotential: 20 },
+          { id: 21, name: "Conf", minAdeptness: 5, maxPotential: 25 },
+        ],
+      },
+      // Special Category (ID 22)
+      22: {
+        name: "Special",
+        skills: [
+          { id: 23, name: "Raci", minAdeptness: 0, maxPotential: 0 },
+          { id: 24, name: "Hors", minAdeptness: 0, maxPotential: 10 },
+        ],
+      },
+    },
+    warlord: {
+      // Melee Category (ID 0)
+      0: {
+        name: "Melee",
+        skills: [
+          { id: 1, name: "Slas", minAdeptness: 5, maxPotential: 25 },
+          { id: 2, name: "Thru", minAdeptness: 2, maxPotential: 25 },
+          { id: 3, name: "Clea", minAdeptness: 5, maxPotential: 25 },
+          { id: 4, name: "Bash", minAdeptness: 2, maxPotential: 20 },
+          { id: 5, name: "Defe", minAdeptness: 4, maxPotential: 25 },
+        ],
+      },
+      // Technique Category (ID 6)
+      6: {
+        name: "Technique",
+        skills: [
+          { id: 7, name: "Shot", minAdeptness: 5, maxPotential: 25 },
+          { id: 8, name: "Alch", minAdeptness: 4, maxPotential: 20 },
+          { id: 9, name: "Assa", minAdeptness: 3, maxPotential: 25 },
+          { id: 10, name: "Trap", minAdeptness: 0, maxPotential: 20 },
+          { id: 11, name: "Dodg", minAdeptness: 3, maxPotential: 25 },
+        ],
+      },
+      // Grace Category (ID 12)
+      12: {
+        name: "Prayer",
+        skills: [
+          { id: 13, name: "Bane", minAdeptness: 5, maxPotential: 25 },
+          { id: 14, name: "Bles", minAdeptness: 5, maxPotential: 25 },
+          { id: 15, name: "Exor", minAdeptness: 5, maxPotential: 25 },
+          { id: 16, name: "Hymn", minAdeptness: 0, maxPotential: 0 }, // Hymn is unique, often starts at 0/0 and is increased by job/racial skills
+        ],
+      },
+      // Magic Category (ID 17)
+      17: {
+        name: "Magic",
+        skills: [
+          { id: 18, name: "Elem", minAdeptness: 5, maxPotential: 25 },
+          { id: 19, name: "Invo", minAdeptness: 5, maxPotential: 25 },
+          { id: 20, name: "Dark", minAdeptness: 5, maxPotential: 20 },
+          { id: 21, name: "Conf", minAdeptness: 5, maxPotential: 25 },
+        ],
+      },
+      // Special Category (ID 22)
+      22: {
+        name: "Special",
+        skills: [
+          { id: 23, name: "Raci", minAdeptness: 0, maxPotential: 0 },
+          { id: 24, name: "Hors", minAdeptness: 0, maxPotential: 10 },
+        ],
+      },
+    },
+    scout: {
+      // Melee Category (ID 0)
+      0: {
+        name: "Melee",
+        skills: [
+          { id: 1, name: "Slas", minAdeptness: 5, maxPotential: 25 },
+          { id: 2, name: "Thru", minAdeptness: 2, maxPotential: 25 },
+          { id: 3, name: "Clea", minAdeptness: 5, maxPotential: 25 },
+          { id: 4, name: "Bash", minAdeptness: 2, maxPotential: 20 },
+          { id: 5, name: "Defe", minAdeptness: 4, maxPotential: 25 },
+        ],
+      },
+      // Technique Category (ID 6)
+      6: {
+        name: "Technique",
+        skills: [
+          { id: 7, name: "Shot", minAdeptness: 5, maxPotential: 25 },
+          { id: 8, name: "Alch", minAdeptness: 4, maxPotential: 20 },
+          { id: 9, name: "Assa", minAdeptness: 3, maxPotential: 25 },
+          { id: 10, name: "Trap", minAdeptness: 0, maxPotential: 20 },
+          { id: 11, name: "Dodg", minAdeptness: 3, maxPotential: 25 },
+        ],
+      },
+      // Grace Category (ID 12)
+      12: {
+        name: "Prayer",
+        skills: [
+          { id: 13, name: "Bane", minAdeptness: 5, maxPotential: 25 },
+          { id: 14, name: "Bles", minAdeptness: 5, maxPotential: 25 },
+          { id: 15, name: "Exor", minAdeptness: 5, maxPotential: 25 },
+          { id: 16, name: "Hymn", minAdeptness: 0, maxPotential: 0 }, // Hymn is unique, often starts at 0/0 and is increased by job/racial skills
+        ],
+      },
+      // Magic Category (ID 17)
+      17: {
+        name: "Magic",
+        skills: [
+          { id: 18, name: "Elem", minAdeptness: 5, maxPotential: 25 },
+          { id: 19, name: "Invo", minAdeptness: 5, maxPotential: 25 },
+          { id: 20, name: "Dark", minAdeptness: 5, maxPotential: 20 },
+          { id: 21, name: "Conf", minAdeptness: 5, maxPotential: 25 },
+        ],
+      },
+      // Special Category (ID 22)
+      22: {
+        name: "Special",
+        skills: [
+          { id: 23, name: "Raci", minAdeptness: 0, maxPotential: 0 },
+          { id: 24, name: "Hors", minAdeptness: 0, maxPotential: 10 },
+        ],
+      },
+    },
+    archer: {
+      // Melee Category (ID 0)
+      0: {
+        name: "Melee",
+        skills: [
+          { id: 1, name: "Slas", minAdeptness: 5, maxPotential: 25 },
+          { id: 2, name: "Thru", minAdeptness: 2, maxPotential: 25 },
+          { id: 3, name: "Clea", minAdeptness: 5, maxPotential: 25 },
+          { id: 4, name: "Bash", minAdeptness: 2, maxPotential: 20 },
+          { id: 5, name: "Defe", minAdeptness: 4, maxPotential: 25 },
+        ],
+      },
+      // Technique Category (ID 6)
+      6: {
+        name: "Technique",
+        skills: [
+          { id: 7, name: "Shot", minAdeptness: 5, maxPotential: 25 },
+          { id: 8, name: "Alch", minAdeptness: 4, maxPotential: 20 },
+          { id: 9, name: "Assa", minAdeptness: 3, maxPotential: 25 },
+          { id: 10, name: "Trap", minAdeptness: 0, maxPotential: 20 },
+          { id: 11, name: "Dodg", minAdeptness: 3, maxPotential: 25 },
+        ],
+      },
+      // Grace Category (ID 12)
+      12: {
+        name: "Prayer",
+        skills: [
+          { id: 13, name: "Bane", minAdeptness: 5, maxPotential: 25 },
+          { id: 14, name: "Bles", minAdeptness: 5, maxPotential: 25 },
+          { id: 15, name: "Exor", minAdeptness: 5, maxPotential: 25 },
+          { id: 16, name: "Hymn", minAdeptness: 0, maxPotential: 0 }, // Hymn is unique, often starts at 0/0 and is increased by job/racial skills
+        ],
+      },
+      // Magic Category (ID 17)
+      17: {
+        name: "Magic",
+        skills: [
+          { id: 18, name: "Elem", minAdeptness: 5, maxPotential: 25 },
+          { id: 19, name: "Invo", minAdeptness: 5, maxPotential: 25 },
+          { id: 20, name: "Dark", minAdeptness: 5, maxPotential: 20 },
+          { id: 21, name: "Conf", minAdeptness: 5, maxPotential: 25 },
+        ],
+      },
+      // Special Category (ID 22)
+      22: {
+        name: "Special",
+        skills: [
+          { id: 23, name: "Raci", minAdeptness: 0, maxPotential: 0 },
+          { id: 24, name: "Hors", minAdeptness: 0, maxPotential: 10 },
+        ],
+      },
+    },
+    provocateur: {
+      // Melee Category (ID 0)
+      0: {
+        name: "Melee",
+        skills: [
+          { id: 1, name: "Slas", minAdeptness: 5, maxPotential: 25 },
+          { id: 2, name: "Thru", minAdeptness: 2, maxPotential: 25 },
+          { id: 3, name: "Clea", minAdeptness: 5, maxPotential: 25 },
+          { id: 4, name: "Bash", minAdeptness: 2, maxPotential: 20 },
+          { id: 5, name: "Defe", minAdeptness: 4, maxPotential: 25 },
+        ],
+      },
+      // Technique Category (ID 6)
+      6: {
+        name: "Technique",
+        skills: [
+          { id: 7, name: "Shot", minAdeptness: 5, maxPotential: 25 },
+          { id: 8, name: "Alch", minAdeptness: 4, maxPotential: 20 },
+          { id: 9, name: "Assa", minAdeptness: 3, maxPotential: 25 },
+          { id: 10, name: "Trap", minAdeptness: 0, maxPotential: 20 },
+          { id: 11, name: "Dodg", minAdeptness: 3, maxPotential: 25 },
+        ],
+      },
+      // Grace Category (ID 12)
+      12: {
+        name: "Prayer",
+        skills: [
+          { id: 13, name: "Bane", minAdeptness: 5, maxPotential: 25 },
+          { id: 14, name: "Bles", minAdeptness: 5, maxPotential: 25 },
+          { id: 15, name: "Exor", minAdeptness: 5, maxPotential: 25 },
+          { id: 16, name: "Hymn", minAdeptness: 0, maxPotential: 0 }, // Hymn is unique, often starts at 0/0 and is increased by job/racial skills
+        ],
+      },
+      // Magic Category (ID 17)
+      17: {
+        name: "Magic",
+        skills: [
+          { id: 18, name: "Elem", minAdeptness: 5, maxPotential: 25 },
+          { id: 19, name: "Invo", minAdeptness: 5, maxPotential: 25 },
+          { id: 20, name: "Dark", minAdeptness: 5, maxPotential: 20 },
+          { id: 21, name: "Conf", minAdeptness: 5, maxPotential: 25 },
+        ],
+      },
+      // Special Category (ID 22)
+      22: {
+        name: "Special",
+        skills: [
+          { id: 23, name: "Raci", minAdeptness: 0, maxPotential: 0 },
+          { id: 24, name: "Hors", minAdeptness: 0, maxPotential: 10 },
+        ],
+      },
+    },
+    sniper: {
+      // Melee Category (ID 0)
+      0: {
+        name: "Melee",
+        skills: [
+          { id: 1, name: "Slas", minAdeptness: 5, maxPotential: 25 },
+          { id: 2, name: "Thru", minAdeptness: 2, maxPotential: 25 },
+          { id: 3, name: "Clea", minAdeptness: 5, maxPotential: 25 },
+          { id: 4, name: "Bash", minAdeptness: 2, maxPotential: 20 },
+          { id: 5, name: "Defe", minAdeptness: 4, maxPotential: 25 },
+        ],
+      },
+      // Technique Category (ID 6)
+      6: {
+        name: "Technique",
+        skills: [
+          { id: 7, name: "Shot", minAdeptness: 5, maxPotential: 25 },
+          { id: 8, name: "Alch", minAdeptness: 4, maxPotential: 20 },
+          { id: 9, name: "Assa", minAdeptness: 3, maxPotential: 25 },
+          { id: 10, name: "Trap", minAdeptness: 0, maxPotential: 20 },
+          { id: 11, name: "Dodg", minAdeptness: 3, maxPotential: 25 },
+        ],
+      },
+      // Grace Category (ID 12)
+      12: {
+        name: "Prayer",
+        skills: [
+          { id: 13, name: "Bane", minAdeptness: 5, maxPotential: 25 },
+          { id: 14, name: "Bles", minAdeptness: 5, maxPotential: 25 },
+          { id: 15, name: "Exor", minAdeptness: 5, maxPotential: 25 },
+          { id: 16, name: "Hymn", minAdeptness: 0, maxPotential: 0 }, // Hymn is unique, often starts at 0/0 and is increased by job/racial skills
+        ],
+      },
+      // Magic Category (ID 17)
+      17: {
+        name: "Magic",
+        skills: [
+          { id: 18, name: "Elem", minAdeptness: 5, maxPotential: 25 },
+          { id: 19, name: "Invo", minAdeptness: 5, maxPotential: 25 },
+          { id: 20, name: "Dark", minAdeptness: 5, maxPotential: 20 },
+          { id: 21, name: "Conf", minAdeptness: 5, maxPotential: 25 },
+        ],
+      },
+      // Special Category (ID 22)
+      22: {
+        name: "Special",
+        skills: [
+          { id: 23, name: "Raci", minAdeptness: 0, maxPotential: 0 },
+          { id: 24, name: "Hors", minAdeptness: 0, maxPotential: 10 },
+        ],
+      },
+    },
+    hunter: {
+      // Melee Category (ID 0)
+      0: {
+        name: "Melee",
+        skills: [
+          { id: 1, name: "Slas", minAdeptness: 5, maxPotential: 25 },
+          { id: 2, name: "Thru", minAdeptness: 2, maxPotential: 25 },
+          { id: 3, name: "Clea", minAdeptness: 5, maxPotential: 25 },
+          { id: 4, name: "Bash", minAdeptness: 2, maxPotential: 20 },
+          { id: 5, name: "Defe", minAdeptness: 4, maxPotential: 25 },
+        ],
+      },
+      // Technique Category (ID 6)
+      6: {
+        name: "Technique",
+        skills: [
+          { id: 7, name: "Shot", minAdeptness: 5, maxPotential: 25 },
+          { id: 8, name: "Alch", minAdeptness: 4, maxPotential: 20 },
+          { id: 9, name: "Assa", minAdeptness: 3, maxPotential: 25 },
+          { id: 10, name: "Trap", minAdeptness: 0, maxPotential: 20 },
+          { id: 11, name: "Dodg", minAdeptness: 3, maxPotential: 25 },
+        ],
+      },
+      // Grace Category (ID 12)
+      12: {
+        name: "Prayer",
+        skills: [
+          { id: 13, name: "Bane", minAdeptness: 5, maxPotential: 25 },
+          { id: 14, name: "Bles", minAdeptness: 5, maxPotential: 25 },
+          { id: 15, name: "Exor", minAdeptness: 5, maxPotential: 25 },
+          { id: 16, name: "Hymn", minAdeptness: 0, maxPotential: 0 }, // Hymn is unique, often starts at 0/0 and is increased by job/racial skills
+        ],
+      },
+      // Magic Category (ID 17)
+      17: {
+        name: "Magic",
+        skills: [
+          { id: 18, name: "Elem", minAdeptness: 5, maxPotential: 25 },
+          { id: 19, name: "Invo", minAdeptness: 5, maxPotential: 25 },
+          { id: 20, name: "Dark", minAdeptness: 5, maxPotential: 20 },
+          { id: 21, name: "Conf", minAdeptness: 5, maxPotential: 25 },
+        ],
+      },
+      // Special Category (ID 22)
+      22: {
+        name: "Special",
+        skills: [
+          { id: 23, name: "Raci", minAdeptness: 0, maxPotential: 0 },
+          { id: 24, name: "Hors", minAdeptness: 0, maxPotential: 10 },
+        ],
+      },
+    },
+    assassin: {
+      // Melee Category (ID 0)
+      0: {
+        name: "Melee",
+        skills: [
+          { id: 1, name: "Slas", minAdeptness: 5, maxPotential: 25 },
+          { id: 2, name: "Thru", minAdeptness: 2, maxPotential: 25 },
+          { id: 3, name: "Clea", minAdeptness: 5, maxPotential: 25 },
+          { id: 4, name: "Bash", minAdeptness: 2, maxPotential: 20 },
+          { id: 5, name: "Defe", minAdeptness: 4, maxPotential: 25 },
+        ],
+      },
+      // Technique Category (ID 6)
+      6: {
+        name: "Technique",
+        skills: [
+          { id: 7, name: "Shot", minAdeptness: 5, maxPotential: 25 },
+          { id: 8, name: "Alch", minAdeptness: 4, maxPotential: 20 },
+          { id: 9, name: "Assa", minAdeptness: 3, maxPotential: 25 },
+          { id: 10, name: "Trap", minAdeptness: 0, maxPotential: 20 },
+          { id: 11, name: "Dodg", minAdeptness: 3, maxPotential: 25 },
+        ],
+      },
+      // Grace Category (ID 12)
+      12: {
+        name: "Prayer",
+        skills: [
+          { id: 13, name: "Bane", minAdeptness: 5, maxPotential: 25 },
+          { id: 14, name: "Bles", minAdeptness: 5, maxPotential: 25 },
+          { id: 15, name: "Exor", minAdeptness: 5, maxPotential: 25 },
+          { id: 16, name: "Hymn", minAdeptness: 0, maxPotential: 0 }, // Hymn is unique, often starts at 0/0 and is increased by job/racial skills
+        ],
+      },
+      // Magic Category (ID 17)
+      17: {
+        name: "Magic",
+        skills: [
+          { id: 18, name: "Elem", minAdeptness: 5, maxPotential: 25 },
+          { id: 19, name: "Invo", minAdeptness: 5, maxPotential: 25 },
+          { id: 20, name: "Dark", minAdeptness: 5, maxPotential: 20 },
+          { id: 21, name: "Conf", minAdeptness: 5, maxPotential: 25 },
+        ],
+      },
+      // Special Category (ID 22)
+      22: {
+        name: "Special",
+        skills: [
+          { id: 23, name: "Raci", minAdeptness: 0, maxPotential: 0 },
+          { id: 24, name: "Hors", minAdeptness: 0, maxPotential: 10 },
+        ],
+      },
+    },
+    saboteur: {
+      // Melee Category (ID 0)
+      0: {
+        name: "Melee",
+        skills: [
+          { id: 1, name: "Slas", minAdeptness: 5, maxPotential: 25 },
+          { id: 2, name: "Thru", minAdeptness: 2, maxPotential: 25 },
+          { id: 3, name: "Clea", minAdeptness: 5, maxPotential: 25 },
+          { id: 4, name: "Bash", minAdeptness: 2, maxPotential: 20 },
+          { id: 5, name: "Defe", minAdeptness: 4, maxPotential: 25 },
+        ],
+      },
+      // Technique Category (ID 6)
+      6: {
+        name: "Technique",
+        skills: [
+          { id: 7, name: "Shot", minAdeptness: 5, maxPotential: 25 },
+          { id: 8, name: "Alch", minAdeptness: 4, maxPotential: 20 },
+          { id: 9, name: "Assa", minAdeptness: 3, maxPotential: 25 },
+          { id: 10, name: "Trap", minAdeptness: 0, maxPotential: 20 },
+          { id: 11, name: "Dodg", minAdeptness: 3, maxPotential: 25 },
+        ],
+      },
+      // Grace Category (ID 12)
+      12: {
+        name: "Prayer",
+        skills: [
+          { id: 13, name: "Bane", minAdeptness: 5, maxPotential: 25 },
+          { id: 14, name: "Bles", minAdeptness: 5, maxPotential: 25 },
+          { id: 15, name: "Exor", minAdeptness: 5, maxPotential: 25 },
+          { id: 16, name: "Hymn", minAdeptness: 0, maxPotential: 0 }, // Hymn is unique, often starts at 0/0 and is increased by job/racial skills
+        ],
+      },
+      // Magic Category (ID 17)
+      17: {
+        name: "Magic",
+        skills: [
+          { id: 18, name: "Elem", minAdeptness: 5, maxPotential: 25 },
+          { id: 19, name: "Invo", minAdeptness: 5, maxPotential: 25 },
+          { id: 20, name: "Dark", minAdeptness: 5, maxPotential: 20 },
+          { id: 21, name: "Conf", minAdeptness: 5, maxPotential: 25 },
+        ],
+      },
+      // Special Category (ID 22)
+      22: {
+        name: "Special",
+        skills: [
+          { id: 23, name: "Raci", minAdeptness: 0, maxPotential: 0 },
+          { id: 24, name: "Hors", minAdeptness: 0, maxPotential: 10 },
+        ],
+      },
+    },
+    acolyte: {
+      // Melee Category (ID 0)
+      0: {
+        name: "Melee",
+        skills: [
+          { id: 1, name: "Slas", minAdeptness: 5, maxPotential: 25 },
+          { id: 2, name: "Thru", minAdeptness: 2, maxPotential: 25 },
+          { id: 3, name: "Clea", minAdeptness: 5, maxPotential: 25 },
+          { id: 4, name: "Bash", minAdeptness: 2, maxPotential: 20 },
+          { id: 5, name: "Defe", minAdeptness: 4, maxPotential: 25 },
+        ],
+      },
+      // Technique Category (ID 6)
+      6: {
+        name: "Technique",
+        skills: [
+          { id: 7, name: "Shot", minAdeptness: 5, maxPotential: 25 },
+          { id: 8, name: "Alch", minAdeptness: 4, maxPotential: 20 },
+          { id: 9, name: "Assa", minAdeptness: 3, maxPotential: 25 },
+          { id: 10, name: "Trap", minAdeptness: 0, maxPotential: 20 },
+          { id: 11, name: "Dodg", minAdeptness: 3, maxPotential: 25 },
+        ],
+      },
+      // Grace Category (ID 12)
+      12: {
+        name: "Prayer",
+        skills: [
+          { id: 13, name: "Bane", minAdeptness: 5, maxPotential: 25 },
+          { id: 14, name: "Bles", minAdeptness: 5, maxPotential: 25 },
+          { id: 15, name: "Exor", minAdeptness: 5, maxPotential: 25 },
+          { id: 16, name: "Hymn", minAdeptness: 0, maxPotential: 0 }, // Hymn is unique, often starts at 0/0 and is increased by job/racial skills
+        ],
+      },
+      // Magic Category (ID 17)
+      17: {
+        name: "Magic",
+        skills: [
+          { id: 18, name: "Elem", minAdeptness: 5, maxPotential: 25 },
+          { id: 19, name: "Invo", minAdeptness: 5, maxPotential: 25 },
+          { id: 20, name: "Dark", minAdeptness: 5, maxPotential: 20 },
+          { id: 21, name: "Conf", minAdeptness: 5, maxPotential: 25 },
+        ],
+      },
+      // Special Category (ID 22)
+      22: {
+        name: "Special",
+        skills: [
+          { id: 23, name: "Raci", minAdeptness: 0, maxPotential: 0 },
+          { id: 24, name: "Hors", minAdeptness: 0, maxPotential: 10 },
+        ],
+      },
     },
   },
 

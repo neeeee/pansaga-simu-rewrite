@@ -165,8 +165,8 @@ function renderSkillsPanel() {
     }
 
 
-    html += `<div class="skill-category">
-                <span>${category.name.substring(0, 5)}</span>
+    html += `<div class="sim-row skill-category">
+                <span>${category.name}</span>
                 <span>${categoryHeaderAdeptness} / ${categoryHeaderPotential}</span>
              </div>`;
 
@@ -211,7 +211,7 @@ function renderSkillsPanel() {
 
 
       html += `
-        <div class="skill-row">
+        <div class="sim-row skill-row">
           <span class="skill-name">${skillData.name.substring(0, 4)}</span>
           <div class="skill-level-line-container">
             <div class="skill-level-line green" style="width: ${initialAdeptnessBarWidth}%;"></div>

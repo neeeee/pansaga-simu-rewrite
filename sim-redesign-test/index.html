@@ -15,17 +15,17 @@
         <div class="selector-group">
           <span>Race</span>
           <select id="race"></select>
-          <span class="selector-display" id="display-race">Human</span>
+          <span class="selector-display" id="display-race"></span>
         </div>
         <div class="selector-group">
           <span>Skill</span>
           <select id="racial-skill"></select>
-          <span class="selector-display" id="display-racial-skill">Fighting Spirit</span>
+          <span class="selector-display" id="display-racial-skill"></span>
         </div>
         <div class="selector-group">
           <span>Job</span>
           <select id="job"></select>
-          <span class="selector-display" id="display-job">Monk</span>
+          <span class="selector-display" id="display-job"></span>
         </div>
       </div>
 
@@ -38,42 +38,77 @@
           </div>
           <div class="stat-row-top">
             <span>Status</span>
-            <span class="stat-display" id="points-stat">504/504</span>
+            <span class="stat-display" id="points-stat"></span>
           </div>
           <div class="stat-row-top">
             <span>Skill</span>
-            <span class="stat-display" id="points-skill">119/119</span>
+            <span class="stat-display" id="points-skill"></span>
           </div>
           <div class="stat-row-top">
-            <span>???</span>
-            <span class="stat-display" id="points-unallocated">0/0</span>
+            <span class="stat-display" id="points-unallocated"></span>
           </div>
 
           <!-- Individual Stat Inputs -->
-           <hr>
+          <hr />
           <div class="stat-input-row">
             <span>STA</span>
-            <input type="number" id="base-sta" class="stat-input" value="0" min="0" />
+            <input
+              type="number"
+              id="base-sta"
+              class="stat-input"
+              value="0"
+              min="0"
+            />
           </div>
           <div class="stat-input-row">
             <span>STR</span>
-            <input type="number" id="base-str" class="stat-input" value="0" min="0" />
+            <input
+              type="number"
+              id="base-str"
+              class="stat-input"
+              value="0"
+              min="0"
+            />
           </div>
           <div class="stat-input-row">
             <span>AGI</span>
-            <input type="number" id="base-agi" class="stat-input" value="0" min="0" />
+            <input
+              type="number"
+              id="base-agi"
+              class="stat-input"
+              value="0"
+              min="0"
+            />
           </div>
           <div class="stat-input-row">
             <span>DEX</span>
-            <input type="number" id="base-dex" class="stat-input" value="0" min="0" />
+            <input
+              type="number"
+              id="base-dex"
+              class="stat-input"
+              value="0"
+              min="0"
+            />
           </div>
           <div class="stat-input-row">
             <span>SPR</span>
-            <input type="number" id="base-spr" class="stat-input" value="0" min="0" />
+            <input
+              type="number"
+              id="base-spr"
+              class="stat-input"
+              value="0"
+              min="0"
+            />
           </div>
           <div class="stat-input-row">
             <span>INT</span>
-            <input type="number" id="base-int" class="stat-input" value="0" min="0" />
+            <input
+              type="number"
+              id="base-int"
+              class="stat-input"
+              value="0"
+              min="0"
+            />
           </div>
         </div>
 
@@ -82,143 +117,280 @@
           <!-- Derived Stats -->
           <div class="derived-stats-section">
             <div class="derived-row">
-              <span>LP</span>
-              <span id="total-lp">3,039</span>
-              <span>MP</span>
-              <span id="total-mp">625</span>
+              <div class="derived-row-column">
+                <span>LP</span>
+                <span id="total-lp"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>MP</span>
+                <span id="total-mp"></span>
+              </div>
+              <div class="derived-row-column-spacer">
+                <span class="spacer-item"></span>
+                <span class="spacer-item"></span>
+              </div>
             </div>
             <div class="derived-row">
-              <span>POT</span>
-              <span>100%</span>
-              <span>%LP Heal</span>
-              <span>100%</span>
-              <span>Red MP</span>
-              <span>100%</span>
+              <div class="derived-row-column">
+                <span>POT</span>
+                <span id="pot"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>%LP Heal</span>
+                <span id="lp-heal"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>Red MP</span>
+                <span id="red-mp"></span>
+              </div>
             </div>
             <div class="derived-row">
-              <span>MaxATK</span>
-              <span id="total-atk">4</span>
-              <span>Front+</span>
-              <span>0%</span>
-              <span>Back+</span>
-              <span>15%</span>
+              <div class="derived-row-column">
+                <span>MaxATK</span>
+                <span id="total-atk"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>Front+</span>
+                <span id="front-atk"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>Back+</span>
+                <span id="back-atk"></span>
+              </div>
             </div>
             <div class="derived-row">
-              <span>MATK</span>
-              <span id="total-matk">101%</span>
+              <div class="derived-row-column">
+                <span>MaxATK</span>
+                <span id="max-atk"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>Front+</span>
+                <span id="front-matk"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>Back+</span>
+                <span id="back-matk"></span>
+              </div>
             </div>
             <div class="derived-row">
-              <span>DEF</span>
-              <span id="total-def">0</span>
-              <span>R/Front</span>
-              <span>0%</span>
-              <span>R/Back</span>
-              <span>0%</span>
+              <div class="derived-row-column">
+                <span>MATK</span>
+                <span id="total-matk"></span>
+              </div>
+              <div class="derived-row-column-spacer">
+                <span class="spacer-item"></span>
+                <span class="spacer-item"></span>
+              </div>
+              <div class="derived-row-column-spacer">
+                <span class="spacer-item"></span>
+                <span class="spacer-item"></span>
+              </div>
             </div>
             <div class="derived-row">
-              <span>Phy RES</span>
-              <span>0%</span>
-              <span>Phy RES</span>
-              <span>0%</span>
-              <span>Mag RES</span>
-              <span>0%</span>
+              <div class="derived-row-column">
+                <span>DEF</span>
+                <span id="total-def"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>R/Front</span>
+                <span id="front-def"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>R/Back</span>
+                <span id="back-def"></span>
+              </div>
             </div>
             <div class="derived-row">
-              <span>Accuracy</span>
-              <span id="total-acc">55</span>
-              <span>Ac/Front</span>
-              <span id="total-acc-front">55</span>
+              <div class="derived-row-column">
+                <span>Phy RES</span>
+                <span id="phy-res"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>Phy RES</span>
+                <span id="phy-res"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>Mag RES</span>
+                <span id="mag-res"></span>
+              </div>
             </div>
             <div class="derived-row">
-              <span>Cri</span>
-              <span id="total-crit">1%</span>
-              <span>Cri DAM</span>
-              <span>100%</span>
+              <div class="derived-row-column">
+                <span>Acc</span>
+                <span id="total-acc"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>Ac/Fr</span>
+                <span id="total-acc-front"></span>
+              </div>
+              <div class="derived-row-column-spacer">
+                <span class="spacer-item"></span>
+                <span class="spacer-item"></span>
+              </div>
             </div>
             <div class="derived-row">
-              <span>Cri RES</span>
-              <span>0%</span>
-              <span>CDAM RES</span>
-              <span>100%</span>
+              <div class="derived-row-column-spacer">
+                <span class="spacer-item"></span>
+                <span class="spacer-item"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>Cri</span>
+                <span id="total-crit"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>Cri DAM</span>
+                <span id="cri-d"></span>
+              </div>
             </div>
             <div class="derived-row">
-              <span>Dodge</span>
-              <span id="total-dodge">54</span>
-              <span>Mel EVA</span>
-              <span>0%</span>
-              <span>Ran EVA</span>
-              <span>0%</span>
-              <span>Mag EVA</span>
-              <span>0%</span>
+              <div class="derived-row-column">
+                <span>Dodge</span>
+                <span id="total-dodge"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>Cri RES</span>
+                <span id="cri-res"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>CDAM RES</span>
+                <span id="cdam-res"></span>
+              </div>
             </div>
             <div class="derived-row">
-              <span>Melee</span>
-              <span>---</span>
-              <span>Range</span>
-              <span>---</span>
-              <span>Fire R</span>
-              <span>0%</span>
+              <div class="derived-row-column">
+                <span>Mel EVA</span>
+                <span id="mel-eva"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>Ran EVA</span>
+                <span id="ran-eva"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>Mag EVA</span>
+                <span id="mag-eva"></span>
+              </div>
             </div>
             <div class="derived-row">
-              <span>ATK SPD</span>
-              <span>100%</span>
-              <span>Cast SPD</span>
-              <span>100%</span>
-              <span>CastTime</span>
-              <span>100%</span>
-              <span>Thund R</span>
-              <span>0%</span>
+              <div class="derived-row-column">
+                <span>Melee</span>
+                <span id="melee"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>Range</span>
+                <span id="range"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>Fire R</span>
+                <span id="fire-r"></span>
+              </div>
             </div>
             <div class="derived-row">
-              <span>Cooldown</span>
-              <span>100%</span>
-              <span>Poison R</span>
-              <span>0%</span>
+              <div class="derived-row-column">
+                <span>ATK SPD</span>
+                <span id="atk-spd"></span>
+              </div>
+              <div class="derived-row-column-spacer">
+                <span class="spacer-item"></span>
+                <span class="spacer-item"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>Ice R</span>
+                <span id="ice-r"></span>
+              </div>
             </div>
             <div class="derived-row">
-              <span>Move SPD</span>
-              <span>100%</span>
-              <span>TownMSP</span>
-              <span>100%</span>
-              <span>Charm R</span>
-              <span>0%</span>
+              <div class="derived-row-column">
+                <span>Cast SPD</span>
+                <span id="cast-spd"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>CastTime</span>
+                <span id="cast-time"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>Thund R</span>
+                <span id="thund-r"></span>
+              </div>
             </div>
             <div class="derived-row">
-              <span>Light R</span>
-              <span>0%</span>
+              <div class="derived-row-column">
+                <span>CD</span>
+                <span id="cooldown"></span>
+              </div>
+              <div class="derived-row-column-spacer">
+                <span class="spacer-item"></span>
+                <span class="spacer-item"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>Psn R</span>
+                <span id="poison-r"></span>
+              </div>
             </div>
             <div class="derived-row">
-              <span>Dark R</span>
-              <span>0%</span>
+              <div class="derived-row-column">
+                <span>MoveSPD</span>
+                <span id="move-spd"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>TownMSP</span>
+                <span id="town-msp"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>Charm R</span>
+                <span id="charm-r"></span>
+              </div>
             </div>
             <div class="derived-row">
-              <span>PDe-B R</span>
-              <span>0%</span>
-              <span>MDe-B R</span>
-              <span>0%</span>
-              <span>Magic R</span>
-              <span>0%</span>
+              <div class="derived-row-column-spacer">
+                <span class="spacer-item"></span>
+                <span class="spacer-item"></span>
+              </div>
+              <div class="derived-row-column-spacer">
+                <span class="spacer-item"></span>
+                <span class="spacer-item"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>Light R</span>
+                <span id="light-r"></span>
+              </div>
+            </div>
+            <div class="derived-row">
+              <div class="derived-row-column">
+                <span>Dark R</span>
+                <span id="dark-r"></span>
+              </div>
+            </div>
+            <div class="derived-row">
+              <div class="derived-row-column">
+                <span>PDe-B R</span>
+                <span id="pde-b-r"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>MDe-B R</span>
+                <span id="mde-b-r"></span>
+              </div>
+              <div class="derived-row-column">
+                <span>Magic R</span>
+                <span id="magic-r"></span>
+              </div>
             </div>
             <!-- Horsemanship -->
-            <div class="horsemanship-row">
-              <span>Horsemanship</span>
-              <span class="re-horse">Re Horse</span>
-              <span id="total-re-horse">10%</span>
+            <div class="derived-row">
+              <div class="derived-row-column">
+                <span>Horse</span>
+                <span id="total-re-horse"></span>
+              </div>
             </div>
           </div>
         </div>
-
-        <!-- RIGHT PANEL: Skills -->
-        <div class="panel panel-right">
-          <h2>Skills</h2>
-          <div id="skills-display">
-            <!-- Skills rendered by JS -->
+          <!-- RIGHT PANEL: Skills -->
+          <div class="panel panel-right">
+            <div id="skills-display">
+              <!-- Skills rendered by JS -->
+            </div>
           </div>
-        </div>
-
         <!-- BOTTOM PANEL: Equipment & Set Bonuses -->
         <div class="panel panel-bottom">
-          <h2>Equipment</h2>
           <div class="equipment-selectors-grid">
             <div class="input-group">
               <label for="equip-weapon">Weapon</label>

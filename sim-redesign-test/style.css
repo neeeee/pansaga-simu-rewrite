@@ -8,7 +8,7 @@ body {
 }
 
 .container {
-  max-width: 900px; /* Reduced max-width to match image proportions */
+  width: 984px;
   margin: auto;
   background: #c0d9a9; /* Main background color from image */
   border: 2px solid #555;
@@ -60,11 +60,13 @@ h1 {
 /* --- Main Calculator Grid --- */
 .calculator-grid {
   display: grid;
-  grid-template-columns: 180px 1fr 180px; /* Fixed left/right, flexible middle */
+  grid-template-columns: 180px 330px 454px; /* Fixed left/right, flexible middle */
   grid-template-rows: auto 1fr; /* Top row auto, bottom row takes remaining space */
   gap: 5px; /* Gap between panels */
   padding: 5px;
   align-items: start; /* Align panels to the top */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .panel {
@@ -80,8 +82,11 @@ h1 {
 }
 
 .panel-middle {
-  grid-column: 2;
-  grid-row: 1; /* Top-middle panel */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto;
 }
 
 .panel-right {
@@ -150,48 +155,51 @@ h1 {
 
 /* --- Middle Panel (Derived Stats) --- */
 .derived-stats-section {
-  display: grid;
-  grid-template-columns: repeat(6, auto); /* Flexible columns for values */
-  gap: 3px 5px; /* Row and column gap */
-  text-align: right;
   font-size: 0.9em;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto;
 }
 
-.derived-row span:nth-child(odd) {
+.derived-row-column span:nth-child(odd) {
+  display: inline-block;
+  min-width: 53px;
+  max-width: 53px;
+  min-height: 17px;
+  max-height: 17px;
   text-align: left; /* Labels align left */
   font-weight: bold;
 }
 
-.derived-row span:nth-child(even) {
-  min-width: 25px; /* Give value fields a min-width */
+.derived-row-column span:nth-child(even) {
+  display: inline-block;
+  min-width: 43px;
+  max-width: 43px;
+  min-height: 17px;
+  max-height: 17px;
+  padding-left: 5px;
+  padding-top: 1px;
   background-color: #fff; /* White background for values */
-  border: 1px solid #777;
-  padding: 1px 2px;
   box-sizing: border-box;
 }
 
-/* Adjustments for rows with specific number of elements */
-.derived-row:nth-child(1), /* LP/MP row */
-.derived-row:nth-child(4) /* MATK row */ {
-  grid-column: span 6; /* Spans all columns */
-  display: grid;
-  grid-template-columns: repeat(6, auto);
-  justify-content: start; /* Align content to start */
-  gap: 3px 5px;
-}
-.derived-row:nth-child(1) span:nth-child(odd),
-.derived-row:nth-child(4) span:nth-child(odd) {
-    grid-column: span 1;
-}
-.derived-row:nth-child(1) span:nth-child(even),
-.derived-row:nth-child(4) span:nth-child(even) {
-    grid-column: span 2;
+.derived-row-column {
+  display: flex;
+  flex-direction: row;
+  min-width: 96px;
+  max-width: 96px;
+  height: 17px;
+  margin-left: 5px;
 }
 
-.derived-row:nth-child(1) span:first-child,
-.derived-row:nth-child(4) span:first-child {
-  padding-left: 5px; /* Indent first label slightly */
+.spacer-item, .derived-row-column-spacer {
+  min-width: 96px;
+  max-width: 96px;
+  height: 17px;
+  margin-left: 5px;
+  background-color: rgba(0,0,0,0.0);
 }
+
 
 
 /* Specific alignment for Horsemanship row */
@@ -244,16 +252,7 @@ h1 {
   font-size: 0.95em;
 }
 
-.skill-row {
-  display: flex;
-  align-items: center;
-  padding: 1px 2px; /* Very tight padding for skill rows */
-  margin-bottom: 1px; /* Very small margin */
-  background-color: #e0f2d4; /* Lighter green for skill rows */
-  border: 1px solid #bbd0ae; /* Subtler border */
-  border-radius: 2px;
-  font-size: 0.9em;
-}
+
 
 .skill-name {
   flex-basis: 45px; /* Shorter name column */
@@ -375,4 +374,72 @@ select {
     background-repeat: no-repeat;
     background-position: right 5px top 50%;
     background-size: 8px auto;
+}
+
+/* --- Unified Row Style --- */
+.sim-row {
+  height: 1.5em;
+  display: flex;
+  align-items: center;
+  font-size: 0.95em;
+  margin: 0;
+  padding: 0 4px;
+  box-sizing: border-box;
+}
+
+/* Update stat, derived, and skill rows to use .sim-row */
+.panel-left .stat-row-top,
+.stat-input-row,
+.derived-row {
+  height: 1.5em;
+  display: flex;
+  align-items: center;
+  font-size: 0.95em;
+  margin: 0.5em;
+  padding: 0 4px;
+  box-sizing: border-box;
+}
+
+.skill-row {
+  display: grid;
+  grid-template-columns: 20% 30% 10% 40%;
+  grid-template-rows: repeat(1, 1fr);
+  gap: 1px;  padding: 1px 2px; /* Very tight padding for skill rows */
+  height: 1.5em;
+  box-sizing: border-box;
+  margin-bottom: 1px; /* Very small margin */
+  background-color: #e0f2d4; /* Lighter green for skill rows */
+  border: 1px solid #bbd0ae; /* Subtler border */
+  border-radius: 2px;
+  font-size: 0.9em;
+}
+/* Remove conflicting paddings/margins */
+.panel-left .stat-row-top,
+.stat-input-row,
+.derived-row,
+.skill-row {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* Remove extra margin from .stat-input-row */
+.stat-input-row {
+  margin-bottom: 0;
+}
+
+/* Remove extra margin from .panel-left .stat-row-top */
+.panel-left .stat-row-top {
+  margin-bottom: 0;
+}
+
+/* Remove extra margin from .derived-row */
+.derived-row {
+  margin-bottom: 0;
+}
+
+/* Optionally, make .panel use grid for inner content */
+.panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
