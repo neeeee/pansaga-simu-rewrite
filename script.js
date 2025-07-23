@@ -101,6 +101,7 @@ const elements = {
     townMsp: document.getElementById("town-msp"),
     charmR: document.getElementById("charm-r"),
     lightR: document.getElementById("light-r"),
+    darkR: document.getElementById("dark-r"),
   },
   setBonusList: document.getElementById("set-bonus-list"),
   skillsDisplay: document.getElementById("skills-display"),
@@ -559,9 +560,7 @@ function calculateDerivedStats() {
   stats.redMp = 100;
 
   // ATK Calculations
-  const weapon = items[character.equipment.weapon];
-  const weaponAtk = weapon?.stats?.atk || 2;
-  stats.atk = Math.floor(stats.str / 2) + weaponAtk;
+  stats.atk = Math.floor(stats.str / 2); // STR/2 only, gear added separately when equipped
   
   // Front ATK bonus - base 0%
   stats.frontAtk = 0;
@@ -627,7 +626,7 @@ function calculateDerivedStats() {
 
   // Accuracy
   stats.acc = level + stats.dex;
-  stats.accFront = Math.floor(stats.acc * 1.1);
+  stats.accFront = stats.acc; // Same as acc, only changes with gear
 
   // Critical calculations
   stats.crit = 1 + Math.floor(stats.dex / 10);
@@ -668,6 +667,7 @@ function calculateDerivedStats() {
   stats.poisonR = 0;
   stats.charmR = 0;
   stats.lightR = 0;
+  stats.darkR = 0;
 
   // Re Horse (mounted movement speed)
   stats.reHorse = 10;
@@ -775,7 +775,7 @@ function updateUI(bonuses) {
   elements.outputs.redMp.textContent = Math.floor(character.finalStats.redMp);
   elements.outputs.frontAtk.textContent = Math.floor(character.finalStats.frontAtk);
   elements.outputs.backAtk.textContent = Math.floor(character.finalStats.backAtk);
-  elements.outputs.atk.textContent = Math.floor(character.finalStats.maxAtk);
+  // Max ATK is displayed in the first row, no need to update atk element again
   elements.outputs.frontDef.textContent = Math.floor(character.finalStats.frontDef);
   elements.outputs.backDef.textContent = Math.floor(character.finalStats.backDef);
   elements.outputs.phyRes.textContent = Math.floor(character.finalStats.phyRes) + "%";
@@ -800,6 +800,7 @@ function updateUI(bonuses) {
   elements.outputs.townMsp.textContent = Math.floor(character.finalStats.townMsp) + "%";
   elements.outputs.charmR.textContent = Math.floor(character.finalStats.charmR) + "%";
   elements.outputs.lightR.textContent = Math.floor(character.finalStats.lightR) + "%";
+  elements.outputs.darkR.textContent = Math.floor(character.finalStats.darkR) + "%";
 
   elements.points.stat.textContent = `${character.points.totalStat - character.points.spentStat}/${character.points.totalStat}`;
   elements.points.stat.classList.toggle(
