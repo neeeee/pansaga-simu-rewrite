@@ -167,6 +167,56 @@ export const gameData = {
     { id: 4, name: "Enkidu" },
     { id: 5, name: "Lapin" },
   ],
+  racialSkills: {
+    0: {
+      name: "Human",
+      skills: [
+        { id: 0, name: "Fighting Spirit", effect: "placeholder" },
+        { id: 1, name: "Adaptibility", effect: "placeholder" },
+        { id: 2, name: "Alchemy", effect: "placeholder" },
+      ],
+    },
+    1: {
+      name: "Elf",
+      skills: [
+        { id: 0, name: "Eagle Eye", effect: "placeholder" },
+        { id: 1, name: "Nature's Harmony", effect: "placeholder" },
+        { id: 2, name: "Steadfastness", effect: "placeholder" },
+      ],
+    },
+    2: {
+      name: "Dwarf",
+      skills: [
+        { id: 0, name: "StrongHearted", effect: "placeholder" },
+        { id: 1, name: "Filial Piety", effect: "placeholder" },
+        { id: 2, name: "Dwarf Spirit", effect: "placeholder" },
+      ],
+    },
+    3: {
+      name: "Myrine",
+      skills: [
+        { id: 0, name: "Acute Senses", effect: "placeholder" },
+        { id: 1, name: "Calmness", effect: "placeholder" },
+        { id: 2, name: "Sharpness", effect: "placeholder" },
+      ],
+    },
+    4: {
+      name: "Enkidu",
+      skills: [
+        { id: 0, name: "Stone Skin", effect: "placeholder" },
+        { id: 1, name: "Strong Arm", effect: "placeholder" },
+        { id: 2, name: "Lapin Support", effect: "placeholder" },
+      ],
+    },
+    5: {
+      name: "Lapin",
+      skills: [
+        { id: 0, name: "Magic Resistance", effect: "placeholder" },
+        { id: 1, name: "Inner Light", effect: "placeholder" },
+        { id: 2, name: "Enkidu Support", effect: "placeholder" },
+      ],
+    },
+  },
   raceBaseStats: {
     0: { sta: 5, str: 5, agi: 5, dex: 5, spr: 5, int: 5 }, // Human
     1: { sta: 3, str: 3, agi: 6, dex: 4, spr: 7, int: 7 }, // Elf
@@ -176,35 +226,83 @@ export const gameData = {
     5: { sta: 3, str: 1, agi: 6, dex: 5, spr: 9, int: 6 }, // Lapin
   },
 
+  skills: {
+    0: {
+      name: "Melee",
+      skills: [
+        { id: 1, name: "Slash" },
+        { id: 2, name: "Thrust" },
+        { id: 3, name: "Cleave" },
+        { id: 4, name: "Bash" },
+        { id: 5, name: "Defend" },
+      ],
+    },
+    6: {
+      name: "Technique",
+      skills: [
+        { id: 7, name: "Shot" },
+        { id: 8, name: "Alchemy" },
+        { id: 9, name: "Assassination" },
+        { id: 10, name: "Trap" },
+        { id: 11, name: "Dodge" },
+      ],
+    },
+    12: {
+      name: "Grace",
+      skills: [
+        { id: 13, name: "Banevolence" },
+        { id: 14, name: "Blessing" },
+        { id: 15, name: "Exorcism" },
+        { id: 16, name: "Hymn" },
+      ],
+    },
+    17: {
+      name: "Magic",
+      skills: [
+        { id: 18, name: "Elemental" },
+        { id: 19, name: "Invocation" },
+        { id: 20, name: "Dark" },
+        { id: 21, name: "Conflagration" },
+      ],
+    },
+    22: {
+      name: "Special",
+      skills: [
+        { id: 23, name: "Racial" },
+        { id: 24, name: "Horsemanship" },
+      ],
+    },
+  },
+
   jobs: [
     { id: 0, name: "Warrior", baseClass: 0 },
-    { id: 1, name: "├─ Gladiator", baseClass: 0 },
-    { id: 2, name: "│  ├─ Juggernaut", baseClass: 0 },
-    { id: 3, name: "│  └─ Dragoon", baseClass: 0 },
-    { id: 4, name: "└─ Knight", baseClass: 0 },
-    { id: 5, name: "│  ├─ Warlord", baseClass: 0 },
-    { id: 6, name: "│  └─ Paladin", baseClass: 0 },
+    { id: 1, name: "  Gladiator", baseClass: 0 },
+    { id: 2, name: "    Juggernaut", baseClass: 0 },
+    { id: 3, name: "    Dragoon", baseClass: 0 },
+    { id: 4, name: "  Knight", baseClass: 0 },
+    { id: 5, name: "    Warlord", baseClass: 0 },
+    { id: 6, name: "    Paladin", baseClass: 0 },
     { id: 7, name: "Scout", baseClass: 1 },
-    { id: 8, name: "├─ Archer", baseClass: 1 },
-    { id: 9, name: "│  ├─ Sniper", baseClass: 1 },
-    { id: 10, name: "│ └─ Hunter", baseClass: 1 },
-    { id: 11, name: "└─ Provocateur", baseClass: 1 },
-    { id: 12, name: "│  ├─ Assassin", baseClass: 1 },
-    { id: 13, name: "│  └─ Saboteur", baseClass: 1 },
+    { id: 8, name: "  Archer", baseClass: 1 },
+    { id: 9, name: "    Sniper", baseClass: 1 },
+    { id: 10, name: "   Hunter", baseClass: 1 },
+    { id: 11, name: " Provocateur", baseClass: 1 },
+    { id: 12, name: "   Assassin", baseClass: 1 },
+    { id: 13, name: "   Saboteur", baseClass: 1 },
     { id: 14, name: "Acolyte", baseClass: 2 },
-    { id: 15, name: "├─ Priest", baseClass: 2 },
-    { id: 16, name: "│ ├─ Cleric", baseClass: 2 },
-    { id: 17, name: "│ └─ Enchanter", baseClass: 2 },
-    { id: 18, name: "└─ Ascetic", baseClass: 2 },
-    { id: 19, name: "│  ├─ Monk", baseClass: 2 },
-    { id: 20, name: "│  └─ Exorcist", baseClass: 2 },
+    { id: 15, name: " Priest", baseClass: 2 },
+    { id: 16, name: "   Cleric", baseClass: 2 },
+    { id: 17, name: "   Enchanter", baseClass: 2 },
+    { id: 18, name: " Ascetic", baseClass: 2 },
+    { id: 19, name: "   Monk", baseClass: 2 },
+    { id: 20, name: "   Exorcist", baseClass: 2 },
     { id: 21, name: "Mage", baseClass: 3 },
-    { id: 22, name: "├─ Wizard", baseClass: 3 },
-    { id: 23, name: "│ ├─ Warlock", baseClass: 3 },
-    { id: 24, name: "│ └─ Conjurer", baseClass: 3 },
-    { id: 25, name: "└─ Sorcerer", baseClass: 3 },
-    { id: 26, name: "│  ├─ Corruptor", baseClass: 3 },
-    { id: 27, name: "│  └─ Shadowblade", baseClass: 3 },
+    { id: 22, name: "  Wizard", baseClass: 3 },
+    { id: 23, name: "   Warlock", baseClass: 3 },
+    { id: 24, name: "   Conjurer", baseClass: 3 },
+    { id: 25, name: "  Sorcerer", baseClass: 3 },
+    { id: 26, name: "   Corruptor", baseClass: 3 },
+    { id: 27, name: "   Shadowblade", baseClass: 3 },
   ],
 
   jobBaseStatModifiers: {
@@ -252,109 +350,4 @@ export const gameData = {
     26: [166, 203, 3.53, 9.4, 4.84, 12.3], // Jester
     27: [151, 195, 3.339, 11.23, 5.26, 10.14], // Calamity
   },
-  skills: {
-    // Melee Category (ID 0)
-    0: {
-      name: "Melee",
-      skills: [
-        { id: 1, name: "Slas", minAdeptness: 5, maxPotential: 25 },
-        { id: 2, name: "Thru", minAdeptness: 2, maxPotential: 25 },
-        { id: 3, name: "Clea", minAdeptness: 5, maxPotential: 25 },
-        { id: 4, name: "Bash", minAdeptness: 2, maxPotential: 20 },
-        { id: 5, name: "Defe", minAdeptness: 4, maxPotential: 25 },
-      ],
-    },
-    // Technique Category (ID 6)
-    6: {
-      name: "Technique",
-      skills: [
-        { id: 7, name: "Shot", minAdeptness: 5, maxPotential: 25 },
-        { id: 8, name: "Alch", minAdeptness: 4, maxPotential: 20 },
-        { id: 9, name: "Assa", minAdeptness: 3, maxPotential: 25 },
-        { id: 10, name: "Trap", minAdeptness: 0, maxPotential: 20 },
-        { id: 11, name: "Dodg", minAdeptness: 3, maxPotential: 25 },
-      ],
-    },
-    // Grace Category (ID 12)
-    12: {
-      name: "Grace",
-      skills: [
-        { id: 13, name: "Bane", minAdeptness: 5, maxPotential: 25 },
-        { id: 14, name: "Bles", minAdeptness: 5, maxPotential: 25 },
-        { id: 15, name: "Exor", minAdeptness: 5, maxPotential: 25 },
-        { id: 16, name: "Hymn", minAdeptness: 0, maxPotential: 0 }, // Hymn is unique, often starts at 0/0 and is increased by job/racial skills
-      ],
-    },
-    // Magic Category (ID 17)
-    17: {
-      name: "Magic",
-      skills: [
-        { id: 18, name: "Elem", minAdeptness: 5, maxPotential: 25 },
-        { id: 19, name: "Invo", minAdeptness: 5, maxPotential: 25 },
-        { id: 20, name: "Dark", minAdeptness: 5, maxPotential: 20 },
-        { id: 21, name: "Conf", minAdeptness: 5, maxPotential: 25 },
-      ],
-    },
-    // Special Category (ID 22)
-    22: {
-      name: "Special",
-      skills: [
-        { id: 23, name: "Raci", minAdeptness: 0, maxPotential: 0 },
-        { id: 24, name: "Hors", minAdeptness: 0, maxPotential: 10 },
-      ],
-    },
-  },
-
-  // --- MOCK ITEM DATABASE ---
-  items: {
-    // Weapons
-    "weapon-none": { id: "weapon-none", name: "None", slot: "weapon" },
-    "weapon-sword": {
-      id: "weapon-sword",
-      name: "Basic Sword",
-      slot: "weapon",
-      stats: { atk: 50 },
-    },
-    // Helmets
-    "head-none": { id: "head-none", name: "None", slot: "head" },
-    "head-falcon-mask": {
-      id: "head-falcon-mask",
-      name: "Falcon Mask",
-      slot: "head",
-      stats: { def: 15, dex: 5 },
-    },
-    // Torsos
-    "torso-none": { id: "torso-none", name: "None", slot: "torso" },
-    "torso-gothic-plate": {
-      id: "torso-gothic-plate",
-      name: "Gothic Plate",
-      slot: "torso",
-      stats: { def: 40, sta: 5 },
-    },
-    "torso-falcon-jacket": {
-      id: "torso-falcon-jacket",
-      name: "Falcon Jacket",
-      slot: "torso",
-      stats: { def: 25, agi: 5 },
-    },
-  },
-
-  setBonuses: [
-    {
-      name: "Falcon Set Bonus",
-      requiredItems: ["head-falcon-mask", "torso-falcon-jacket"],
-      bonus: {
-        description: "Falcon Set: +15 Accuracy, +5% MP Reduction",
-        stats: { acc: 15, reduceMp: -5 },
-      },
-    },
-    {
-      name: "Gothic Set Bonus",
-      requiredItems: ["torso-gothic-plate"],
-      bonus: {
-        description: "Gothic Bonus: +1 STA, -3% Physical Damage Taken",
-        stats: { sta: 1, resPhyDamP: -3 },
-      },
-    },
-  ],
 };

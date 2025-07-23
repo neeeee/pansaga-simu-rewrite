@@ -1,12 +1,18 @@
 import { gameData } from "./gameData.js";
+import { skills } from "./jobSkillValues.js";
+import { items } from "./equipData.js";
+import { setBonuses } from "./setBonuses.js";
 
+// --- CONSTANTS ---
 const PRIMARY_STATS = ["sta", "str", "agi", "dex", "spr", "int"];
 
+// --- CHARACTER STATE ---
 const character = {
-  level: 1,
-  raceId: 0,
-  jobId: 0,
-  addedStats: { sta: 0, str: 0, agi: 0, dex: 0, spr: 0, int: 0 },
+  level: 1, // Default to 50 for the image
+  raceId: 0, // Default Human
+  racialSkillId: 0, // Default Fighting Spirit
+  jobId: 0, // Default Monk (job ID 19)
+  addedStats: { sta: 0, str: 0, agi: 0, dex: 0, spr: 0, int: 0 }, // Set to 0 added for the image
   equipment: {
     weapon: "weapon-none",
     head: "head-none",
@@ -28,7 +34,12 @@ const character = {
 const elements = {
   level: document.getElementById("level"),
   race: document.getElementById("race"),
+  racialSkill: document.getElementById("racial-skill"), // NEW
   job: document.getElementById("job"),
+  displayRace: document.getElementById("display-race"), // NEW
+  displayRacialSkill: document.getElementById("display-racial-skill"), // NEW
+  displayJob: document.getElementById("display-job"), // NEW
+
   addedStatInputs: {
     sta: document.getElementById("base-sta"),
     str: document.getElementById("base-str"),
@@ -53,94 +64,186 @@ const elements = {
     mp: document.getElementById("total-mp"),
     atk: document.getElementById("total-atk"),
     def: document.getElementById("total-def"),
+    matk: document.getElementById("total-matk"), // Added MATK display
     dodge: document.getElementById("total-dodge"),
     acc: document.getElementById("total-acc"),
+    accFront: document.getElementById("total-acc-front"), // Added Acc/Front
     crit: document.getElementById("total-crit"),
+    reHorse: document.getElementById("total-re-horse"), // Added Re Horse
+    
+    // Additional derived stats
+    pot: document.getElementById("pot"),
+    lpHeal: document.getElementById("lp-heal"),
+    redMp: document.getElementById("red-mp"),
+    frontAtk: document.getElementById("front-atk"),
+    backAtk: document.getElementById("back-atk"),
+    maxAtk: document.getElementById("max-atk"),
+    frontMatk: document.getElementById("front-matk"),
+    backMatk: document.getElementById("back-matk"),
+    frontDef: document.getElementById("front-def"),
+    backDef: document.getElementById("back-def"),
+    phyRes: document.getElementById("phy-res"),
+    magRes: document.getElementById("mag-res"),
+    criD: document.getElementById("cri-d"),
+    criRes: document.getElementById("cri-res"),
+    cdamRes: document.getElementById("cdam-res"),
+    melEva: document.getElementById("mel-eva"),
+    ranEva: document.getElementById("ran-eva"),
+    magEva: document.getElementById("mag-eva"),
+    melee: document.getElementById("melee"),
+    range: document.getElementById("range"),
+    fireR: document.getElementById("fire-r"),
+    atkSpd: document.getElementById("atk-spd"),
+    iceR: document.getElementById("ice-r"),
+    castSpd: document.getElementById("cast-spd"),
+    castTime: document.getElementById("cast-time"),
+    thundR: document.getElementById("thund-r"),
+    cooldown: document.getElementById("cooldown"),
+    poisonR: document.getElementById("poison-r"),
+    moveSpd: document.getElementById("move-spd"),
+    townMsp: document.getElementById("town-msp"),
+    charmR: document.getElementById("charm-r"),
+    lightR: document.getElementById("light-r"),
   },
   setBonusList: document.getElementById("set-bonus-list"),
-  skillsDisplay: document.getElementById("skills-display"), 
+  skillsDisplay: document.getElementById("skills-display"),
   points: {
     stat: document.getElementById("points-stat"),
     skill: document.getElementById("points-skill"),
-    unallocated: document.getElementById("points-unallocated")
+    unallocated: document.getElementById("points-unallocated"),
+  },
+  resetButtons: {
+    statusPoints: document.getElementById("reset-status-points"),
+    abilityPoints: document.getElementById("reset-ability-points"),
   },
 };
 
+/**
+ * Initializes skill levels based on job and sets up default values.
+ * This function is critical for setting the "base" skill levels for a job.
+ */
 function initializeSkills() {
-  character.skills = {}; // Reset skills
-  for (const categoryId in gameData.skills) {
-    const category = gameData.skills[categoryId];
+  character.skills = {}; // Reset all skills
+  const jobInfo = gameData.jobs[character.jobId];
+  const jobSkillData = skills[character.jobId];
+
+  if (!jobSkillData) {
+    console.warn(`No skill data found for job ID ${character.jobId}`);
+    return;
+  }
+
+  // Initialize all skills with their base values from jobSkillValues.js
+  for (const categoryId in jobSkillData) {
+    if (categoryId === 'name') continue; // Skip the job name
+    
+    const category = jobSkillData[categoryId];
     for (const skillData of category.skills) {
-      // Default to 0 for player allocated points
-      character.skills[skillData.id] = { adeptness: 0, potential: 0 };
+      character.skills[skillData.id] = {
+        adeptness: skillData.minAdeptness, // Base adeptness from job
+        potential: skillData.minAdeptness, // Keep potential for compatibility, but it's not used
+      };
     }
   }
 }
 
+/**
+ * Renders the skill panel based on character.skills state.
+ */
 function renderSkillsPanel() {
   let html = "";
-  let totalAdeptnessSum = 0; // For category header
-  let totalPotentialSum = 0; // For category header
 
   for (const categoryId in gameData.skills) {
     const category = gameData.skills[categoryId];
     let categoryAdeptnessSum = 0;
-    let categoryPotentialSum = 0;
+    let categoryMaxPotentialSum = 0;
 
-    html += `<div class="skill-category">
+    // Calculate actual category sums based on current character skills and job data
+    for (const skillData of category.skills) {
+      const currentSkill = character.skills[skillData.id];
+      if (currentSkill) {
+        categoryAdeptnessSum += currentSkill.adeptness;
+        
+        // Get max potential from job data
+        const jobSkillData = skills[character.jobId];
+        let maxPotential = 0;
+        if (jobSkillData) {
+          for (const catId in jobSkillData) {
+            if (catId === 'name') continue;
+            const cat = jobSkillData[catId];
+            const skill = cat.skills.find(s => s.id === skillData.id);
+            if (skill) {
+              maxPotential = skill.maxPotential;
+              break;
+            }
+          }
+        }
+        categoryMaxPotentialSum += maxPotential;
+      }
+    }
+
+    // Category Header - show the calculated totals
+    html += `<div class="sim-row skill-category">
                 <span>${category.name}</span>
-                <span id="category-total-${categoryId}">0 / 0</span>
+                <span>${categoryAdeptnessSum} / ${categoryMaxPotentialSum}</span>
              </div>`;
 
     for (const skillData of category.skills) {
       const currentSkill = character.skills[skillData.id];
+      if (!currentSkill) continue;
+      
       const currentAdeptness = currentSkill.adeptness;
-      const currentPotential = currentSkill.potential;
+      
+      // Get max potential from job data
+      const jobSkillData = skills[character.jobId];
+      let maxPotential = 0;
+      let baseAdeptness = 0;
+      if (jobSkillData) {
+        for (const catId in jobSkillData) {
+          if (catId === 'name') continue;
+          const cat = jobSkillData[catId];
+          const skill = cat.skills.find(s => s.id === skillData.id);
+          if (skill) {
+            maxPotential = skill.maxPotential;
+            baseAdeptness = skill.minAdeptness;
+            break;
+          }
+        }
+      }
 
-      // Calculate the cost to increase adeptness/potential by 1
-      const adeptnessCost =
-        gameData.statPointCosts[currentAdeptness + 1]?.[0] || "-";
-      const potentialCost =
-        gameData.statPointCosts[currentPotential + 1]?.[0] || "-";
-
-      // Calculate bar widths (as percentages of maxSkillValue)
-      const adeptnessBarWidth =
-        (currentAdeptness / gameData.maxSkillValue) * 100;
-      const potentialLinePos =
-        (currentPotential / gameData.maxSkillValue) * 100;
+      // Calculate bar width as percentage of max potential
+      const barWidth = maxPotential > 0 ? (currentAdeptness / maxPotential) * 100 : 0;
+      
+      // Determine bar color based on skill level
+      let barClass = "skill-level-line";
+      if (currentAdeptness >= maxPotential) {
+        barClass += " max-gradient"; // Black to blue gradient when at max
+      } else if (currentAdeptness > baseAdeptness) {
+        barClass += " filled-gradient"; // Green gradient when filled
+      } else {
+        barClass += " empty"; // Empty when at base level
+      }
 
       html += `
-        <div class="skill-row">
-          <span class="skill-name">${skillData.name}</span>
-          <div class="skill-bar-container">
-            <div class="skill-adeptness-bar" style="width: ${adeptnessBarWidth}%;"></div>
-            <div class="skill-potential-line" style="left: ${potentialLinePos}%;"></div>
+        <div class="sim-row skill-row">
+          <span class="skill-name">${skillData.name.substring(0, 4)}</span>
+          <div class="skill-level-line-container">
+            <div class="${barClass}" style="width: ${barWidth}%;"></div>
           </div>
-          <span class="skill-level-display">
-            ${currentAdeptness} / ${currentPotential}
-          </span>
-          <div class="skill-controls">
-            <button data-skill-id="${skillData.id}" data-type="adeptness" data-amount="-1">-</button>
-            <button data-skill-id="${skillData.id}" data-type="adeptness" data-amount="1">+</button>
+          <span class="skill-numerical-display">${currentAdeptness} / ${maxPotential}</span>
+          <div class="skill-add-sub-controls">
+            <button class="skill-btn" data-skill-id="${skillData.id}" data-type="adeptness" data-amount="-1">-</button>
+            <button class="skill-btn" data-skill-id="${skillData.id}" data-type="adeptness" data-amount="1">+</button>
+            <span class="cost-display">SP: 1</span>
+            <span>1</span> <!-- The '1' from the image -->
           </div>
-          <span class="skill-cost" title="Cost to increase Adeptness by 1">SP: ${adeptnessCost}</span>
-          <div class="skill-controls">
-            <button data-skill-id="${skillData.id}" data-type="potential" data-amount="-1">-</button>
-            <button data-skill-id="${skillData.id}" data-type="potential" data-amount="1">+</button>
-          </div>
-          <span class="skill-cost" title="Cost to increase Potential by 1">UP: ${potentialCost}</span>
         </div>
       `;
-      categoryAdeptnessSum += currentAdeptness;
-      categoryPotentialSum += currentPotential;
     }
-    // Update category totals after the loop to ensure the element exists
-    // We'll update this in the updateUI function for live totals
   }
   elements.skillsDisplay.innerHTML = html;
 
-  // Add event listeners dynamically after rendering
-  elements.skillsDisplay.querySelectorAll("button").forEach((button) => {
+  // Add event listeners dynamically for the new buttons
+  elements.skillsDisplay.querySelectorAll(".skill-btn").forEach((button) => {
     button.addEventListener("click", handleSkillButtonClick);
   });
 }
@@ -151,45 +254,67 @@ function renderSkillsPanel() {
 function handleSkillButtonClick(event) {
   const button = event.target;
   const skillId = parseInt(button.dataset.skillId, 10);
-  const type = button.dataset.type; // 'adeptness' or 'potential'
+  const type = button.dataset.type; // 'adeptness' only
   const amount = parseInt(button.dataset.amount, 10);
 
-  // Get the current skill values
   const skill = character.skills[skillId];
   if (!skill) return;
 
   const currentValue = skill[type];
   const newValue = currentValue + amount;
 
-  // Validate limits and points
-  const cost = gameData.statPointCosts[newValue]?.[0]; // Cost for the new level
-  let canAfford = true;
-
-  if (type === "adeptness") {
-    // Check if new value is within limits
-    if (newValue < 0 || newValue > gameData.maxSkillValue) canAfford = false;
-    // Check if enough Skill Points
-    if (amount > 0 && character.points.spentSkill + cost > character.points.totalSkill) canAfford = false;
-  } else if (type === "potential") {
-    // Check if new value is within limits
-    if (newValue < 0 || newValue > gameData.maxSkillValue) canAfford = false;
-    // Check if enough Unallocated Points
-    if (amount > 0 && character.points.spentUnallocated + cost > character.points.totalUnallocated) canAfford = false;
-  }
-
-  if (canAfford) {
-    if (amount > 0) {
-      if (type === "adeptness") character.points.spentSkill += cost;
-      else character.points.spentUnallocated += cost;
-    } else {
-      // For decreasing, we refund points
-      const refundCost = gameData.statPointCosts[currentValue]?.[0]; // Cost that was originally paid for current level
-      if (type === "adeptness") character.points.spentSkill -= refundCost;
-      else character.points.spentUnallocated -= refundCost;
+  // Get the base values and max potential for this skill from the current job
+  const jobSkillData = skills[character.jobId];
+  let baseAdeptnessForJob = 0;
+  let maxPotentialForJob = gameData.maxSkillValue;
+  
+  if (jobSkillData) {
+    // Find the skill in the job data
+    for (const categoryId in jobSkillData) {
+      if (categoryId === 'name') continue;
+      const category = jobSkillData[categoryId];
+      const skillData = category.skills.find(s => s.id === skillId);
+      if (skillData) {
+        baseAdeptnessForJob = skillData.minAdeptness;
+        maxPotentialForJob = skillData.maxPotential;
+        break;
+      }
     }
-    skill[type] = newValue;
-    runCalculations(); // Recalculate and re-render
   }
+
+  // Check limits first
+  if (newValue < 0) {
+    return; // Cannot go below 0
+  }
+  
+  if (type === "adeptness") {
+    if (newValue < baseAdeptnessForJob || newValue > maxPotentialForJob) {
+      return; // Cannot go below base adeptness or above max potential
+    }
+  }
+
+  const cost = 1; // Fixed cost of 1 point per level increase
+
+  if (amount > 0) {
+    // Adding points
+    if (type === "adeptness") {
+      if (character.points.spentSkill + cost <= character.points.totalSkill) {
+        character.points.spentSkill += cost;
+        skill[type] = newValue;
+      } else {
+        return; // Not enough Skill Points
+      }
+    }
+  } else {
+    // Subtracting points (refund)
+    // Base values are already checked above, so we can proceed with the refund
+
+    const refundCost = 1; // Fixed refund of 1 point per level
+    if (type === "adeptness") character.points.spentSkill -= refundCost;
+    skill[type] = newValue;
+  }
+
+  runCalculations(); // Recalculate and re-render
 }
 
 /**
@@ -200,34 +325,114 @@ function populateDropdowns() {
   elements.race.innerHTML = gameData.races
     .map((r) => `<option value="${r.id}">${r.name}</option>`)
     .join("");
+  elements.race.value = character.raceId; // Set initial value
 
   // Jobs
   elements.job.innerHTML = gameData.jobs
     .map((j) => `<option value="${j.id}">${j.name}</option>`)
     .join("");
+  elements.job.value = character.jobId; // Set initial value
+
+  // Racial Skills - Dynamically populate based on selected race
+  populateRacialSkillDropdown();
 
   // Equipment
   const itemsBySlot = {};
-  for (const item of Object.values(gameData.items)) {
+  for (const item of Object.values(items)) {
     if (!itemsBySlot[item.slot]) itemsBySlot[item.slot] = [];
     itemsBySlot[item.slot].push(item);
   }
 
   for (const slot in elements.equipmentSelectors) {
-    elements.equipmentSelectors[slot].innerHTML = itemsBySlot[slot]
-      .map((item) => `<option value="${item.id}">${item.name}</option>`)
-      .join("");
+    if (itemsBySlot[slot]) {
+      // Sort items so "None" options appear first
+      const sortedItems = itemsBySlot[slot].sort((a, b) => {
+        if (a.name === "None") return -1;
+        if (b.name === "None") return 1;
+        return a.name.localeCompare(b.name);
+      });
+      
+      elements.equipmentSelectors[slot].innerHTML = sortedItems
+        .map((item) => `<option value="${item.id}">${item.name}</option>`)
+        .join("");
+      elements.equipmentSelectors[slot].value = character.equipment[slot]; // Set initial value
+    } else {
+      console.warn(`No items found for slot: ${slot}`);
+    }
   }
+}
+
+/**
+ * Dynamically populates the racial skill dropdown based on the selected race.
+ * This function also determines and sets the *default* racial skill for the job.
+ */
+function populateRacialSkillDropdown() {
+  const currentRaceId = parseInt(elements.race.value, 10);
+  const currentJobId = parseInt(elements.job.value, 10);
+  let racialSkillsForRace = [];
+  let defaultRacialSkillId = 0; // Default to the first racial skill for the race
+
+  // Map Job IDs to their base racial skill types (based on ps_sim_data.js structure)
+  // This is a manual mapping based on Skill['D'][raceId][jobSkillIndex]
+  const raceJobSkillMap = {
+    0: { 0: "Fighting Spirit", 1: "Adaptability", 2: "Alchemy" }, // Human
+    1: { 0: "Harmony with Nature", 1: "Eagle Eye", 2: "Steadfastness" }, // Elf
+    2: { 0: "Stronghearted", 1: "Dwarf Spirit", 2: "Filial Piety" }, // Dwarf
+    3: { 0: "Acute Senses", 1: "Calmness", 2: "Sharpness" }, // Myrine
+    4: { 0: "Stone Skin", 1: "Strong Arm", 2: "Lapin Support" }, // Enkidu
+    5: { 0: "Magic Resistance", 1: "Inner Light", 2: "Enkidu Support" }, // Lapin
+  };
+
+  if (raceJobSkillMap[currentRaceId]) {
+    racialSkillsForRace = Object.values(raceJobSkillMap[currentRaceId]);
+  }
+
+  // Determine the default selected racial skill based on the *job*
+  // This logic is complex in the original, often tied to job-specific skill trees
+  // For the purpose of the image, we'll hardcode based on the Monk example: Fighting Spirit (Human)
+
+  elements.racialSkill.innerHTML = racialSkillsForRace
+    .map((skillName, index) => `<option value="${index}">${skillName}</option>`)
+    .join("");
+
+  elements.racialSkill.value = defaultRacialSkillId; // Set the default based on job
+  character.racialSkillId = defaultRacialSkillId; // Update character state
+
+  // Update display text
+  elements.displayRace.textContent = gameData.races[currentRaceId].name;
+  elements.displayRacialSkill.textContent =
+    racialSkillsForRace[character.racialSkillId] || "";
+  elements.displayJob.textContent = gameData.jobs[currentJobId].name;
 }
 
 function readInputs() {
   character.level = parseInt(elements.level.value, 10);
   character.raceId = parseInt(elements.race.value, 10);
+  character.racialSkillId = parseInt(elements.racialSkill.value, 10); // NEW
   character.jobId = parseInt(elements.job.value, 10);
 
+  // Get the racial base stats for the current race
+  const raceStats = gameData.raceBaseStats[character.raceId];
+  const jobInfo = gameData.jobs[character.jobId];
+  const jobModifiers = gameData.jobBaseStatModifiers[jobInfo.baseClass];
+
   for (const stat of PRIMARY_STATS) {
-    character.addedStats[stat] =
-      parseInt(elements.addedStatInputs[stat].value, 10) || 0;
+    // Calculate the base stat (racial + job modifier)
+    const baseStat = raceStats[stat] + jobModifiers[stat];
+    
+    // Read the total stat value from the input field
+    let totalStat = parseInt(elements.addedStatInputs[stat].value, 10) || 0;
+    
+    // Enforce minimum: total stat cannot go below base stat
+    totalStat = Math.max(baseStat, totalStat);
+    
+    // Update the input field if it was below minimum
+    if (totalStat !== parseInt(elements.addedStatInputs[stat].value, 10)) {
+      elements.addedStatInputs[stat].value = totalStat;
+    }
+    
+    // Calculate additional stats as the difference between total and base
+    character.addedStats[stat] = Math.max(0, totalStat - baseStat);
   }
 
   for (const slot in elements.equipmentSelectors) {
@@ -261,10 +466,12 @@ function getCombinedBaseStats() {
   const combined = {};
   const raceStats = gameData.raceBaseStats[character.raceId];
   const jobInfo = gameData.jobs[character.jobId];
-  const jobModifiers = gameData.jobBaseStatModifiers[jobInfo.baseClass];
+  const jobModifiers = gameData.jobBaseStatModifiers[jobInfo.baseClass]; // Use baseClass from jobInfo
 
   for (const stat of PRIMARY_STATS) {
-    combined[stat] = raceStats[stat] + jobModifiers[stat];
+    // Only apply job modifiers at level 10 and above
+    const jobModifier = character.level >= 10 ? jobModifiers[stat] : 0;
+    combined[stat] = raceStats[stat] + jobModifier;
   }
   return combined;
 }
@@ -275,7 +482,7 @@ function getCombinedBaseStats() {
 function applyEquipmentBonuses(bonuses) {
   for (const slot in character.equipment) {
     const itemId = character.equipment[slot];
-    const item = gameData.items[itemId];
+    const item = items[itemId];
     if (item && item.stats) {
       for (const stat in item.stats) {
         bonuses.stats[stat] = (bonuses.stats[stat] || 0) + item.stats[stat];
@@ -289,9 +496,10 @@ function applyEquipmentBonuses(bonuses) {
  */
 function applySetBonuses(bonuses) {
   const equippedItemIds = new Set(Object.values(character.equipment));
-  for (const set of gameData.setBonuses) {
+  
+  for (const set of setBonuses) {
     const hasAllItems = set.requiredItems.every((itemId) =>
-      equippedItemIds.has(itemId)
+      equippedItemIds.has(itemId),
     );
     if (hasAllItems) {
       bonuses.description.push(set.bonus.description);
@@ -332,51 +540,159 @@ function calculateDerivedStats() {
   const mod =
     gameData.jobModifiers[character.jobId] || gameData.jobModifiers[0];
 
+  // LP Calculation
   const levelLPComponent = Math.ceil(level * (100 / mod[2]));
   const staMultiplier = Math.ceil(100 / mod[4]);
   const staLPComponent = Math.ceil(stats.sta * staMultiplier);
   stats.lp = mod[0] + levelLPComponent + staLPComponent;
 
+  // MP Calculation
   const levelMPComponent = Math.ceil(level * (100 / mod[3]));
   const sprMultiplier = Math.ceil(100 / mod[5]);
   const sprMPComponent = Math.ceil(stats.spr * sprMultiplier);
   stats.mp = mod[1] + levelMPComponent + sprMPComponent;
 
-  const weapon = gameData.items[character.equipment.weapon];
+  // POT (Potential) - based on level and stats
+  stats.pot = Math.floor(level * 2 + stats.sta / 2);
+
+  // LP Heal - percentage of max LP that can be healed
+  stats.lpHeal = Math.floor(stats.spr / 2);
+
+  // Red MP - MP regeneration rate
+  stats.redMp = Math.floor(stats.spr / 3);
+
+  // ATK Calculations
+  const weapon = items[character.equipment.weapon];
   const weaponAtk = weapon?.stats?.atk || 2;
   stats.atk = Math.floor(stats.str / 2) + weaponAtk;
+  
+  // Front ATK bonus
+  stats.frontAtk = Math.floor(stats.atk * 1.2);
+  
+  // Back ATK bonus
+  stats.backAtk = Math.floor(stats.atk * 1.5);
+  
+  // Max ATK (same as base ATK for now)
+  stats.maxAtk = stats.atk;
 
+  // MATK Calculations
+  let matkValue = 100;
+  
+  // INT bonus to MATK - approximately 0.376% per INT point
+  if (stats.int >= 5) {
+    matkValue += (stats.int - 4) * 0.376;
+  }
+
+  if (character.jobId >= 22 && character.jobId <= 24) {
+    matkValue += 10;
+  }
+
+  const equippedWeaponId = character.equipment.weapon;
+  if (equippedWeaponId.includes("staff")) {
+    matkValue += 10;
+  }
+  
+  // Add elemental proficiency bonus to MATK
+  const elementalSkill = character.skills[18]; // Elemental skill ID
+  if (elementalSkill) {
+    const elementalBonus = elementalSkill.adeptness * 0.106; // 0.106% per point
+    matkValue += elementalBonus;
+  }
+  
+  stats.matk = matkValue;
+  
+  // Front MATK bonus
+  stats.frontMatk = Math.floor(stats.matk * 1.1);
+  
+  // Back MATK bonus
+  stats.backMatk = Math.floor(stats.matk * 1.3);
+
+  // DEF Calculations
   stats.def = 0;
   for (const slot in character.equipment) {
-    const item = gameData.items[character.equipment[slot]];
+    const item = items[character.equipment[slot]];
     if (item?.stats?.def) {
       stats.def += item.stats.def;
     }
   }
+  
+  // Front DEF bonus
+  stats.frontDef = Math.floor(stats.def * 1.1);
+  
+  // Back DEF bonus
+  stats.backDef = Math.floor(stats.def * 0.9);
 
+  // Physical Resistance
+  stats.phyRes = Math.floor(stats.def / 2);
+
+  // Magical Resistance
+  stats.magRes = Math.floor(stats.spr / 2);
+
+  // Accuracy
+  stats.acc = level + stats.dex;
+  stats.accFront = Math.floor(stats.acc * 1.1);
+
+  // Critical calculations
+  stats.crit = 1 + Math.floor(stats.dex / 10);
+  stats.criD = 100; // Critical damage bonus (base 100%, only increased by gear)
+  stats.criRes = Math.floor(stats.agi / 3); // Critical resistance
+  stats.cdamRes = Math.floor(stats.agi / 4); // Critical damage resistance
+
+  // Dodge
   const agiBonus = getAgilityDodgeBonus(stats.agi);
   stats.dodge = level + stats.agi + agiBonus;
 
-  stats.acc = level + stats.dex;
-  stats.crit = 1 + Math.floor(stats.dex / 10);
+  // Evasion types
+  stats.melEva = Math.floor(stats.dodge * 0.8); // Melee evasion
+  stats.ranEva = Math.floor(stats.dodge * 0.9); // Range evasion
+  stats.magEva = Math.floor(stats.dodge * 0.7); // Magic evasion
+
+  // Attack types
+  stats.melee = Math.floor(stats.atk * 1.0); // Melee attack
+  stats.range = Math.floor(stats.atk * 0.8); // Range attack
+
+  // Attack Speed
+  stats.atkSpd = Math.floor(stats.agi / 2);
+
+  // Cast Speed - +5% per 10 DEX
+  stats.castSpd = Math.floor(stats.dex / 10) * 5;
+  stats.castTime = Math.max(1, 10 - Math.floor(stats.castSpd / 10));
+
+  // Cooldown - -2% every 10 INT (base 100%)
+  stats.cooldown = Math.max(0, 100 - Math.floor(stats.int / 10) * 2);
+
+  // Movement Speed - doesn't increase with stats, only gear (base 100)
+  stats.moveSpd = 100;
+  stats.townMsp = Math.floor(stats.moveSpd * 1.5);
+
+  // Elemental Resistances (base values, can be modified by equipment)
+  stats.fireR = 0;
+  stats.iceR = 0;
+  stats.thundR = 0;
+  stats.poisonR = 0;
+  stats.charmR = 0;
+  stats.lightR = 0;
+
+  // Re Horse (mounted movement speed)
+  stats.reHorse = 10;
 }
 
 function calculateTotalPoints() {
   let totalStat = 0;
   let totalSkill = 0;
-  let totalUnallocated = 0; // NEW: For Potential points
+  let totalUnallocated = 0;
 
   for (let i = 2; i <= character.level; i++) {
     const bonus = gameData.levelUpBonuses[i];
     if (bonus) {
       totalStat += bonus[0];
       totalSkill += bonus[1];
-      totalUnallocated += bonus[2]; // Add unallocated points
+      totalUnallocated += bonus[2];
     }
   }
   character.points.totalStat = totalStat;
   character.points.totalSkill = totalSkill;
-  character.points.totalUnallocated = totalUnallocated; // Store total unallocated
+  character.points.totalUnallocated = totalUnallocated;
 }
 
 function calculateSpentStatPoints(baseStats) {
@@ -386,62 +702,129 @@ function calculateSpentStatPoints(baseStats) {
     const addedValue = character.addedStats[stat];
     const endValue = startValue + addedValue;
 
-    // Check for max stat limit
     if (endValue > gameData.maxStatValue) {
-      // If attempting to go over max stat, cap addedStats and calculate cost up to max
-      character.addedStats[stat] = Math.max(0, gameData.maxStatValue - startValue);
-      // Update the input field to reflect the cap
+      character.addedStats[stat] = Math.max(
+        0,
+        gameData.maxStatValue - startValue,
+      );
       elements.addedStatInputs[stat].value = character.addedStats[stat];
-      // Recalculate endValue after capping
       const cappedEndValue = startValue + character.addedStats[stat];
 
       for (let i = startValue; i < cappedEndValue; i++) {
-          totalCost += gameData.statPointCosts[i + 1]?.[0] || 0;
+        totalCost += gameData.statPointCosts[i + 1]?.[0] || 0;
       }
-      // If even after capping, it's somehow still above maxStatValue (shouldn't happen with correct logic)
-      // or if the initial value *already* exceeded maxStatValue, mark it as invalid/overspent.
       if (cappedEndValue > gameData.maxStatValue) {
-          totalCost = Infinity; // Or a large number to indicate overspent
+        totalCost = Infinity;
       }
-
     } else {
-        // Normal calculation within limits
-        for (let i = startValue; i < endValue; i++) {
-            totalCost += gameData.statPointCosts[i + 1]?.[0] || 0; // Add 0 if cost is undefined (e.g., trying to add above 99)
-        }
+      for (let i = startValue; i < endValue; i++) {
+        totalCost += gameData.statPointCosts[i + 1]?.[0] || 0;
+      }
     }
   }
   character.points.spentStat = totalCost;
 }
 
 function updateUI(bonuses) {
-  for (const stat in elements.outputs) {
-    if (elements.outputs[stat] && character.finalStats[stat] !== undefined) {
-      elements.outputs[stat].textContent = Math.floor(
-        character.finalStats[stat]
-      );
+  // Update display values for racial skill and job based on selected values
+  const selectedRace = gameData.races[character.raceId];
+  const selectedJob = gameData.jobs[character.jobId];
+
+  elements.displayRace.textContent = selectedRace ? selectedRace.name : "";
+  // Ensure racial skill name is retrieved correctly
+  const racialSkillsForCurrentRace =
+    gameData.racialSkills[character.raceId] || [];
+  elements.displayRacialSkill.textContent =
+    racialSkillsForCurrentRace[character.racialSkillId]?.name || "";
+  elements.displayJob.textContent = selectedJob ? selectedJob.name : "";
+
+  // Update primary stat displays
+  for (const stat of PRIMARY_STATS) {
+    const totalElement = elements.outputs[stat];
+    const inputElement = elements.addedStatInputs[stat];
+    
+    if (totalElement) {
+      const combinedBase = getCombinedBaseStats()[stat]; // Get base stat after race/job modifiers
+      const added = character.addedStats[stat];
+      const final = character.finalStats[stat];
+
+      // Set the input field to show the total stat (base + additional)
+      const totalStat = combinedBase + added;
+      inputElement.value = totalStat;
+      
+      // Format the output display as "Final (Total)" where Total = base + additional
+      totalElement.innerHTML = `${final} (${totalStat})`;
     }
   }
-elements.points.stat.textContent =
-    character.points.totalStat - character.points.spentStat;
+  // Update other outputs
+  elements.outputs.lp.textContent = Math.floor(character.finalStats.lp);
+  elements.outputs.mp.textContent = Math.floor(character.finalStats.mp);
+  elements.outputs.atk.textContent = Math.floor(character.finalStats.atk);
+  elements.outputs.def.textContent = Math.floor(character.finalStats.def);
+  elements.outputs.matk.textContent =
+    character.finalStats.matk.toFixed(1) + "%"; // MATK as percentage with 1 decimal place
+  elements.outputs.dodge.textContent = Math.floor(character.finalStats.dodge);
+  elements.outputs.acc.textContent = Math.floor(character.finalStats.acc);
+  elements.outputs.accFront.textContent = Math.floor(
+    character.finalStats.accFront,
+  );
+  elements.outputs.crit.textContent =
+    Math.floor(character.finalStats.crit) + "%";
+  elements.outputs.reHorse.textContent =
+    Math.floor(character.finalStats.reHorse) + "%";
+
+  // Update additional derived stats
+  elements.outputs.pot.textContent = Math.floor(character.finalStats.pot);
+  elements.outputs.lpHeal.textContent = Math.floor(character.finalStats.lpHeal) + "%";
+  elements.outputs.redMp.textContent = Math.floor(character.finalStats.redMp);
+  elements.outputs.frontAtk.textContent = Math.floor(character.finalStats.frontAtk);
+  elements.outputs.backAtk.textContent = Math.floor(character.finalStats.backAtk);
+  elements.outputs.maxAtk.textContent = Math.floor(character.finalStats.maxAtk);
+  elements.outputs.frontMatk.textContent = Math.floor(character.finalStats.frontMatk);
+  elements.outputs.backMatk.textContent = Math.floor(character.finalStats.backMatk);
+  elements.outputs.frontDef.textContent = Math.floor(character.finalStats.frontDef);
+  elements.outputs.backDef.textContent = Math.floor(character.finalStats.backDef);
+  elements.outputs.phyRes.textContent = Math.floor(character.finalStats.phyRes);
+  elements.outputs.magRes.textContent = Math.floor(character.finalStats.magRes);
+  elements.outputs.criD.textContent = Math.floor(character.finalStats.criD) + "%";
+  elements.outputs.criRes.textContent = Math.floor(character.finalStats.criRes);
+  elements.outputs.cdamRes.textContent = Math.floor(character.finalStats.cdamRes);
+  elements.outputs.melEva.textContent = Math.floor(character.finalStats.melEva);
+  elements.outputs.ranEva.textContent = Math.floor(character.finalStats.ranEva);
+  elements.outputs.magEva.textContent = Math.floor(character.finalStats.magEva);
+  elements.outputs.melee.textContent = Math.floor(character.finalStats.melee);
+  elements.outputs.range.textContent = Math.floor(character.finalStats.range);
+  elements.outputs.fireR.textContent = Math.floor(character.finalStats.fireR);
+  elements.outputs.atkSpd.textContent = Math.floor(character.finalStats.atkSpd);
+  elements.outputs.iceR.textContent = Math.floor(character.finalStats.iceR);
+  elements.outputs.castSpd.textContent = Math.floor(character.finalStats.castSpd) + "%";
+  elements.outputs.castTime.textContent = Math.floor(character.finalStats.castTime);
+  elements.outputs.thundR.textContent = Math.floor(character.finalStats.thundR);
+  elements.outputs.cooldown.textContent = Math.floor(character.finalStats.cooldown) + "%";
+  elements.outputs.poisonR.textContent = Math.floor(character.finalStats.poisonR);
+  elements.outputs.moveSpd.textContent = Math.floor(character.finalStats.moveSpd);
+  elements.outputs.townMsp.textContent = Math.floor(character.finalStats.townMsp);
+  elements.outputs.charmR.textContent = Math.floor(character.finalStats.charmR);
+  elements.outputs.lightR.textContent = Math.floor(character.finalStats.lightR);
+
+  elements.points.stat.textContent = `${character.points.totalStat - character.points.spentStat}/${character.points.totalStat}`;
   elements.points.stat.classList.toggle(
     "overspent",
-    character.points.totalStat < character.points.spentStat
+    character.points.totalStat < character.points.spentStat,
   );
 
-  elements.points.skill.textContent =
-    character.points.totalSkill - character.points.spentSkill;
+  elements.points.skill.textContent = `${character.points.totalSkill - character.points.spentSkill}/${character.points.totalSkill}`;
   elements.points.skill.classList.toggle(
     "overspent",
-    character.points.totalSkill < character.points.spentSkill
+    character.points.totalSkill < character.points.spentSkill,
   );
 
-  elements.points.unallocated.textContent =
-    character.points.totalUnallocated - character.points.spentUnallocated;
+  elements.points.unallocated.textContent = `${character.points.totalUnallocated - character.points.spentUnallocated}/${character.points.totalUnallocated}`;
   elements.points.unallocated.classList.toggle(
     "overspent",
-    character.points.totalUnallocated < character.points.spentUnallocated
+    character.points.totalUnallocated < character.points.spentUnallocated,
   );
+
   if (bonuses.description.length > 0) {
     elements.setBonusList.innerHTML = bonuses.description
       .map((d) => `<li>${d}</li>`)
@@ -450,26 +833,118 @@ elements.points.stat.textContent =
     elements.setBonusList.innerHTML = "<li>None</li>";
   }
 
-  renderSkillsPanel();
-
-   for (const categoryId in gameData.skills) {
-    const category = gameData.skills[categoryId];
-    let categoryAdeptnessSum = 0;
-    let categoryPotentialSum = 0;
-    for (const skillData of category.skills) {
-      categoryAdeptnessSum += character.skills[skillData.id].adeptness;
-      categoryPotentialSum += character.skills[skillData.id].potential;
-    }
-    const categoryTotalElement = document.getElementById(`category-total-${categoryId}`);
-    if (categoryTotalElement) {
-      categoryTotalElement.textContent = `${categoryAdeptnessSum} / ${categoryPotentialSum}`;
-    }
-  }
+  renderSkillsPanel(); // Re-render skills to update bars and levels
 }
-document.getElementById("config-panel").addEventListener("input", runCalculations);
-document.getElementById("points-and-equipment-panel").addEventListener("input", runCalculations);
+
+/**
+ * Handles job or race changes by reinitializing skills and running calculations.
+ */
+function handleJobRaceChange() {
+  readInputs();
+  
+  // Re-initialize skills on job/race change to get base skill levels
+  initializeSkills();
+  
+  // Update racial skill dropdown when race changes
+  populateRacialSkillDropdown();
+  
+  // Update input fields to show new total stats (racial base + job modifiers + additional)
+  const raceStats = gameData.raceBaseStats[character.raceId];
+  const jobInfo = gameData.jobs[character.jobId];
+  const jobModifiers = gameData.jobBaseStatModifiers[jobInfo.baseClass];
+  
+  for (const stat of PRIMARY_STATS) {
+    const baseStat = raceStats[stat] + jobModifiers[stat];
+    const totalStat = baseStat + character.addedStats[stat];
+    
+    // Update the input field value and min attribute
+    elements.addedStatInputs[stat].value = totalStat;
+    elements.addedStatInputs[stat].min = baseStat;
+  }
+  
+  // Run the rest of the calculations
+  runCalculations();
+}
+
+/**
+ * Resets status points to the current race and job base values.
+ */
+function resetStatusPoints() {
+  // Get the current race and job base stats
+  const raceStats = gameData.raceBaseStats[character.raceId];
+  const jobInfo = gameData.jobs[character.jobId];
+  const jobModifiers = gameData.jobBaseStatModifiers[jobInfo.baseClass];
+  
+  // Reset additional stats to 0
+  for (const stat of PRIMARY_STATS) {
+    character.addedStats[stat] = 0;
+  }
+  
+  // Update input fields to show base stats only
+  for (const stat of PRIMARY_STATS) {
+    const baseStat = raceStats[stat] + jobModifiers[stat];
+    elements.addedStatInputs[stat].value = baseStat;
+    elements.addedStatInputs[stat].min = baseStat;
+  }
+  
+  // Recalculate everything
+  runCalculations();
+}
+
+/**
+ * Resets ability points to the current job base values.
+ */
+function resetAbilityPoints() {
+  // Re-initialize skills to get base values for current job
+  initializeSkills();
+  
+  // Re-render the skills panel
+  renderSkillsPanel();
+  
+  // Recalculate everything
+  runCalculations();
+}
+
+// --- Event Listeners and Initial Population (Same as before) ---
+document.getElementById("race").addEventListener("change", handleJobRaceChange);
+document
+  .getElementById("racial-skill")
+  .addEventListener("change", runCalculations); // NEW listener
+document.getElementById("job").addEventListener("change", handleJobRaceChange); // Add listener for job changes
+
+document.getElementById("level").addEventListener("input", runCalculations); // Add listener for level changes
+
+for (const statInput of Object.values(elements.addedStatInputs)) {
+  statInput.addEventListener("input", runCalculations);
+}
+for (const equipSelector of Object.values(elements.equipmentSelectors)) {
+  equipSelector.addEventListener("change", runCalculations);
+}
+
+// Add event listeners for reset buttons
+elements.resetButtons.statusPoints.addEventListener("click", resetStatusPoints);
+elements.resetButtons.abilityPoints.addEventListener("click", resetAbilityPoints);
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Set initial default values to match the image
+  elements.level.value = character.level;
+  elements.race.value = character.raceId;
+  elements.job.value = character.jobId;
+  
+  // Set input fields to show total stats (racial base + job modifiers + additional)
+  const raceStats = gameData.raceBaseStats[character.raceId];
+  const jobInfo = gameData.jobs[character.jobId];
+  const jobModifiers = gameData.jobBaseStatModifiers[jobInfo.baseClass];
+  
+  for (const stat of PRIMARY_STATS) {
+    const baseStat = raceStats[stat] + jobModifiers[stat];
+    const totalStat = baseStat + character.addedStats[stat];
+    
+    // Set the input field value and min attribute
+    elements.addedStatInputs[stat].value = totalStat;
+    elements.addedStatInputs[stat].min = baseStat;
+  }
+
   populateDropdowns();
   initializeSkills();
   runCalculations();
