@@ -77,9 +77,6 @@ const elements = {
     redMp: document.getElementById("red-mp"),
     frontAtk: document.getElementById("front-atk"),
     backAtk: document.getElementById("back-atk"),
-    maxAtk: document.getElementById("max-atk"),
-    frontMatk: document.getElementById("front-matk"),
-    backMatk: document.getElementById("back-matk"),
     frontDef: document.getElementById("front-def"),
     backDef: document.getElementById("back-def"),
     phyRes: document.getElementById("phy-res"),
@@ -552,28 +549,28 @@ function calculateDerivedStats() {
   const sprMPComponent = Math.ceil(stats.spr * sprMultiplier);
   stats.mp = mod[1] + levelMPComponent + sprMPComponent;
 
-  // POT (Potential) - based on level and stats
-  stats.pot = Math.floor(level * 2 + stats.sta / 2);
+  // POT (Potential) - base 100%
+  stats.pot = 100;
 
-  // LP Heal - percentage of max LP that can be healed
-  stats.lpHeal = Math.floor(stats.spr / 2);
+  // LP Heal - base 100%
+  stats.lpHeal = 100;
 
-  // Red MP - MP regeneration rate
-  stats.redMp = Math.floor(stats.spr / 3);
+  // Red MP - base 100%
+  stats.redMp = 100;
 
   // ATK Calculations
   const weapon = items[character.equipment.weapon];
   const weaponAtk = weapon?.stats?.atk || 2;
   stats.atk = Math.floor(stats.str / 2) + weaponAtk;
   
-  // Front ATK bonus
-  stats.frontAtk = Math.floor(stats.atk * 1.2);
+  // Front ATK bonus - base 0%
+  stats.frontAtk = 0;
   
-  // Back ATK bonus
-  stats.backAtk = Math.floor(stats.atk * 1.5);
+  // Back ATK bonus - base 15%
+  stats.backAtk = 15;
   
-  // Max ATK (same as base ATK for now)
-  stats.maxAtk = stats.atk;
+  // Max ATK - base 5
+  stats.maxAtk = 5;
 
   // MATK Calculations
   let matkValue = 100;
@@ -622,11 +619,11 @@ function calculateDerivedStats() {
   // Back DEF bonus
   stats.backDef = Math.floor(stats.def * 0.9);
 
-  // Physical Resistance
-  stats.phyRes = Math.floor(stats.def / 2);
+  // Physical Resistance - base 0%
+  stats.phyRes = 0;
 
-  // Magical Resistance
-  stats.magRes = Math.floor(stats.spr / 2);
+  // Magical Resistance - base 0%
+  stats.magRes = 0;
 
   // Accuracy
   stats.acc = level + stats.dex;
@@ -635,35 +632,34 @@ function calculateDerivedStats() {
   // Critical calculations
   stats.crit = 1 + Math.floor(stats.dex / 10);
   stats.criD = 100; // Critical damage bonus (base 100%, only increased by gear)
-  stats.criRes = Math.floor(stats.agi / 3); // Critical resistance
-  stats.cdamRes = Math.floor(stats.agi / 4); // Critical damage resistance
+  stats.criRes = 0; // Critical resistance - base 0%
+  stats.cdamRes = 100; // Critical damage resistance - base 100%
 
-  // Dodge
-  const agiBonus = getAgilityDodgeBonus(stats.agi);
-  stats.dodge = level + stats.agi + agiBonus;
+  // Dodge - base 5
+  stats.dodge = 5;
 
   // Evasion types
-  stats.melEva = Math.floor(stats.dodge * 0.8); // Melee evasion
-  stats.ranEva = Math.floor(stats.dodge * 0.9); // Range evasion
-  stats.magEva = Math.floor(stats.dodge * 0.7); // Magic evasion
+  stats.melEva = 0; // Melee evasion - base 0%
+  stats.ranEva = 0; // Range evasion - base 0%
+  stats.magEva = 0; // Magic evasion - base 0%
 
-  // Attack types
-  stats.melee = Math.floor(stats.atk * 1.0); // Melee attack
-  stats.range = Math.floor(stats.atk * 0.8); // Range attack
+  // Attack types - weapon range values only change with gear
+  stats.melee = "---"; // Melee range - no base value
+  stats.range = "---"; // Range attack - no base value
 
-  // Attack Speed
-  stats.atkSpd = Math.floor(stats.agi / 2);
+  // Attack Speed - base 100%
+  stats.atkSpd = 100;
 
-  // Cast Speed - +5% per 10 DEX
-  stats.castSpd = Math.floor(stats.dex / 10) * 5;
-  stats.castTime = Math.max(1, 10 - Math.floor(stats.castSpd / 10));
+  // Cast Speed - starts at 100%, increases by 5% every 10 DEX
+  stats.castSpd = 100 + Math.floor(stats.dex / 10) * 5;
+  stats.castTime = 100; // Cast time - base 100%
 
   // Cooldown - -2% every 10 INT (base 100%)
   stats.cooldown = Math.max(0, 100 - Math.floor(stats.int / 10) * 2);
 
-  // Movement Speed - doesn't increase with stats, only gear (base 100)
+  // Movement Speed - base 100%
   stats.moveSpd = 100;
-  stats.townMsp = Math.floor(stats.moveSpd * 1.5);
+  stats.townMsp = 100;
 
   // Elemental Resistances (base values, can be modified by equipment)
   stats.fireR = 0;
@@ -779,33 +775,31 @@ function updateUI(bonuses) {
   elements.outputs.redMp.textContent = Math.floor(character.finalStats.redMp);
   elements.outputs.frontAtk.textContent = Math.floor(character.finalStats.frontAtk);
   elements.outputs.backAtk.textContent = Math.floor(character.finalStats.backAtk);
-  elements.outputs.maxAtk.textContent = Math.floor(character.finalStats.maxAtk);
-  elements.outputs.frontMatk.textContent = Math.floor(character.finalStats.frontMatk);
-  elements.outputs.backMatk.textContent = Math.floor(character.finalStats.backMatk);
+  elements.outputs.atk.textContent = Math.floor(character.finalStats.maxAtk);
   elements.outputs.frontDef.textContent = Math.floor(character.finalStats.frontDef);
   elements.outputs.backDef.textContent = Math.floor(character.finalStats.backDef);
-  elements.outputs.phyRes.textContent = Math.floor(character.finalStats.phyRes);
-  elements.outputs.magRes.textContent = Math.floor(character.finalStats.magRes);
+  elements.outputs.phyRes.textContent = Math.floor(character.finalStats.phyRes) + "%";
+  elements.outputs.magRes.textContent = Math.floor(character.finalStats.magRes) + "%";
   elements.outputs.criD.textContent = Math.floor(character.finalStats.criD) + "%";
-  elements.outputs.criRes.textContent = Math.floor(character.finalStats.criRes);
-  elements.outputs.cdamRes.textContent = Math.floor(character.finalStats.cdamRes);
-  elements.outputs.melEva.textContent = Math.floor(character.finalStats.melEva);
-  elements.outputs.ranEva.textContent = Math.floor(character.finalStats.ranEva);
-  elements.outputs.magEva.textContent = Math.floor(character.finalStats.magEva);
-  elements.outputs.melee.textContent = Math.floor(character.finalStats.melee);
-  elements.outputs.range.textContent = Math.floor(character.finalStats.range);
-  elements.outputs.fireR.textContent = Math.floor(character.finalStats.fireR);
-  elements.outputs.atkSpd.textContent = Math.floor(character.finalStats.atkSpd);
-  elements.outputs.iceR.textContent = Math.floor(character.finalStats.iceR);
+  elements.outputs.criRes.textContent = Math.floor(character.finalStats.criRes) + "%";
+  elements.outputs.cdamRes.textContent = Math.floor(character.finalStats.cdamRes) + "%";
+  elements.outputs.melEva.textContent = Math.floor(character.finalStats.melEva) + "%";
+  elements.outputs.ranEva.textContent = Math.floor(character.finalStats.ranEva) + "%";
+  elements.outputs.magEva.textContent = Math.floor(character.finalStats.magEva) + "%";
+  elements.outputs.melee.textContent = character.finalStats.melee;
+  elements.outputs.range.textContent = character.finalStats.range;
+  elements.outputs.fireR.textContent = Math.floor(character.finalStats.fireR) + "%";
+  elements.outputs.atkSpd.textContent = Math.floor(character.finalStats.atkSpd) + "%";
+  elements.outputs.iceR.textContent = Math.floor(character.finalStats.iceR) + "%";
   elements.outputs.castSpd.textContent = Math.floor(character.finalStats.castSpd) + "%";
-  elements.outputs.castTime.textContent = Math.floor(character.finalStats.castTime);
-  elements.outputs.thundR.textContent = Math.floor(character.finalStats.thundR);
+  elements.outputs.castTime.textContent = Math.floor(character.finalStats.castTime) + "%";
+  elements.outputs.thundR.textContent = Math.floor(character.finalStats.thundR) + "%";
   elements.outputs.cooldown.textContent = Math.floor(character.finalStats.cooldown) + "%";
-  elements.outputs.poisonR.textContent = Math.floor(character.finalStats.poisonR);
-  elements.outputs.moveSpd.textContent = Math.floor(character.finalStats.moveSpd);
-  elements.outputs.townMsp.textContent = Math.floor(character.finalStats.townMsp);
-  elements.outputs.charmR.textContent = Math.floor(character.finalStats.charmR);
-  elements.outputs.lightR.textContent = Math.floor(character.finalStats.lightR);
+  elements.outputs.poisonR.textContent = Math.floor(character.finalStats.poisonR) + "%";
+  elements.outputs.moveSpd.textContent = Math.floor(character.finalStats.moveSpd) + "%";
+  elements.outputs.townMsp.textContent = Math.floor(character.finalStats.townMsp) + "%";
+  elements.outputs.charmR.textContent = Math.floor(character.finalStats.charmR) + "%";
+  elements.outputs.lightR.textContent = Math.floor(character.finalStats.lightR) + "%";
 
   elements.points.stat.textContent = `${character.points.totalStat - character.points.spentStat}/${character.points.totalStat}`;
   elements.points.stat.classList.toggle(
