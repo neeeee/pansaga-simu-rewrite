@@ -351,9 +351,9 @@ function populateDropdowns() {
       });
       
       elements.equipmentSelectors[slot].innerHTML = sortedItems
-        .map((item) => `<option value="${item.id}">${item.name}</option>`)
-        .join("");
-      elements.equipmentSelectors[slot].value = character.equipment[slot]; // Set initial value
+      .map((item) => `<option value="${item.id}">${item.name}</option>`)
+      .join("");
+    elements.equipmentSelectors[slot].value = character.equipment[slot]; // Set initial value
     } else {
       console.warn(`No items found for slot: ${slot}`);
     }
@@ -367,27 +367,15 @@ function populateDropdowns() {
 function populateRacialSkillDropdown() {
   const currentRaceId = parseInt(elements.race.value, 10);
   const currentJobId = parseInt(elements.job.value, 10);
+  
+  // Get racial skills from gameData
+  const racialSkillsData = gameData.racialSkills[currentRaceId];
   let racialSkillsForRace = [];
   let defaultRacialSkillId = 0; // Default to the first racial skill for the race
 
-  // Map Job IDs to their base racial skill types (based on ps_sim_data.js structure)
-  // This is a manual mapping based on Skill['D'][raceId][jobSkillIndex]
-  const raceJobSkillMap = {
-    0: { 0: "Fighting Spirit", 1: "Adaptability", 2: "Alchemy" }, // Human
-    1: { 0: "Harmony with Nature", 1: "Eagle Eye", 2: "Steadfastness" }, // Elf
-    2: { 0: "Stronghearted", 1: "Dwarf Spirit", 2: "Filial Piety" }, // Dwarf
-    3: { 0: "Acute Senses", 1: "Calmness", 2: "Sharpness" }, // Myrine
-    4: { 0: "Stone Skin", 1: "Strong Arm", 2: "Lapin Support" }, // Enkidu
-    5: { 0: "Magic Resistance", 1: "Inner Light", 2: "Enkidu Support" }, // Lapin
-  };
-
-  if (raceJobSkillMap[currentRaceId]) {
-    racialSkillsForRace = Object.values(raceJobSkillMap[currentRaceId]);
+  if (racialSkillsData && racialSkillsData.skills) {
+    racialSkillsForRace = racialSkillsData.skills.map(skill => skill.name);
   }
-
-  // Determine the default selected racial skill based on the *job*
-  // This logic is complex in the original, often tied to job-specific skill trees
-  // For the purpose of the image, we'll hardcode based on the Monk example: Fighting Spirit (Human)
 
   elements.racialSkill.innerHTML = racialSkillsForRace
     .map((skillName, index) => `<option value="${index}">${skillName}</option>`)
@@ -404,7 +392,14 @@ function populateRacialSkillDropdown() {
 }
 
 function readInputs() {
-  character.level = parseInt(elements.level.value, 10);
+  let level = parseInt(elements.level.value, 10);
+  // Enforce level limits
+  level = Math.max(1, Math.min(55, level));
+  if (level !== parseInt(elements.level.value, 10)) {
+    elements.level.value = level;
+  }
+  character.level = level;
+  
   character.raceId = parseInt(elements.race.value, 10);
   character.racialSkillId = parseInt(elements.racialSkill.value, 10); // NEW
   character.jobId = parseInt(elements.job.value, 10);
@@ -424,7 +419,10 @@ function readInputs() {
     // Enforce minimum: total stat cannot go below base stat
     totalStat = Math.max(baseStat, totalStat);
     
-    // Update the input field if it was below minimum
+    // Enforce maximum: total stat cannot exceed 99
+    totalStat = Math.min(99, totalStat);
+    
+    // Update the input field if it was outside limits
     if (totalStat !== parseInt(elements.addedStatInputs[stat].value, 10)) {
       elements.addedStatInputs[stat].value = totalStat;
     }
@@ -449,6 +447,7 @@ function runCalculations() {
   const bonuses = { description: [], stats: {} };
   applyEquipmentBonuses(bonuses);
   applySetBonuses(bonuses);
+  applyRacialSkillEffects(bonuses);
 
   for (const stat of PRIMARY_STATS) {
     const total =
@@ -457,6 +456,13 @@ function runCalculations() {
   }
 
   calculateDerivedStats();
+  
+  // Apply racial skill effects to derived stats
+  if (bonuses.potionEffectiveness) {
+    // Apply Alchemy racial skill bonus to POT (15% of base 100%)
+    character.finalStats.pot += Math.floor(100 * bonuses.potionEffectiveness / 100);
+  }
+  
   updateUI(bonuses);
 }
 
@@ -508,6 +514,41 @@ function applySetBonuses(bonuses) {
     }
   }
 }
+
+/**
+ * Applies racial skill effects to the character.
+ */
+function applyRacialSkillEffects(bonuses) {
+  const racialSkillsData = gameData.racialSkills[character.raceId];
+  if (!racialSkillsData || !racialSkillsData.skills) return;
+  
+  const selectedSkill = racialSkillsData.skills[character.racialSkillId];
+  if (!selectedSkill || !selectedSkill.effect) return;
+  
+  const effect = selectedSkill.effect;
+  
+  // Add description of the racial skill effect
+  bonuses.description.push(`${selectedSkill.name}: ${selectedSkill.description}`);
+  
+  // Apply effects based on type
+  switch (effect.type) {
+    case "meleeSkillBonus":
+      // +10 to melee skill with one-handed weapons
+      // This would affect melee skill calculations
+      bonuses.meleeSkillBonus = effect.value;
+      break;
+    case "ailmentDurationReduction":
+      // Reduce duration of ailments by 50%
+      // This would affect status effect calculations
+      bonuses.ailmentDurationReduction = effect.value;
+      break;
+    case "potionEffectiveness":
+      // Increase potion effectiveness by 15%
+      // This affects POT calculation
+      bonuses.potionEffectiveness = effect.value;
+      break;
+  }
+}
 /**
  * @param {number} agility The character's final Agility stat.
  * @returns {number} The bonus dodge points.
@@ -550,8 +591,36 @@ function calculateDerivedStats() {
   const sprMPComponent = Math.ceil(stats.spr * sprMultiplier);
   stats.mp = mod[1] + levelMPComponent + sprMPComponent;
 
-  // POT (Potential) - base 100%
-  stats.pot = 100;
+  // POT (Potential) - Potion effectiveness
+  let potValue = 100; // Base 100%
+  
+  // STA bonus: Math.floor((STA^2 * 2) / 1000)
+  const staBonus = Math.floor((Math.pow(stats.sta, 2) * 2) / 1000);
+  potValue += staBonus;
+  
+  // Warrior class bonus: +10% for all warrior classes
+  if (character.jobId >= 0 && character.jobId <= 6) { // Warrior class range
+    potValue += 10;
+  }
+  
+  // Alchemy skill bonus: +15 for Acolyte class (job 14-20)
+  if (character.jobId >= 14 && character.jobId <= 20) {
+    potValue += 15;
+  }
+  
+  // Recovery increase: +10 per 10 points in melee skills (if level >= 12 and warrior class)
+  if (character.level >= 12 && character.jobId >= 0 && character.jobId <= 6) {
+    const meleeSkill = character.skills[1]; // Slash skill as representative
+    if (meleeSkill) {
+      const meleeBonus = Math.floor(meleeSkill.adeptness / 10) * 10;
+      potValue += meleeBonus;
+    }
+  }
+  
+  // Racial skill bonus: Alchemy increases potion effectiveness by 15%
+  // This will be applied later in applyRacialSkillEffects
+  
+  stats.pot = potValue;
 
   // LP Heal - base 100%
   stats.lpHeal = 100;
@@ -611,7 +680,7 @@ function calculateDerivedStats() {
       stats.def += item.stats.def;
     }
   }
-  
+
   // Front DEF bonus
   stats.frontDef = Math.floor(stats.def * 1.1);
   
@@ -729,9 +798,9 @@ function updateUI(bonuses) {
   elements.displayRace.textContent = selectedRace ? selectedRace.name : "";
   // Ensure racial skill name is retrieved correctly
   const racialSkillsForCurrentRace =
-    gameData.racialSkills[character.raceId] || [];
-  elements.displayRacialSkill.textContent =
-    racialSkillsForCurrentRace[character.racialSkillId]?.name || "";
+    gameData.racialSkills[character.raceId];
+  const selectedRacialSkill = racialSkillsForCurrentRace?.skills?.[character.racialSkillId];
+  elements.displayRacialSkill.textContent = selectedRacialSkill?.name || "";
   elements.displayJob.textContent = selectedJob ? selectedJob.name : "";
 
   // Update primary stat displays
@@ -907,10 +976,36 @@ document
   .addEventListener("change", runCalculations); // NEW listener
 document.getElementById("job").addEventListener("change", handleJobRaceChange); // Add listener for job changes
 
-document.getElementById("level").addEventListener("input", runCalculations); // Add listener for level changes
+document.getElementById("level").addEventListener("input", (event) => {
+  const value = parseInt(event.target.value) || 1;
+  const min = parseInt(event.target.min) || 1;
+  const max = parseInt(event.target.max) || 55;
+  
+  // Enforce min/max limits
+  if (value < min) {
+    event.target.value = min;
+  } else if (value > max) {
+    event.target.value = max;
+  }
+  
+  runCalculations();
+}); // Add listener for level changes
 
 for (const statInput of Object.values(elements.addedStatInputs)) {
-  statInput.addEventListener("input", runCalculations);
+  statInput.addEventListener("input", (event) => {
+    const value = parseInt(event.target.value) || 0;
+    const min = parseInt(event.target.min) || 0;
+    const max = parseInt(event.target.max) || 99;
+    
+    // Enforce min/max limits
+    if (value < min) {
+      event.target.value = min;
+    } else if (value > max) {
+      event.target.value = max;
+    }
+    
+    runCalculations();
+  });
 }
 for (const equipSelector of Object.values(elements.equipmentSelectors)) {
   equipSelector.addEventListener("change", runCalculations);
@@ -924,6 +1019,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Set initial default values to match the image
   elements.level.value = character.level;
   elements.race.value = character.raceId;
+  elements.racialSkill.value = character.racialSkillId;
   elements.job.value = character.jobId;
   
   // Set input fields to show total stats (racial base + job modifiers + additional)

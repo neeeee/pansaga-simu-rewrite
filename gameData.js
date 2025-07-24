@@ -171,9 +171,34 @@ export const gameData = {
     0: {
       name: "Human",
       skills: [
-        { id: 0, name: "Fighting Spirit", effect: "placeholder" },
-        { id: 1, name: "Adaptibility", effect: "placeholder" },
-        { id: 2, name: "Alchemy", effect: "placeholder" },
+        { 
+          id: 0, 
+          name: "Fighting Spirit", 
+          description: "+10 to melee skill with one-handed weapons",
+          effect: {
+            type: "meleeSkillBonus",
+            value: 10,
+            condition: "oneHandedWeapon"
+          }
+        },
+        { 
+          id: 1, 
+          name: "Adaptibility", 
+          description: "Reduce duration of ailments by 50%",
+          effect: {
+            type: "ailmentDurationReduction",
+            value: 50
+          }
+        },
+        { 
+          id: 2, 
+          name: "Alchemy", 
+          description: "Increase potion effectiveness by 15%",
+          effect: {
+            type: "potionEffectiveness",
+            value: 15
+          }
+        },
       ],
     },
     1: {
