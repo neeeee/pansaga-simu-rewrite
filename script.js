@@ -455,13 +455,7 @@ function runCalculations() {
     character.finalStats[stat] = Math.min(gameData.maxStatValue, total);
   }
 
-  calculateDerivedStats();
-  
-  // Apply racial skill effects to derived stats
-  if (bonuses.potionEffectiveness) {
-    // Apply Alchemy racial skill bonus to POT (15% of base 100%)
-    character.finalStats.pot += Math.floor(100 * bonuses.potionEffectiveness / 100);
-  }
+  calculateDerivedStats(bonuses);
   
   updateUI(bonuses);
 }
@@ -534,18 +528,70 @@ function applyRacialSkillEffects(bonuses) {
   switch (effect.type) {
     case "meleeSkillBonus":
       // +10 to melee skill with one-handed weapons
-      // This would affect melee skill calculations
       bonuses.meleeSkillBonus = effect.value;
       break;
     case "ailmentDurationReduction":
       // Reduce duration of ailments by 50%
-      // This would affect status effect calculations
       bonuses.ailmentDurationReduction = effect.value;
       break;
     case "potionEffectiveness":
       // Increase potion effectiveness by 15%
-      // This affects POT calculation
       bonuses.potionEffectiveness = effect.value;
+      break;
+    case "rangedRangeBonus":
+      // Increase ranged range by 3
+      bonuses.rangedRangeBonus = effect.value;
+      break;
+    case "mpCostReduction":
+      // Reduce MP cost of spells by 15%
+      bonuses.mpCostReduction = effect.value;
+      break;
+    case "charmResistance":
+      // Increase charm resistance by 20%
+      bonuses.charmResistance = effect.value;
+      break;
+    case "damageBonus":
+      // Increase damage with specific weapon types
+      if (effect.condition === "axeOrBlunt") {
+        bonuses.axeBluntDamageBonus = effect.value;
+      } else if (effect.condition === "2HandedWeapon") {
+        bonuses.twoHandedDamageBonus = effect.value;
+      }
+      break;
+    case "criticalHitChance":
+      // Increased critical hit chance by 5%
+      bonuses.criticalHitChance = effect.value;
+      break;
+    case "damageToMPConversion":
+      // Chance to convert 10% damage taken into MP
+      bonuses.damageToMPConversion = effect.value;
+      break;
+    case "dodgeChance":
+      // 5% chance to dodge damage
+      bonuses.dodgeChance = effect.value;
+      break;
+    case "physicalDamageReduction":
+      // Reduce damage taken by 10%
+      bonuses.physicalDamageReduction = effect.value;
+      break;
+    case "physicalDefense":
+      // Boosts physical defense (party effect)
+      bonuses.physicalDefense = effect.value;
+      break;
+    case "magicalDefense":
+      // Boosts magical defense (party effect)
+      bonuses.magicalDefense = effect.value;
+      break;
+    case "magicResistance":
+      // Increase magic resistance by 10%
+      bonuses.magicResistance = effect.value;
+      break;
+    case "mpRegeneration":
+      // MP regeneration increases by 15%
+      bonuses.mpRegeneration = effect.value;
+      break;
+    default:
+      // Handle "none" effects or other undefined effects gracefully
       break;
   }
 }
@@ -573,7 +619,7 @@ function getAgilityDodgeBonus(agility) {
 /**
  * Calculates derived stats based on the final primary stats.
  */
-function calculateDerivedStats() {
+function calculateDerivedStats(bonuses = {}) {
   const stats = character.finalStats;
   const level = character.level;
   const mod =
@@ -617,16 +663,22 @@ function calculateDerivedStats() {
     }
   }
   
-  // Racial skill bonus: Alchemy increases potion effectiveness by 15%
-  // This will be applied later in applyRacialSkillEffects
+  // Apply racial skill bonus for potion effectiveness
+  if (bonuses.potionEffectiveness) {
+    potValue += bonuses.potionEffectiveness;
+  }
   
   stats.pot = potValue;
 
   // LP Heal - base 100%
   stats.lpHeal = 100;
 
-  // Red MP - base 100%
-  stats.redMp = 100;
+  if (bonuses.mpCostReduction) {
+    stats.redMp = 100 - bonuses.mpCostReduction;
+  } else {
+    stats.redMp = 100;
+  }
+
 
   // ATK Calculations
   stats.atk = Math.floor(stats.str / 2); // STR/2 only, gear added separately when equipped
@@ -692,6 +744,11 @@ function calculateDerivedStats() {
 
   // Magical Resistance - base 0%
   stats.magRes = 0;
+  
+  // Apply racial skill bonus for magic resistance
+  if (bonuses.magicResistance) {
+    stats.magRes += bonuses.magicResistance;
+  }
 
   // Accuracy
   stats.acc = level + stats.dex;
@@ -699,12 +756,23 @@ function calculateDerivedStats() {
 
   // Critical calculations
   stats.crit = 1 + Math.floor(stats.dex / 10);
+  
+  // Apply racial skill bonus for critical hit chance
+  if (bonuses.criticalHitChance) {
+    stats.crit += bonuses.criticalHitChance;
+  }
+  
   stats.criD = 100; // Critical damage bonus (base 100%, only increased by gear)
   stats.criRes = 0; // Critical resistance - base 0%
   stats.cdamRes = 100; // Critical damage resistance - base 100%
 
   // Dodge - base 5
   stats.dodge = 5;
+  
+  // Apply racial skill bonus for dodge chance
+  if (bonuses.dodgeChance) {
+    stats.dodge += bonuses.dodgeChance;
+  }
 
   // Evasion types
   stats.melEva = 0; // Melee evasion - base 0%
@@ -712,8 +780,16 @@ function calculateDerivedStats() {
   stats.magEva = 0; // Magic evasion - base 0%
 
   // Attack types - weapon range values only change with gear
-  stats.melee = "---"; // Melee range - no base value
-  stats.range = "---"; // Range attack - no base value
+  if (bonuses.rangedRangeBonus) {
+    stats.range = bonuses.rangedRangeBonus;
+  } else {
+    stats.range = "---"; // Range attack - no base value
+  }
+  if (bonuses.meleeRangeBonus) {
+    stats.melee = bonuses.meleeRangeBonus;
+  } else {
+    stats.melee = "---"; // Melee range - no base value
+  }
 
   // Attack Speed - base 100%
   stats.atkSpd = 100;
@@ -737,6 +813,15 @@ function calculateDerivedStats() {
   stats.charmR = 0;
   stats.lightR = 0;
   stats.darkR = 0;
+  
+  // Apply racial skill bonuses for resistances
+  if (bonuses.charmResistance) {
+    stats.charmR += bonuses.charmResistance;
+  }
+
+  if (bonuses.physicalDamageReduction) {
+    stats.phyRes += bonuses.physicalDamageReduction;
+  }
 
   // Re Horse (mounted movement speed)
   stats.reHorse = 10;
