@@ -143,6 +143,14 @@ h1 {
     align-items: center;
     margin-bottom: 3px;
     font-weight: bold;
+    gap: 5px;
+}
+
+.stat-cost {
+    color: #666;
+    font-size: 0.9em;
+    min-width: 20px;
+    text-align: right;
 }
 
 .stat-input-row input {

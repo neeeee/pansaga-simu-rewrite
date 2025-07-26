@@ -48,6 +48,14 @@ const elements = {
     spr: document.getElementById("base-spr"),
     int: document.getElementById("base-int"),
   },
+  statCosts: {
+    sta: document.getElementById("cost-sta"),
+    str: document.getElementById("cost-str"),
+    agi: document.getElementById("cost-agi"),
+    dex: document.getElementById("cost-dex"),
+    spr: document.getElementById("cost-spr"),
+    int: document.getElementById("cost-int"),
+  },
   equipmentSelectors: {
     weapon: document.getElementById("equip-weapon"),
     head: document.getElementById("equip-head"),
@@ -875,6 +883,25 @@ function calculateSpentStatPoints(baseStats) {
   character.points.spentStat = totalCost;
 }
 
+function updateStatCostIndicators() {
+  const raceStats = gameData.raceBaseStats[character.raceId];
+  const jobInfo = gameData.jobs[character.jobId];
+  const jobModifiers = gameData.jobBaseStatModifiers[jobInfo.baseClass];
+
+  for (const stat of PRIMARY_STATS) {
+    const baseStat = raceStats[stat] + jobModifiers[stat];
+    const currentTotalStat = baseStat + character.addedStats[stat];
+    const nextLevel = currentTotalStat + 1;
+    
+    if (nextLevel > gameData.maxStatValue) {
+      elements.statCosts[stat].textContent = "--";
+    } else {
+      const cost = gameData.statPointCosts[nextLevel]?.[0] || 0;
+      elements.statCosts[stat].textContent = cost + "p";
+    }
+  }
+}
+
 function updateUI(bonuses) {
   // Update display values for racial skill and job based on selected values
   const selectedRace = gameData.races[character.raceId];
@@ -982,6 +1009,7 @@ function updateUI(bonuses) {
     elements.setBonusList.innerHTML = "<li>None</li>";
   }
 
+  updateStatCostIndicators(); // Update cost indicators for stat increases
   renderSkillsPanel(); // Re-render skills to update bars and levels
 }
 
