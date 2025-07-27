@@ -140,6 +140,7 @@
                     <div class="reset-buttons-row">
                         <button id="reset-status-points" class="reset-btn">Reset Status Points</button>
                         <button id="reset-ability-points" class="reset-btn">Reset Ability Points</button>
+                        <button id="preview-skills" class="reset-btn">Preview Unlocked Skills</button>
                     </div>
                 </div>
 
@@ -447,6 +448,22 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Skill Preview Modal -->
+        <div id="skill-preview-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Unlocked Skills Preview</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div id="unlocked-skills-display">
+                        <!-- Unlocked skills will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <script type="module" src="script.js"></script>
     </body>
 </html>

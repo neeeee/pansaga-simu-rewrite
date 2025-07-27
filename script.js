@@ -2,6 +2,7 @@ import { gameData } from "./gameData.js";
 import { skills } from "./jobSkillValues.js";
 import { items } from "./equipData.js";
 import { setBonuses } from "./setBonuses.js";
+import { classSkillData } from "./classSkillData.js";
 
 // --- CONSTANTS ---
 const PRIMARY_STATS = ["sta", "str", "agi", "dex", "spr", "int"];
@@ -122,6 +123,11 @@ const elements = {
     statusPoints: document.getElementById("reset-status-points"),
     abilityPoints: document.getElementById("reset-ability-points"),
   },
+  // Modal elements
+  skillPreviewButton: document.getElementById("preview-skills"),
+  skillPreviewModal: document.getElementById("skill-preview-modal"),
+  modalClose: document.querySelector("#skill-preview-modal .close"),
+  unlockedSkillsDisplay: document.getElementById("unlocked-skills-display"),
 };
 
 /**
@@ -1082,6 +1088,210 @@ function resetAbilityPoints() {
   runCalculations();
 }
 
+/**
+ * Calculates which skills are unlocked based on current skill levels.
+ * Returns an object with skill data organized by skill tree categories.
+ */
+function calculateUnlockedSkills() {
+  const unlockedSkills = {};
+  
+  // Get job skill data to determine what skill categories this job can access
+  const jobSkillData = skills[character.jobId];
+  if (!jobSkillData) {
+    console.warn(`No job skill data found for job ID ${character.jobId}`);
+    return unlockedSkills;
+  }
+  
+  // Process each skill category that exists in classSkillData
+  for (const categoryId in classSkillData) {
+    const categoryIdNum = parseInt(categoryId, 10);
+    const categorySkillData = classSkillData[categoryIdNum];
+    
+    if (!categorySkillData || !categorySkillData.skills) {
+      continue;
+    }
+    
+    // Check if the current job has access to this skill category
+    const jobCategoryData = jobSkillData[categoryIdNum];
+    if (!jobCategoryData || !jobCategoryData.skills) {
+      continue; // Job doesn't have access to this skill category
+    }
+    
+    // Check if any skill in this category has maxPotential > 0 for this job
+    const hasAccessToCategory = jobCategoryData.skills.some(skill => skill.maxPotential > 0);
+    if (!hasAccessToCategory) {
+      continue; // Job has no potential in this skill category
+    }
+    
+    const categoryName = jobCategoryData.name;
+    unlockedSkills[categoryName] = {
+      name: categoryName,
+      skills: []
+    };
+    
+    // Process each skill tree in this category
+    for (const skillTree of categorySkillData.skills) {
+      const skillTreeName = skillTree.name;
+      const skillTreeId = skillTree.id;
+      
+      if (!skillTree.skills) {
+        continue;
+      }
+      
+      // Get current skill level for this specific skill tree
+      const currentSkillLevel = character.skills[skillTreeId]?.adeptness || 0;
+      
+      // Process each individual skill in the tree
+      for (const skillName in skillTree.skills) {
+        const skillData = skillTree.skills[skillName];
+        
+        // Check if skill is unlocked
+        let isUnlocked = false;
+        let requirementText = "";
+        
+        if (typeof skillData.reqPoints === 'number') {
+          // Simple number requirement - check against current skill level in this tree
+          isUnlocked = currentSkillLevel >= skillData.reqPoints;
+          requirementText = `${skillTreeName} ${skillData.reqPoints}`;
+        } else if (typeof skillData.reqPoints === 'object') {
+          // Multiple skill requirements
+          isUnlocked = true;
+          const requirements = [];
+          
+          for (const reqSkillName in skillData.reqPoints) {
+            const reqLevel = skillData.reqPoints[reqSkillName];
+            
+            // Find the skill ID by name
+            let reqSkillId = null;
+            for (const catId in gameData.skills) {
+              const category = gameData.skills[catId];
+              const skill = category.skills.find(s => s.name === reqSkillName);
+              if (skill) {
+                reqSkillId = skill.id;
+                break;
+              }
+            }
+            
+            if (reqSkillId) {
+              const currentReqSkillLevel = character.skills[reqSkillId]?.adeptness || 0;
+              if (currentReqSkillLevel < reqLevel) {
+                isUnlocked = false;
+              }
+              requirements.push(`${reqSkillName} ${reqLevel}`);
+            }
+          }
+          
+          requirementText = requirements.join(", ");
+        }
+        
+        unlockedSkills[categoryName].skills.push({
+          name: skillName,
+          description: skillData.description,
+          requirement: requirementText,
+          isUnlocked: isUnlocked,
+          mpCost: skillData.mpCost,
+          castTime: skillData.castTime,
+          cooldown: skillData.cooldown,
+          duration: skillData.duration,
+          skillTree: skillTreeName
+        });
+      }
+    }
+    
+    // If no skills were added to this category, remove it
+    if (unlockedSkills[categoryName].skills.length === 0) {
+      delete unlockedSkills[categoryName];
+    }
+  }
+  
+  return unlockedSkills;
+}
+
+/**
+ * Displays the unlocked skills in the modal.
+ */
+function displayUnlockedSkills() {
+  const unlockedSkills = calculateUnlockedSkills();
+  let html = "";
+  
+  // Get current job info for display
+  const jobInfo = gameData.jobs[character.jobId];
+  const jobName = jobInfo.name.trim();
+  const baseClass = jobInfo.baseClass;
+  
+  if (Object.keys(unlockedSkills).length === 0) {
+    html = `<div class="no-skills-message">
+              <p><strong>No skills available for ${jobName}.</strong></p>
+              <p>This job may not have access to any skill categories with unlockable skills,</p>
+              <p>or the skill data for this job's categories hasn't been added yet.</p>
+            </div>`;
+  } else {
+    html += `<div class="job-info"><p><strong>Skills for ${jobName}:</strong></p></div>`;
+    
+    for (const categoryName in unlockedSkills) {
+      const skillCategory = unlockedSkills[categoryName];
+      
+      html += `<div class="unlocked-skill-category">
+                 <h3>${skillCategory.name}</h3>`;
+      
+      if (skillCategory.skills.length === 0) {
+        html += `<p>No skills available in this category.</p>`;
+      } else {
+        // Group skills by skill tree for better organization
+        const skillsByTree = {};
+        for (const skill of skillCategory.skills) {
+          if (!skillsByTree[skill.skillTree]) {
+            skillsByTree[skill.skillTree] = [];
+          }
+          skillsByTree[skill.skillTree].push(skill);
+        }
+        
+        // Display skills grouped by tree
+        for (const treeName in skillsByTree) {
+          html += `<div class="skill-tree-group">
+                     <h4>${treeName} Skills</h4>`;
+          
+          for (const skill of skillsByTree[treeName]) {
+            const statusClass = skill.isUnlocked ? 'unlocked' : 'locked';
+            const reqClass = skill.isUnlocked ? 'met' : 'not-met';
+            
+            html += `
+              <div class="unlocked-skill-item ${statusClass}">
+                <div class="skill-name-unlock">${skill.name}</div>
+                <div class="skill-description-unlock">${skill.description}</div>
+                <div class="skill-requirement ${reqClass}">
+                  Req: ${skill.requirement}
+                </div>
+              </div>
+            `;
+          }
+          
+          html += `</div>`;
+        }
+      }
+      
+      html += `</div>`;
+    }
+  }
+  
+  elements.unlockedSkillsDisplay.innerHTML = html;
+}
+
+/**
+ * Opens the skill preview modal.
+ */
+function openSkillPreviewModal() {
+  displayUnlockedSkills();
+  elements.skillPreviewModal.style.display = "block";
+}
+
+/**
+ * Closes the skill preview modal.
+ */
+function closeSkillPreviewModal() {
+  elements.skillPreviewModal.style.display = "none";
+}
+
 // --- Event Listeners and Initial Population (Same as before) ---
 document.getElementById("race").addEventListener("change", handleJobRaceChange);
 document
@@ -1127,6 +1337,17 @@ for (const equipSelector of Object.values(elements.equipmentSelectors)) {
 // Add event listeners for reset buttons
 elements.resetButtons.statusPoints.addEventListener("click", resetStatusPoints);
 elements.resetButtons.abilityPoints.addEventListener("click", resetAbilityPoints);
+
+// Add event listeners for skill preview modal
+elements.skillPreviewButton.addEventListener("click", openSkillPreviewModal);
+elements.modalClose.addEventListener("click", closeSkillPreviewModal);
+
+// Close modal when clicking outside of it
+window.addEventListener("click", (event) => {
+  if (event.target === elements.skillPreviewModal) {
+    closeSkillPreviewModal();
+  }
+});
 
 document.addEventListener("DOMContentLoaded", () => {
   // Set initial default values to match the image

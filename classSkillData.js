@@ -92,9 +92,8 @@ const classSkillData = {
                     duration: 0,
                     description: "Strong single-target attack with a long cooldown and high MP cost"
                 }
-            }
-    },
-        { id: 2, name: "Thrust", skills: {
+            }},
+            { id: 2, name: "Thrust", skills: {
             "Heave": {
                 reqPoints: 8,
                 mpCost: 16,
@@ -189,8 +188,8 @@ const classSkillData = {
                 duration: 0,
                 description: "Strong single target attack with knockback"
             }
-        }},
-        { id: 3, name: "Cleave", skills: {
+            }},
+            { id: 3, name: "Cleave", skills: {
             "Clobber": {
                 reqPoints: 8,
                 mpCost: 19,
@@ -277,8 +276,8 @@ const classSkillData = {
                 duration: 0,
                 description: "A strong 360 AOE attack that deals damage as recoil if missed"
             }
-        }},
-        { id: 4, name: "Bash", skills: {
+            }},
+            { id: 4, name: "Bash", skills: {
             "Stun": {
                 reqPoints: 8,
                 mpCost: 15,
@@ -338,10 +337,469 @@ const classSkillData = {
                 duration: 0,
                 description: "Strong single target attack"
             },
-        }}
-    ]},
+            }},
+            { id: 5, name: "Defend", skills: {
+            "Blocking": {
+                reqPoints: 8,
+                mpCost: 5,
+                castTime: 0,
+                cooldown: 2,
+                duration: 0,
+                description: "Stationary blocking mode"
+            },
+            "Shield Bash": {
+                reqPoints: 12,
+                mpCost: 14,
+                castTime: 0,
+                cooldown: 10,
+                duration: 2,
+                description: "Trip enemies who attack you while blocking"
+            },
+            "Parapet": {
+                reqPoints: 21,
+                mpCost: 25,
+                castTime: 2,
+                cooldown: 30,
+                duration: 120,
+                description: "Increase critical hit resistance, lowers dodge"
+            },
+            "Auto-guard": {
+                reqPoints: 26,
+                mpCost: 20,
+                castTime: 0,
+                cooldown: 30,
+                duration: 120,
+                description: "Chance to reduce damage taken (shield)"    
+            },
+            "Shield Charge": {
+                reqPoints: 31,
+                mpCost: 18,
+                castTime: 0,
+                cooldown: 10,
+                duration: 0,
+                description: "Charge forward and knockdown enemies in your path"
+            },
+            "Defensive March": {
+                reqPoints: 41,
+                mpCost: 10,
+                castTime: 0,
+                cooldown: 5,
+                duration: 0,
+                description: "Move while blocking"
+            },
+            "Guardian": {
+                reqPoints: 54,
+                mpCost: 16,
+                castTime: 4,
+                cooldown: 10,
+                duration: 300,
+                description: "Take all damage for a party member"
+            },
+            "Eternal Dirge": {
+                reqPoints: 61,
+                mpCost: 74,
+                castTime: 0,
+                cooldown: 20,
+                duration: 0,
+                description: "AOE that prevents all skills from being used while active"
+            },
+        }},
+        ]},
     6: {
-
+        skills: [
+            { id: 7, name: "Shot", skills: {
+                "Flaming Arrow": {
+                    reqPoints: 8,
+                    mpCost: 12,
+                    castTime: 0,
+                    cooldown: 30,
+                    duration: 0,
+                    description: "Ranged attack with a chance to burn (bow, crossbow)"
+                },
+                "Cobra Arrow": {
+                    reqPoints: 12,
+                    mpCost: 12,
+                    castTime: 0,
+                    cooldown: 30,
+                    duration: 0,
+                    description: "Ranged attack with a chance to poison (bow, crossbow)"
+                },
+                "Arrow Rain": {
+                    reqPoints: 26,
+                    mpCost: 15,
+                    castTime: 1,
+                    cooldown: 5,
+                    duration: 0,
+                    description: "AOE attack over target (bow)"
+                },
+                "Multi Shot": {
+                    reqPoints: {
+                        "Shot": 41,
+                        "Trap": 21
+                    },
+                    mpCost: 20,
+                    castTime: 0,
+                    cooldown: 30,
+                    duration: 0,
+                    description: "Fire five arrows at once (crossbow)"
+                },
+                "Charge Shot": {
+                    reqPoints: {
+                        "Shot": 50,
+                        "Trap": 21
+                    },
+                    mpCost: 18,
+                    castTime: 0,
+                    cooldown: 30,
+                    duration: 0,
+                    description: "Deal damage and knockback target (bow, crossbow)"
+                },
+                "Silence Arrow": {
+                    reqPoints: 54,
+                    mpCost: 33,
+                    castTime: 0,
+                    cooldown: 10,
+                    duration: 0,
+                    description: "Silence target (bow)"
+                },
+                "Arrow Storm": {
+                    reqPoints: 61,
+                    mpCost: 15,
+                    castTime: 1,
+                    cooldown: 5,
+                    duration: 0,
+                    description: "AOE attack over target (bow), replaces Arrow Rain"
+                },
+                "Arrow Mastery (Passive)": {
+                    reqPoints: 71,
+                    mpCost: 49,
+                    castTime: 0,
+                    cooldown: 30,
+                    duration: 0,
+                    description: "Pin target in place if hit from the back (bow, crossbow)"
+                },
+                "Piercing Shot": {
+                    reqPoints: 81,
+                    mpCost: 22,
+                    castTime: 0,
+                    cooldown: 8,
+                    duration: 0,
+                    description: "Shoot an arrow that pierces the target"
+                },
+                "Cataract": {
+                    reqPoints: 90,
+                    mpCost: 54,
+                    castTime: 0,
+                    cooldown: 90,
+                    duration: 0,
+                    description: "Deal increased damage to the front of target, reduce damage taken from the front, but increase damage taken from the back. reduces movement speed"
+                }
+            }},
+            { id: 8, name: "Alchemy", skills: {
+                "Poison Making": {
+                    reqPoints: 8,
+                    mpCost: 3,
+                    castTime: 1,
+                    cooldown: 0,
+                    duration: 0,
+                    description: "Creates Poison vials (Deadly Nightshade x1, Container x1)"
+                },
+                "Toxify": {
+                    reqPoints: 12,
+                    mpCost: 15,
+                    castTime: 2,
+                    cooldown: 10,
+                    duration: 120,
+                    description: "Coat weapon with poison"
+                },
+                "Serum": {
+                    reqPoints: 26,
+                    mpCost: 3,
+                    castTime: 1,
+                    cooldown: 0,
+                    duration: 0,
+                    description: "Create an antidote to remove poison (Antidote Herb x1, Container x1)"
+                },
+                "Potion Crafting": {
+                    reqPoints: 41,
+                    mpCost: 3,
+                    castTime: 0,
+                    cooldown: 0,
+                    duration: 0,
+                    description: "Create a mysterious potion to cure disease, silence, and burn (Moonlight Herb x1, Aquilegia x1, Container x1)"
+                },
+                "Befuddle": {
+                    reqPoints: 50,
+                    mpCost: 31,
+                    castTime: 0,
+                    cooldown: 0,
+                    duration: 150,
+                    description: "Strike to reduce target's casting speed"
+                },
+                "Toxic Aura (Passive)": {
+                    reqPoints: 61,
+                    mpCost: 0,
+                    castTime: 0,
+                    cooldown: 0,
+                    duration: 0,
+                    description: "Increased damage with poison when using Toxify"
+                },
+                "Surveillance": {
+                    reqPoints: 71,
+                    mpCost: 44,
+                    castTime: 0.5,
+                    cooldown: 20,
+                    duration: 10,
+                    description: "See enemy traps for 10 seconds"
+                },
+                "Seudoro-ga": {
+                    reqPoints: 81,
+                    mpCost: 1,
+                    castTime: 0,
+                    cooldown: 60,
+                    duration: 30,
+                    description: "Drink a mysterious potion to gain a temporary buff, increase accuracy, prevent taking critical hits"
+                },
+                "Overdose": {
+                    reqPoints: 90,
+                    mpCost: 25,
+                    castTime: 0,
+                    cooldown: 45,
+                    duration: 0,
+                    description: "Drinking a potion will heal the party for a large amount"
+                }
+            }},
+            { id: 9, name: "Assassination", skills: {
+                "Backstab": {
+                    reqPoints: 8,
+                    mpCost: 15,
+                    castTime: 0,
+                    cooldown: 30,
+                    duration: 0,
+                    description: "Attack enemy from behind"
+                },
+                "Dagger Throw": {
+                    reqPoints: 12,
+                    mpCost: 10,
+                    castTime: 0,
+                    cooldown: 5,
+                    duration: 0,
+                    description: "Throw a dagger at target (dagger)"
+                },
+                "Rush": {
+                    reqPoints: 26,
+                    mpCost: 30,
+                    castTime: 0,
+                    cooldown: 90,
+                    duration: 20,
+                    description: "Each attack hits twice, caster takes more damage (dagger, knuckles)"
+                },
+                "Blindside": {
+                    reqPoints: 41,
+                    mpCost: 15,
+                    castTime: 0,
+                    cooldown: 10,
+                    duration: 0,
+                    description: "While cloaked, trips target, does not remove cloak"
+                },
+                "Pierce Armor": {
+                    reqPoints: 54,
+                    mpCost: 15,
+                    castTime: 0,
+                    cooldown: 10,
+                    duration: 0,
+                    description: "Attack that ignores armor, bonus damage against knocked down targets"
+                },
+                "Double-Cross": {
+                    reqPoints: 71,
+                    mpCost: 58,
+                    castTime: 0,
+                    cooldown: 55,
+                    duration: 0,
+                    description: "Attack back of target to reset all skill cooldowns (dagger, knuckles), only against other players"
+                },
+                "Killing Time": {
+                    reqPoints: 81,
+                    mpCost: 20,
+                    castTime: 0,
+                    cooldown: 15,
+                    duration: 0,
+                    description: "Can be used while hiding, deals a heavy blow from behind"
+                },
+                "Overkill": {
+                    reqPoints: 90,
+                    mpCost: 70,
+                    castTime: 0,
+                    cooldown: 60,
+                    duration: 0,
+                    description: "Killed target cannot be revived"
+                }
+            }},
+            { id: 10, name: "Trap", skills: {
+                "Disarm": {
+                    reqPoints: 8,
+                    mpCost: 10,
+                    castTime: 1,
+                    cooldown: 10,
+                    duration: 0,
+                    description: "Remove nearby traps"
+                },
+                "Tangled Legs": {
+                    reqPoints: 16,
+                    mpCost: 20,
+                    castTime: 1.5,
+                    cooldown: 3,
+                    duration: 0,
+                    description: "Root target for 3 seconds (Trap x1)"
+                },
+                "Plant Mine": {
+                    reqPoints: 26,
+                    mpCost: 30,
+                    castTime: 1.5,
+                    cooldown: 3,
+                    duration: 0,
+                    description: "Plant a mine that explodes on target (Trap x1)"
+                },
+                "Worm Bomb": {
+                    reqPoints: 41,
+                    mpCost: 33,
+                    castTime: 3,
+                    cooldown: 5, 
+                    duration: 0,
+                    description: "Trap that crawls forward and explodes on target (Trap x1)"
+                },
+                "Safe Zone": {
+                    reqPoints: 50,
+                    mpCost: 46,
+                    castTime: 1.5,
+                    cooldown: 8,
+                    duration: 0,
+                    description: "Create a field that prevents field spells from being used or doing damage"
+                },
+                "Stone Prison": {
+                    reqPoints: 61,
+                    mpCost: 48,
+                    castTime: 1.5,
+                    cooldown: 3,
+                    duration: 0,
+                    description: "Create a stone prison around mounted target (Trap x1)"
+                },
+                "Mind Warp": {
+                    reqPoints: 71,
+                    mpCost: 48,
+                    castTime: 1.5,
+                    cooldown: 3,
+                    duration: 0,
+                    description: "Trap that reduces target's MP (Trap x1)"
+                },
+                "Poison Bomb": {
+                    reqPoints: 81,
+                    mpCost: 48,
+                    castTime: 8,
+                    cooldown: 3,
+                    duration: 0,
+                    description: "Trap that explodes on target, deals damage and poisons (Trap x1)"
+                },
+                "Oil Bomb": {
+                    reqPoints: 90,
+                    mpCost: 62,
+                    castTime: 6,
+                    cooldown: 30,
+                    duration: 0,
+                    description: "Trap that moves forward and explodes on target, deals damage (Trap x1)"
+                }
+            }},
+            { id: 11, name: "Dodge", skills: {
+                "Backstep": {
+                    reqPoints: 3,
+                    mpCost: 5,
+                    castTime: 0,
+                    cooldown: 3,
+                    duration: 1,
+                    description: "Step back and increase dodge by 100 for 1 second"
+                },
+                "Dash": {
+                    reqPoints: 8,
+                    mpCost: 18,
+                    castTime: 0,
+                    cooldown: 30,
+                    duration: 2,
+                    description: "Dash forward"
+                },
+                "Quick Step": {
+                    reqPoints: 16,
+                    mpCost: 35,
+                    castTime: 0.5,
+                    cooldown: 90,
+                    duration: 60,
+                    description: "Increased dodge"
+                },
+                "Tangled Fingers": {
+                    reqPoints: 21,
+                    mpCost: 22,
+                    castTime: 0.8,
+                    cooldown: 30,
+                    duration: 30,
+                    description: "Reduce target's accuracy"
+                },
+                "Reinforce (Passive)": {
+                    reqPoints: 26,
+                    mpCost: 0,
+                    castTime: 0,
+                    cooldown: 0,
+                    duration: 0,
+                    description: "Knockdown/Knockback/Freeze resistance"
+                },
+                "Avoidance": {
+                    reqPoints: 41,
+                    mpCost: 38,
+                    castTime: 0.5,
+                    cooldown: 30,
+                    duration: 0,
+                    description: "Increased dodge until hit by two physical attacks"
+                },
+                "Intuition (Passive)": {
+                    reqPoints: 50,
+                    mpCost: 0,
+                    castTime: 0,
+                    cooldown: 0,
+                    duration: 0,
+                    description: "Chance to dodge magic"
+                },
+                "Bolster": {
+                    reqPoints: 66,
+                    mpCost: 29,
+                    castTime: 1,
+                    cooldown: 1.5,
+                    duration: 2,
+                    description: "Cast Dash on target"
+                },
+                "Move Stream": {
+                    reqPoints: 81,
+                    mpCost: 60,
+                    castTime: 0,
+                    cooldown: 25,
+                    duration: 2,
+                    description: "Cast Dash on all party members in range"
+                },
+                "Sprint": {
+                    reqPoints: 90,
+                    mpCost: 18,
+                    castTime: 0,
+                    cooldown: 30,
+                    duration: 2,
+                    description: "Dash forward"
+                },
+                "Spurt": {
+                    reqPoints: 90,
+                    mpCost: 18,
+                    castTime: 0,
+                    cooldown: 30,
+                    duration: 2,
+                    description: "Dash forward"
+                }
+            }},
+        ]
     },
     12: {
 
@@ -353,3 +811,5 @@ const classSkillData = {
 
     }
 }
+
+export { classSkillData };

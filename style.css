@@ -566,3 +566,164 @@ select {
 .reset-btn:active {
     background-color: #d0d0d0;
 }
+
+/* --- Modal Styles --- */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #c0d9a9;
+    margin: 5% auto; /* 5% from the top and centered */
+    padding: 0;
+    border: 2px solid #555;
+    border-radius: 5px;
+    width: 80%; /* Could be more or less, depending on screen size */
+    max-width: 800px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    font-family: monospace;
+}
+
+.modal-header {
+    padding: 10px 15px;
+    background-color: #aed6a1;
+    border-bottom: 1px solid #777;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #000;
+}
+
+.close {
+    color: #000;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+.close:hover,
+.close:focus {
+    color: #666;
+}
+
+.modal-body {
+    padding: 15px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+/* Unlocked Skills Display */
+.unlocked-skill-category {
+    margin-bottom: 20px;
+}
+
+.unlocked-skill-category h3 {
+    margin: 0 0 10px 0;
+    padding: 5px 10px;
+    background-color: #aed6a1;
+    border: 1px solid #777;
+    border-radius: 3px;
+    font-size: 1.1em;
+}
+
+.unlocked-skill-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    margin-bottom: 5px;
+    background-color: #e8f4e1;
+    border: 1px solid #b5d6a9;
+    border-radius: 3px;
+}
+
+.unlocked-skill-item.locked {
+    background-color: #f0f0f0;
+    color: #666;
+    border-color: #ccc;
+}
+
+.skill-name-unlock {
+    font-weight: bold;
+    min-width: 150px;
+}
+
+.skill-description-unlock {
+    flex: 1;
+    margin: 0 10px;
+    font-size: 0.9em;
+}
+
+.skill-requirement {
+    font-size: 0.85em;
+    color: #555;
+    min-width: 100px;
+    text-align: right;
+}
+
+.skill-requirement.met {
+    color: #2d5a2d;
+    font-weight: bold;
+}
+
+.skill-requirement.not-met {
+    color: #a52a2a;
+}
+
+/* Additional modal content styles */
+.no-skills-message {
+    padding: 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+.no-skills-message p {
+    margin: 10px 0;
+}
+
+.job-info {
+    padding: 10px;
+    background-color: #e8f4e1;
+    border: 1px solid #b5d6a9;
+    border-radius: 3px;
+    margin-bottom: 15px;
+}
+
+.job-info p {
+    margin: 0;
+    font-weight: bold;
+}
+
+/* Skill tree grouping within categories */
+.skill-tree-group {
+    margin-bottom: 15px;
+    padding-left: 10px;
+    border-left: 3px solid #b5d6a9;
+}
+
+.skill-tree-group h4 {
+    margin: 0 0 8px 0;
+    padding: 3px 8px;
+    background-color: #d4e8ca;
+    border: 1px solid #b5d6a9;
+    border-radius: 3px;
+    font-size: 1em;
+    color: #2d5a2d;
+}
