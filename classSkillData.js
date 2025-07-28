@@ -802,13 +802,92 @@ const classSkillData = {
         ]
     },
     12: {
-
+        skills: [
+            { id: 13, name: "Banevolence", skills: {
+                "First Aid": {
+                    reqPoints: 8,
+                    mpCost: 28,
+                    castTime: 1,
+                    cooldown: 4,
+                    duration: 0,
+                    description: "Restore HP based on level, expertise, and INT"
+                },
+                "Cleanse": {
+                    reqPoints: 12,
+                    mpCost: 15,
+                    castTime: 1,
+                    cooldown: 3,
+                    duration: 0,
+                    description: "Cure Poison"
+                },
+                "Regenerate": {
+                    reqPoints: 21,
+                    mpCost: 40,
+                    castTime: 1.5,
+                    cooldown: 5,
+                    duration: 120,
+                    description: "Every few seconds, restore HP based on SPI and expertise"
+                },
+                "Vivify": {
+                    reqPoints: 26,
+                    mpCost: 18,
+                    castTime: 1,
+                    cooldown: 3,
+                    duration: 0,
+                    description: "Cure sleep/knock out/freeze"
+                },
+                "Restoration": {
+                    reqPoints: 41,
+                    mpCost: 90,
+                    castTime: 3,
+                    cooldown: 20,
+                    duration: 120,
+                    description: "Restore party HP over time based on level, expertise, and INT"
+                },
+                "Healing Aura": {
+                    reqPoints: 54,
+                    mpCost: 256,
+                    castTime: 2,
+                    cooldown: 30,
+                    duration: 0,
+                    description: "Heal party members in range"
+                },
+                "Purify": {
+                    reqPoints: 71,
+                    mpCost: 76,
+                    castTime: 1.5,
+                    cooldown: 35,
+                    duration: 15,
+                    description: "Cures all debuffs and increases resistance to debuffs for 15 seconds"
+                },
+                "Sacrifice": {
+                    reqPoints: 81,
+                    mpCost: 0,
+                    castTime: 0,
+                    cooldown: 300,
+                    duration: 0,
+                    description: "Sacrifice self to restore a party member's HP, consumes 5 Holy Waters"
+                }
+            }},
+            { id: 14, name: "Blessing", skills: {}},
+            { id: 15, name: "Exorcism", skills: {}},
+            { id: 16, name: "Hymn", skills: {}}
+        ]
     },
     17: {
+        skills: [
+            { id: 18, name: "Elemental", skills: {}},
+            { id: 19, name: "Invocation", skills: {}},
+            { id: 20, name: "Dark", skills: {}},
+            { id: 21, name: "Conflagration", skills: {}}
+        ]
 
     },
     22: {
-
+        skills: [
+            { id: 23, name: "Racial", skills: {}},
+            { id: 24, name: "Horsemanship", skills: {}}
+        ]
     }
 }
 
