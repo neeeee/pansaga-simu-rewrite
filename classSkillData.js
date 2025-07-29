@@ -1056,6 +1056,17 @@ const classSkillData = {
                     duration: 0,
                     description: "Increase magical damage and decrease skill cooldowns for all in song range"
                 },
+                "Yellow Song": {
+                    reqPoints: {
+                        "Hymn": 20,
+                        "Grace": 61
+                    },
+                    mpCost: 33,
+                    castTime: 0,
+                    cooldown: 5,
+                    duration: 0,
+                    description: "Players in song range gain immunity to damage below a certain threshold"
+                },
                 "Red Song": {
                     reqPoints: {
                         "Hymn": 30,

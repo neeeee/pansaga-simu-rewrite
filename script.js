@@ -246,8 +246,11 @@ function renderSkillsPanel() {
           <div class="skill-add-sub-controls">
             <button class="skill-btn" data-skill-id="${skillData.id}" data-type="adeptness" data-amount="-1">-</button>
             <button class="skill-btn" data-skill-id="${skillData.id}" data-type="adeptness" data-amount="1">+</button>
+            <button class="skill-btn skill-btn-wide" data-skill-id="${skillData.id}" data-type="adeptness" data-amount="-10">-10</button>
+            <button class="skill-btn skill-btn-wide" data-skill-id="${skillData.id}" data-type="adeptness" data-amount="10">+10</button>
+            <button class="skill-btn skill-btn-wide" data-skill-id="${skillData.id}" data-type="adeptness" data-amount="min">Min</button>
+            <button class="skill-btn skill-btn-wide" data-skill-id="${skillData.id}" data-type="adeptness" data-amount="max">Max</button>
             <span class="cost-display">SP: 1</span>
-            <span>1</span> <!-- The '1' from the image -->
           </div>
         </div>
       `;
@@ -268,13 +271,12 @@ function handleSkillButtonClick(event) {
   const button = event.target;
   const skillId = parseInt(button.dataset.skillId, 10);
   const type = button.dataset.type; // 'adeptness' only
-  const amount = parseInt(button.dataset.amount, 10);
+  const amountStr = button.dataset.amount;
 
   const skill = character.skills[skillId];
   if (!skill) return;
 
   const currentValue = skill[type];
-  const newValue = currentValue + amount;
 
   // Get the base values and max potential for this skill from the current job
   const jobSkillData = skills[character.jobId];
@@ -295,36 +297,50 @@ function handleSkillButtonClick(event) {
     }
   }
 
+  let newValue;
+  let pointsToAllocate;
+
+  if (amountStr === "max") {
+    // Max button: allocate to reach maximum potential
+    newValue = maxPotentialForJob;
+    pointsToAllocate = newValue - currentValue;
+  } else if (amountStr === "min") {
+    // Min button: reduce to base adeptness
+    newValue = baseAdeptnessForJob;
+    pointsToAllocate = newValue - currentValue; // This will be negative (refund)
+  } else {
+    // Regular numeric amount (+1, -1, +10, -10)
+    const amount = parseInt(amountStr, 10);
+    newValue = currentValue + amount;
+    pointsToAllocate = amount;
+  }
+
   // Check limits first
-  if (newValue < 0) {
-    return; // Cannot go below 0
+  if (newValue < baseAdeptnessForJob || newValue > maxPotentialForJob) {
+    return; // Cannot go below base adeptness or above max potential
   }
-  
+
   if (type === "adeptness") {
-    if (newValue < baseAdeptnessForJob || newValue > maxPotentialForJob) {
-      return; // Cannot go below base adeptness or above max potential
-    }
-  }
-
-  const cost = 1; // Fixed cost of 1 point per level increase
-
-  if (amount > 0) {
-    // Adding points
-    if (type === "adeptness") {
-      if (character.points.spentSkill + cost <= character.points.totalSkill) {
-        character.points.spentSkill += cost;
+    if (pointsToAllocate > 0) {
+      // Adding points - check if we have enough skill points
+      if (character.points.spentSkill + pointsToAllocate <= character.points.totalSkill) {
+        character.points.spentSkill += pointsToAllocate;
         skill[type] = newValue;
       } else {
-        return; // Not enough Skill Points
+        // Not enough skill points - allocate as many as possible
+        const availablePoints = character.points.totalSkill - character.points.spentSkill;
+        if (availablePoints > 0) {
+          character.points.spentSkill += availablePoints;
+          skill[type] = currentValue + availablePoints;
+        }
+        return;
       }
+    } else if (pointsToAllocate < 0) {
+      // Subtracting points (refund)
+      const refundAmount = Math.abs(pointsToAllocate);
+      character.points.spentSkill -= refundAmount;
+      skill[type] = newValue;
     }
-  } else {
-    // Subtracting points (refund)
-    // Base values are already checked above, so we can proceed with the refund
-
-    const refundCost = 1; // Fixed refund of 1 point per level
-    if (type === "adeptness") character.points.spentSkill -= refundCost;
-    skill[type] = newValue;
   }
 
   runCalculations(); // Recalculate and re-render
