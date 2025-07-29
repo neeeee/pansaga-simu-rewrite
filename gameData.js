@@ -372,9 +372,9 @@ export const gameData = {
       ],
     },
     12: {
-      name: "Grace",
+      name: "Prayer",
       skills: [
-        { id: 13, name: "Banevolence" },
+        { id: 13, name: "Grace" },
         { id: 14, name: "Blessing" },
         { id: 15, name: "Exorcism" },
         { id: 16, name: "Hymn" },
@@ -385,8 +385,8 @@ export const gameData = {
       skills: [
         { id: 18, name: "Elemental" },
         { id: 19, name: "Invocation" },
-        { id: 20, name: "Dark" },
-        { id: 21, name: "Conflagration" },
+        { id: 20, name: "Darkness" },
+        { id: 21, name: "Confusion" },
       ],
     },
     22: {

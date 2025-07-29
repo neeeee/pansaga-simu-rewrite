@@ -3,6 +3,7 @@ import { skills } from "./jobSkillValues.js";
 import { items } from "./equipData.js";
 import { setBonuses } from "./setBonuses.js";
 import { classSkillData } from "./classSkillData.js";
+import { classSpecificSkillData } from "./classSpecificSkillData.js";
 
 // --- CONSTANTS ---
 const PRIMARY_STATS = ["sta", "str", "agi", "dex", "spr", "int"];
@@ -1196,6 +1197,94 @@ function calculateUnlockedSkills() {
           skillTree: skillTreeName
         });
       }
+    }
+    
+    // If no skills were added to this category, remove it
+    if (unlockedSkills[categoryName].skills.length === 0) {
+      delete unlockedSkills[categoryName];
+    }
+  }
+  
+  // Add class-specific skills
+  const classSpecificSkills = classSpecificSkillData[character.jobId];
+  if (classSpecificSkills && Object.keys(classSpecificSkills).length > 0) {
+    const jobInfo = gameData.jobs[character.jobId];
+    const categoryName = `${jobInfo.name} Skills`;
+    
+    if (!unlockedSkills[categoryName]) {
+      unlockedSkills[categoryName] = {
+        name: categoryName,
+        skills: []
+      };
+    }
+    
+    for (const skillName in classSpecificSkills) {
+      const skillData = classSpecificSkills[skillName];
+      
+      // Check if skill is unlocked
+      let isUnlocked = false;
+      let requirementText = "";
+      
+      if (skillData.reqLevel !== undefined) {
+        // Level requirement
+        isUnlocked = character.level >= skillData.reqLevel;
+        requirementText = `Level ${skillData.reqLevel}`;
+      } else if (skillData.reqPoints !== undefined) {
+        // Skill point requirements (similar to other skills)
+        if (typeof skillData.reqPoints === 'number') {
+          // This shouldn't happen for class skills, but handle it just in case
+          requirementText = `Unknown requirement ${skillData.reqPoints}`;
+        } else if (typeof skillData.reqPoints === 'object') {
+          // Multiple skill requirements
+          isUnlocked = true;
+          const requirements = [];
+          
+          for (const reqSkillName in skillData.reqPoints) {
+            const reqLevel = skillData.reqPoints[reqSkillName];
+            
+            // Find the skill ID by name
+            let reqSkillId = null;
+            for (const catId in gameData.skills) {
+              const category = gameData.skills[catId];
+              const skill = category.skills.find(s => s.name === reqSkillName);
+              if (skill) {
+                reqSkillId = skill.id;
+                break;
+              }
+            }
+            
+            if (reqSkillId) {
+              const currentReqSkillLevel = character.skills[reqSkillId]?.adeptness || 0;
+              if (currentReqSkillLevel < reqLevel) {
+                isUnlocked = false;
+              }
+              requirements.push(`${reqSkillName} ${reqLevel}`);
+            } else {
+              // Skill not found, mark as not unlocked
+              isUnlocked = false;
+              requirements.push(`${reqSkillName} ${reqLevel} (unknown skill)`);
+            }
+          }
+          
+          requirementText = requirements.join(", ");
+        }
+      } else {
+        // No requirements specified
+        isUnlocked = true;
+        requirementText = "None";
+      }
+      
+      unlockedSkills[categoryName].skills.push({
+        name: skillName,
+        description: skillData.description,
+        requirement: requirementText,
+        isUnlocked: isUnlocked,
+        mpCost: skillData.mpCost,
+        castTime: skillData.castTime,
+        cooldown: skillData.cooldown,
+        duration: skillData.duration,
+        skillTree: "Class Specific"
+      });
     }
     
     // If no skills were added to this category, remove it
