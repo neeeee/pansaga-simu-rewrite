@@ -409,7 +409,7 @@ function populateRacialSkillDropdown() {
 function readInputs() {
   let level = parseInt(elements.level.value, 10);
   // Enforce level limits
-  level = Math.max(1, Math.min(55, level));
+  level = Math.max(1, Math.min(gameData.maxLevel, level));
   if (level !== parseInt(elements.level.value, 10)) {
     elements.level.value = level;
   }

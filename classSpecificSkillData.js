@@ -1316,6 +1316,14 @@ const classSpecificSkillData = {
             duration: 0,
             description: "Trip the target with electricity"
        },       
+       "Shadow Garments (Passive)": {
+            reqLevel: 20,
+            mpCost: 0,
+            castTime: 0,
+            cooldown: 0,
+            duration: 0,
+            description: "Fire, Ice, and Lightning resistance increase when gear is enhanced with dark"
+       }
     },
     26: {
         // Corruptor
@@ -1335,6 +1343,22 @@ const classSpecificSkillData = {
             duration: 0,
             description: "Trip the target with electricity"
        },      
+       "Shadow Garments (Passive)": {
+            reqLevel: 20,
+            mpCost: 0,
+            castTime: 0,
+            cooldown: 0,
+            duration: 0,
+            description: "Fire, Ice, and Lightning resistance increase when gear is enhanced with dark"
+       },
+       "Discomfort (Passive)": {
+            reqLevel: 60,
+            mpCost: 0,
+            castTime: 0,
+            cooldown: 0,
+            duration: 0,
+            description: "Increase debuff duration +5%"
+       }
     },
     27: {
         // Shadowblade
@@ -1354,6 +1378,30 @@ const classSpecificSkillData = {
             duration: 0,
             description: "Trip the target with electricity"
        },     
+       "Shadow Garments (Passive)": {
+            reqLevel: 20,
+            mpCost: 0,
+            castTime: 0,
+            cooldown: 0,
+            duration: 0,
+            description: "Fire, Ice, and Lightning resistance increase when gear is enhanced with dark"
+       },
+       "Dark Shield (Passive)": {
+            reqLevel: 45,
+            mpCost: 0,
+            castTime: 0,
+            cooldown: 0,
+            duration: 0,
+            description: "Reduce recoil damage from Gloom"
+       },
+       "Median Riding (Passive)": {
+            reqLevel: 45,
+            mpCost: 0,
+            castTime: 0,
+            cooldown: 0,
+            duration: 0,
+            description: "Gain ability to cast spells while mounted"
+       }
     },
 }
 
