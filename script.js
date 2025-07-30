@@ -1725,30 +1725,53 @@ function displayUnlockedSkills() {
             const detailedSkillData = getDetailedSkillData(skill.name);
             let skillStatsHtml = '';
             
-            if (detailedSkillData && skill.isUnlocked) {
-              // Calculate bonuses for this skill calculation
-              const bonuses = { description: [], stats: {} };
-              applyEquipmentBonuses(bonuses);
-              applySetBonuses(bonuses);
-              applyRacialSkillEffects(bonuses);
-              applySkillBuffEffects(bonuses);
+            if (detailedSkillData) {
+              // Build base stats (always show for all skills)
+              let baseStatsParts = [];
+              if (detailedSkillData.mpCost > 0) baseStatsParts.push(`MP: ${detailedSkillData.mpCost}`);
+              if (detailedSkillData.castTime > 0) baseStatsParts.push(`Cast: ${detailedSkillData.castTime.toFixed(1)}s`);
+              if (detailedSkillData.cooldown > 0) baseStatsParts.push(`Cooldown: ${detailedSkillData.cooldown.toFixed(1)}s`);
+              if (detailedSkillData.duration > 0) baseStatsParts.push(`Duration: ${detailedSkillData.duration}s`);
               
-              // Calculate effective values
-              const effectiveMp = calculateEffectiveMpCost(detailedSkillData.mpCost, bonuses);
-              const effectiveCastTime = calculateEffectiveCastTime(detailedSkillData.castTime, bonuses);
-              const effectiveCooldown = calculateEffectiveCooldown(detailedSkillData.cooldown, bonuses);
-              const duration = detailedSkillData.duration || 0;
-              
-              // Build skill stats string
-              let statsParts = [];
-              if (effectiveMp > 0) statsParts.push(`MP: ${effectiveMp}`);
-              if (effectiveCastTime > 0) statsParts.push(`Cast: ${effectiveCastTime.toFixed(1)}s`);
-              if (effectiveCooldown > 0) statsParts.push(`Cooldown: ${effectiveCooldown.toFixed(1)}s`);
-              if (duration > 0) statsParts.push(`Duration: ${duration}s`);
-              
-              if (statsParts.length > 0) {
-                skillStatsHtml = `<div class="skill-modal-stats">${statsParts.join(' | ')}</div>`;
+              let baseStatsHtml = '';
+              if (baseStatsParts.length > 0) {
+                baseStatsHtml = `<div class="skill-modal-stats-base">Base: ${baseStatsParts.join(' | ')}</div>`;
               }
+              
+              // For unlocked skills, also show modified stats
+              let modifiedStatsHtml = '';
+              if (skill.isUnlocked) {
+                // Calculate bonuses for this skill calculation
+                const bonuses = { description: [], stats: {} };
+                applyEquipmentBonuses(bonuses);
+                applySetBonuses(bonuses);
+                applyRacialSkillEffects(bonuses);
+                applySkillBuffEffects(bonuses);
+                
+                // Calculate effective values
+                const effectiveMp = calculateEffectiveMpCost(detailedSkillData.mpCost, bonuses);
+                const effectiveCastTime = calculateEffectiveCastTime(detailedSkillData.castTime, bonuses);
+                const effectiveCooldown = calculateEffectiveCooldown(detailedSkillData.cooldown, bonuses);
+                const duration = detailedSkillData.duration || 0;
+                
+                // Build modified stats string (only if different from base)
+                let modifiedStatsParts = [];
+                if (detailedSkillData.mpCost > 0 && effectiveMp !== detailedSkillData.mpCost) {
+                  modifiedStatsParts.push(`MP: ${effectiveMp}`);
+                }
+                if (detailedSkillData.castTime > 0 && Math.abs(effectiveCastTime - detailedSkillData.castTime) > 0.01) {
+                  modifiedStatsParts.push(`Cast: ${effectiveCastTime.toFixed(1)}s`);
+                }
+                if (detailedSkillData.cooldown > 0 && Math.abs(effectiveCooldown - detailedSkillData.cooldown) > 0.01) {
+                  modifiedStatsParts.push(`Cooldown: ${effectiveCooldown.toFixed(1)}s`);
+                }
+                
+                if (modifiedStatsParts.length > 0) {
+                  modifiedStatsHtml = `<div class="skill-modal-stats">Modified: ${modifiedStatsParts.join(' | ')}</div>`;
+                }
+              }
+              
+              skillStatsHtml = baseStatsHtml + modifiedStatsHtml;
             }
             
             html += `

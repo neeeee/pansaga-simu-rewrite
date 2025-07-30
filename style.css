@@ -756,15 +756,28 @@ select {
     color: #a52a2a;
 }
 
+.skill-modal-stats-base {
+    font-size: 0.8rem;
+    color: #666;
+    background-color: #f5f5f5;
+    padding: 2px 5px;
+    border-radius: 2px;
+    border: 1px solid #ddd;
+    font-family: monospace;
+    align-self: flex-start;
+    margin: 1px 0;
+}
+
 .skill-modal-stats {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: #0066cc;
     background-color: #f0f8ff;
-    padding: 3px 6px;
-    border-radius: 3px;
+    padding: 2px 5px;
+    border-radius: 2px;
     border: 1px solid #b3d9ff;
     font-family: monospace;
     align-self: flex-start;
+    margin: 1px 0;
 }
 
 /* Equipment Modal Styles */
