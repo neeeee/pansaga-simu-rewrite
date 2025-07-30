@@ -33,6 +33,22 @@
                 </div>
             </div>
 
+            <!-- MODAL BUTTONS ROW -->
+            <div class="modal-buttons-row">
+                <button id="buffs-modal-btn" class="modal-btn">
+                    <span>⚡</span>
+                    <span>Buffs</span>
+                </button>
+                <button id="equipment-modal-btn" class="modal-btn">
+                    <span>⚔️</span>
+                    <span>Equipment</span>
+                </button>
+                <button id="preview-skills" class="modal-btn">
+                    <span>🎯</span>
+                    <span>Skills</span>
+                </button>
+            </div>
+
             <div class="calculator-grid">
                 <!-- LEFT PANEL: Level & Base Stats -->
                 <div class="panel panel-left">
@@ -141,7 +157,6 @@
                     <div class="reset-buttons-row">
                         <button id="reset-status-points" class="reset-btn">Reset Status Points</button>
                         <button id="reset-ability-points" class="reset-btn">Reset Ability Points</button>
-                        <button id="preview-skills" class="reset-btn">Preview Unlocked Skills</button>
                     </div>
                 </div>
 
@@ -417,34 +432,115 @@
                         <!-- Skills rendered by JS -->
                     </div>
                 </div>
-                <!-- BOTTOM PANEL: Equipment & Set Bonuses -->
+                <!-- BOTTOM PANEL: Set Bonuses -->
                 <div class="panel panel-bottom">
-                    <div class="equipment-selectors-grid">
-                        <div class="input-group">
-                            <label for="equip-weapon">Weapon</label>
-                            <select
-                                id="equip-weapon"
-                                class="equip-selector"
-                            ></select>
-                        </div>
-                        <div class="input-group">
-                            <label for="equip-head">Head</label>
-                            <select
-                                id="equip-head"
-                                class="equip-selector"
-                            ></select>
-                        </div>
-                        <div class="input-group">
-                            <label for="equip-torso">Torso</label>
-                            <select
-                                id="equip-torso"
-                                class="equip-selector"
-                            ></select>
+                    <div id="set-bonus-display">
+                        <h3>Active Bonuses</h3>
+                        <ul id="set-bonus-list"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Buffs Modal -->
+        <div id="buffs-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Active Buffs</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div id="buffs-display">
+                        <p>Buff management system coming soon...</p>
+                        <div class="buff-section">
+                            <h3>Temporary Buffs</h3>
+                            <div class="buff-grid">
+                                <label class="buff-item">
+                                    <input type="checkbox" id="buff-proelium" data-buff="proelium">
+                                    <span>Proelium (+STR/AGI/INT)</span>
+                                </label>
+                                <label class="buff-item">
+                                    <input type="checkbox" id="buff-velox" data-buff="velox">
+                                    <span>Velox (+Attack Speed)</span>
+                                </label>
+                                <label class="buff-item">
+                                    <input type="checkbox" id="buff-lapis-mediow" data-buff="lapis">
+                                    <span>Lapis Mediow (+Defense)</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
-                    <div id="set-bonus-display">
-                        <h3>Active Set Bonuses</h3>
-                        <ul id="set-bonus-list"></ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Equipment Modal -->
+        <div id="equipment-modal" class="modal">
+            <div class="modal-content modal-content-wide">
+                <div class="modal-header">
+                    <h2>Equipment Management</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div id="equipment-display">
+                        <div class="equipment-grid">
+                            <div class="equipment-slot">
+                                <label for="equip-weapon">Weapon</label>
+                                <select id="equip-weapon" class="equip-selector"></select>
+                            </div>
+                            <div class="equipment-slot">
+                                <label for="equip-shield">Shield</label>
+                                <select id="equip-shield" class="equip-selector"></select>
+                            </div>
+                            <div class="equipment-slot">
+                                <label for="equip-head">Head</label>
+                                <select id="equip-head" class="equip-selector"></select>
+                            </div>
+                            <div class="equipment-slot">
+                                <label for="equip-torso">Torso</label>
+                                <select id="equip-torso" class="equip-selector"></select>
+                            </div>
+                            <div class="equipment-slot">
+                                <label for="equip-gloves">Gloves</label>
+                                <select id="equip-gloves" class="equip-selector"></select>
+                            </div>
+                            <div class="equipment-slot">
+                                <label for="equip-pants">Pants</label>
+                                <select id="equip-pants" class="equip-selector"></select>
+                            </div>
+                            <div class="equipment-slot">
+                                <label for="equip-boots">Boots</label>
+                                <select id="equip-boots" class="equip-selector"></select>
+                            </div>
+                            <div class="equipment-slot">
+                                <label for="equip-cape">Cape</label>
+                                <select id="equip-cape" class="equip-selector"></select>
+                            </div>
+                            <div class="equipment-slot">
+                                <label for="equip-earring1">Earring 1</label>
+                                <select id="equip-earring1" class="equip-selector"></select>
+                            </div>
+                            <div class="equipment-slot">
+                                <label for="equip-earring2">Earring 2</label>
+                                <select id="equip-earring2" class="equip-selector"></select>
+                            </div>
+                            <div class="equipment-slot">
+                                <label for="equip-necklace">Necklace</label>
+                                <select id="equip-necklace" class="equip-selector"></select>
+                            </div>
+                            <div class="equipment-slot">
+                                <label for="equip-belt">Belt</label>
+                                <select id="equip-belt" class="equip-selector"></select>
+                            </div>
+                            <div class="equipment-slot">
+                                <label for="equip-ring1">Ring 1</label>
+                                <select id="equip-ring1" class="equip-selector"></select>
+                            </div>
+                            <div class="equipment-slot">
+                                <label for="equip-ring2">Ring 2</label>
+                                <select id="equip-ring2" class="equip-selector"></select>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

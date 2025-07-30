@@ -4,7 +4,7 @@ export const setBonuses = [
     requiredItems: ["head-falcon-mask", "torso-falcon-jacket"],
     bonus: {
       description: "Falcon Set: +15 Accuracy, +5% MP Reduction",
-      stats: { acc: 15, reduceMp: -5 },
+      stats: { acc: 15, redMp: -5 },
     },
   },
   {

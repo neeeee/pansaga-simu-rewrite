@@ -29,4 +29,17 @@ export const items = {
     slot: "torso",
     stats: { def: 25, agi: 5 },
   },
+  
+  // Additional Equipment Slots
+  "shield-none": { id: "shield-none", name: "None", slot: "shield" },
+  "gloves-none": { id: "gloves-none", name: "None", slot: "gloves" },
+  "pants-none": { id: "pants-none", name: "None", slot: "pants" },
+  "boots-none": { id: "boots-none", name: "None", slot: "boots" },
+  "cape-none": { id: "cape-none", name: "None", slot: "cape" },
+  "earring1-none": { id: "earring1-none", name: "None", slot: "earring1" },
+  "earring2-none": { id: "earring2-none", name: "None", slot: "earring2" },
+  "necklace-none": { id: "necklace-none", name: "None", slot: "necklace" },
+  "belt-none": { id: "belt-none", name: "None", slot: "belt" },
+  "ring1-none": { id: "ring1-none", name: "None", slot: "ring1" },
+  "ring2-none": { id: "ring2-none", name: "None", slot: "ring2" },
 };

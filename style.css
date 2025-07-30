@@ -28,16 +28,61 @@ h1 {
 /* --- Top Selector Row (Race, Skill, Job) --- */
 .top-selectors-row {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     padding: 5px 10px;
     background-color: #aed6a1; /* Header green */
     border-bottom: 1px solid #777;
     font-weight: bold;
 }
 
+/* --- Modal Buttons Row --- */
+.modal-buttons-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    background-color: #e8f4e8;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    padding: 8px;
+    margin: 10px 0;
+}
+
+.modal-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 12px;
+    background-color: #fff;
+    border: 1px solid #888;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 60px;
+    font-family: inherit;
+}
+
+.modal-btn:hover {
+    background-color: #f0f8ff;
+    border-color: #0066cc;
+    transform: translateY(-1px);
+}
+
+.modal-btn span:first-child {
+    font-size: 16px;
+}
+
+.modal-btn span:last-child {
+    font-size: 11px;
+    font-weight: bold;
+    color: #333;
+}
+
 .selector-group {
     display: flex;
     align-items: center;
+    margin-left: 10px;
     gap: 5px;
 }
 
@@ -701,6 +746,85 @@ select {
 
 .skill-requirement.not-met {
     color: #a52a2a;
+}
+
+/* Equipment Modal Styles */
+.modal-content-wide {
+    width: 90%;
+    max-width: 1000px;
+}
+
+.equipment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    padding: 10px 0;
+}
+
+.equipment-slot {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.equipment-slot label {
+    font-weight: bold;
+    color: #333;
+    font-size: 0.9em;
+}
+
+.equipment-slot select {
+    padding: 5px;
+    border: 1px solid #777;
+    border-radius: 3px;
+    background-color: #fff;
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
+/* Buffs Modal Styles */
+.buff-section {
+    margin-bottom: 20px;
+}
+
+.buff-section h3 {
+    margin: 0 0 10px 0;
+    padding: 5px 10px;
+    background-color: #aed6a1;
+    border: 1px solid #777;
+    border-radius: 3px;
+    font-size: 1em;
+}
+
+.buff-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.buff-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background-color: #e8f4e1;
+    border: 1px solid #b5d6a9;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.buff-item:hover {
+    background-color: #d8e8d1;
+}
+
+.buff-item input[type="checkbox"] {
+    margin: 0;
+}
+
+.buff-item span {
+    font-size: 0.9em;
+    color: #333;
 }
 
 /* Additional modal content styles */

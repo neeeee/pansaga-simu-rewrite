@@ -17,8 +17,24 @@ const character = {
   addedStats: { sta: 0, str: 0, agi: 0, dex: 0, spr: 0, int: 0 }, // Set to 0 added for the image
   equipment: {
     weapon: "weapon-none",
+    shield: "shield-none", 
     head: "head-none",
     torso: "torso-none",
+    gloves: "gloves-none",
+    pants: "pants-none", 
+    boots: "boots-none",
+    cape: "cape-none",
+    earring1: "earring1-none",
+    earring2: "earring2-none",
+    necklace: "necklace-none",
+    belt: "belt-none",
+    ring1: "ring1-none",
+    ring2: "ring2-none",
+  },
+  buffs: {
+    proelium: false,
+    velox: false,
+    lapis: false,
   },
   skills: {}, // { [skillId]: { adeptness: 0, potential: 0 } }
   points: {
@@ -60,8 +76,19 @@ const elements = {
   },
   equipmentSelectors: {
     weapon: document.getElementById("equip-weapon"),
+    shield: document.getElementById("equip-shield"),
     head: document.getElementById("equip-head"),
     torso: document.getElementById("equip-torso"),
+    gloves: document.getElementById("equip-gloves"),
+    pants: document.getElementById("equip-pants"),
+    boots: document.getElementById("equip-boots"),
+    cape: document.getElementById("equip-cape"),
+    earring1: document.getElementById("equip-earring1"),
+    earring2: document.getElementById("equip-earring2"),
+    necklace: document.getElementById("equip-necklace"),
+    belt: document.getElementById("equip-belt"),
+    ring1: document.getElementById("equip-ring1"),
+    ring2: document.getElementById("equip-ring2"),
   },
   outputs: {
     sta: document.getElementById("total-sta"),
@@ -129,6 +156,12 @@ const elements = {
   skillPreviewModal: document.getElementById("skill-preview-modal"),
   modalClose: document.querySelector("#skill-preview-modal .close"),
   unlockedSkillsDisplay: document.getElementById("unlocked-skills-display"),
+  
+  // New modal elements
+  buffsModalButton: document.getElementById("buffs-modal-btn"),
+  buffsModal: document.getElementById("buffs-modal"),
+  equipmentModalButton: document.getElementById("equipment-modal-btn"),
+  equipmentModal: document.getElementById("equipment-modal"),
 };
 
 /**
@@ -387,6 +420,40 @@ function populateDropdowns() {
     elements.equipmentSelectors[slot].value = character.equipment[slot]; // Set initial value
     } else {
       console.warn(`No items found for slot: ${slot}`);
+    }
+  }
+}
+
+/**
+ * Populates equipment selectors in the equipment modal.
+ */
+function populateEquipmentSelectors() {
+  const itemsBySlot = {};
+  for (const item of Object.values(items)) {
+    if (!itemsBySlot[item.slot]) itemsBySlot[item.slot] = [];
+    itemsBySlot[item.slot].push(item);
+  }
+
+  for (const slot in elements.equipmentSelectors) {
+    const selector = elements.equipmentSelectors[slot];
+    if (!selector) continue; // Skip if element doesn't exist
+    
+    if (itemsBySlot[slot]) {
+      // Sort items so "None" options appear first
+      const sortedItems = itemsBySlot[slot].sort((a, b) => {
+        if (a.name === "None") return -1;
+        if (b.name === "None") return 1;
+        return a.name.localeCompare(b.name);
+      });
+      
+      selector.innerHTML = sortedItems
+        .map((item) => `<option value="${item.id}">${item.name}</option>`)
+        .join("");
+      selector.value = character.equipment[slot] || `${slot}-none`; // Set initial value
+    } else {
+      // Create a "None" option for empty slots
+      selector.innerHTML = `<option value="${slot}-none">None</option>`;
+      selector.value = `${slot}-none`;
     }
   }
 }
@@ -704,11 +771,19 @@ function calculateDerivedStats(bonuses = {}) {
   // LP Heal - base 100%
   stats.lpHeal = 100;
 
+  // Calculate MP cost reduction from both racial skills and set bonuses
+  let totalMpReduction = 0;
+  
   if (bonuses.mpCostReduction) {
-    stats.redMp = 100 - bonuses.mpCostReduction;
-  } else {
-    stats.redMp = 100;
+    totalMpReduction += bonuses.mpCostReduction;
   }
+  
+  if (bonuses.stats.redMp) {
+    // Set bonus redMp is negative for reduction (e.g., -5 means 5% reduction)
+    totalMpReduction += Math.abs(bonuses.stats.redMp);
+  }
+  
+  stats.redMp = 100 - totalMpReduction;
 
 
   // ATK Calculations
@@ -1397,6 +1472,35 @@ function closeSkillPreviewModal() {
   elements.skillPreviewModal.style.display = "none";
 }
 
+/**
+ * Opens the buffs modal.
+ */
+function openBuffsModal() {
+  elements.buffsModal.style.display = "block";
+}
+
+/**
+ * Closes the buffs modal.
+ */
+function closeBuffsModal() {
+  elements.buffsModal.style.display = "none";
+}
+
+/**
+ * Opens the equipment modal.
+ */
+function openEquipmentModal() {
+  populateEquipmentSelectors();
+  elements.equipmentModal.style.display = "block";
+}
+
+/**
+ * Closes the equipment modal.
+ */
+function closeEquipmentModal() {
+  elements.equipmentModal.style.display = "none";
+}
+
 // --- Event Listeners and Initial Population (Same as before) ---
 document.getElementById("race").addEventListener("change", handleJobRaceChange);
 document
@@ -1443,15 +1547,31 @@ for (const equipSelector of Object.values(elements.equipmentSelectors)) {
 elements.resetButtons.statusPoints.addEventListener("click", resetStatusPoints);
 elements.resetButtons.abilityPoints.addEventListener("click", resetAbilityPoints);
 
-// Add event listeners for skill preview modal
+// Add event listeners for modals
 elements.skillPreviewButton.addEventListener("click", openSkillPreviewModal);
 elements.modalClose.addEventListener("click", closeSkillPreviewModal);
+elements.buffsModalButton.addEventListener("click", openBuffsModal);
+elements.equipmentModalButton.addEventListener("click", openEquipmentModal);
 
-// Close modal when clicking outside of it
+// Close modal when clicking outside of it or on close button
 window.addEventListener("click", (event) => {
   if (event.target === elements.skillPreviewModal) {
     closeSkillPreviewModal();
   }
+  if (event.target === elements.buffsModal) {
+    closeBuffsModal();
+  }
+  if (event.target === elements.equipmentModal) {
+    closeEquipmentModal();
+  }
+});
+
+// Add close button listeners for new modals
+document.querySelectorAll(".modal .close").forEach(closeButton => {
+  closeButton.addEventListener("click", (event) => {
+    const modal = event.target.closest(".modal");
+    modal.style.display = "none";
+  });
 });
 
 document.addEventListener("DOMContentLoaded", () => {
