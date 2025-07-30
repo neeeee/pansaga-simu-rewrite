@@ -844,7 +844,7 @@ const classSpecificSkillData = {
     },
     16: {
         // Cleric
-         "Meditation": {
+        "Meditation": {
             reqLevel: 5,
             mpCost: 0,
             castTime: 0,
@@ -875,14 +875,6 @@ const classSpecificSkillData = {
             cooldown: 20,
             duration: 120,
             description: "Increase MP regen for party"
-        },
-        "Divine Aid": {
-            reqLevel: 28,
-            mpCost: 89,
-            castTime: 4,
-            cooldown: 1.54,
-            duration: 480,
-            description: "Increase LP for party"
         },
         "Revive": {
             reqLevel: 35,
@@ -943,14 +935,6 @@ const classSpecificSkillData = {
             duration: 120,
             description: "Increase MP regen for party"
         },
-        "Divine Aid": {
-            reqLevel: 28,
-            mpCost: 89,
-            castTime: 4,
-            cooldown: 1.54,
-            duration: 480,
-            description: "Increase LP for party"
-        },
         "Revive": {
             reqLevel: 35,
             mpCost: 65,
@@ -978,7 +962,7 @@ const classSpecificSkillData = {
     },
     18: {
         // Ascetic
-           "Meditation": {
+        "Meditation": {
             reqLevel: 5,
             mpCost: 0,
             castTime: 0,

@@ -664,9 +664,11 @@ function getAllSkillBuffs() {
   }
   
   // Search through classSpecificSkillData
-  for (const [classId, classData] of Object.entries(classSpecificSkillData)) {
-    if (classData.skills) {
-      extractBuffsFromCategory(classData.skills, `${classData.name} Specific`);
+  for (const [classId, skillsData] of Object.entries(classSpecificSkillData)) {
+    // classSpecificSkillData has skills directly under job ID, not under a .skills property
+    if (skillsData && typeof skillsData === 'object') {
+      const jobName = gameData.jobs[parseInt(classId)]?.name || `Job ${classId}`;
+      extractBuffsFromCategory(skillsData, `${jobName} Specific`);
     }
   }
   
@@ -704,9 +706,10 @@ function getDetailedSkillData(skillName) {
   }
   
   // Search through classSpecificSkillData
-  for (const [classId, classData] of Object.entries(classSpecificSkillData)) {
-    if (classData.skills && classData.skills[skillName]) {
-      return classData.skills[skillName];
+  for (const [classId, skillsData] of Object.entries(classSpecificSkillData)) {
+    // classSpecificSkillData has skills directly under job ID, not under a .skills property
+    if (skillsData && skillsData[skillName]) {
+      return skillsData[skillName];
     }
   }
   
