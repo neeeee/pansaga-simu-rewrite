@@ -884,6 +884,52 @@ const classSkillData = {
                     castTime: 0.5,
                     cooldown: 1.5,
                     duration: 480,
+                    buff: "lapis",
+                    buffEffectTable: {
+                        sprValues: [
+                            {value: 33, 
+                                Blessing: [
+                                    {value: 24.9, def: 5},
+                                    {value: 25, def: 6},
+                                    {value: 50, def: 7},
+                                    {value: 75, def: 8},
+                                ],
+                            },
+                            {value: 34, 
+                                Blessing: [
+                                    {value: 24.9, def: 6},
+                                    {value: 25, def: 7},
+                                    {value: 50, def: 8},
+                                    {value: 75, def: 9},
+                                ],
+                            },
+                            {value: 67, 
+                                Blessing: [
+                                    {value: 24.9, def: 7},
+                                    {value: 25, def: 8},
+                                    {value: 50, def: 9},
+                                    {value: 75, def: 10},
+                                ],
+                            },
+                            {value: 100, 
+                                Blessing: [
+                                    {value: 24.9, def: 8},
+                                    {value: 25, def: 9},
+                                    {value: 50, def: 10},
+                                    {value: 75, def: 11},
+                                ],
+                            },
+                            {value: 134,
+                                Blessing: [
+                                    {value: 24.9, def: 9},
+                                    {value: 25, def: 10},
+                                    {value: 50, def: 11},
+                                    {value: 75, def: 12},
+                                ],
+                            },
+                        ],
+
+                    },
                     description: "Increase player's defense"
                 },  
                 "Impedimentia": {
@@ -916,7 +962,10 @@ const classSkillData = {
                     castTime: 0,
                     cooldown: 5,
                     duration: 90,
-                    description: "Cure Poison"
+                    buffEffectTable: {
+                        "castTime": -50,
+                    },
+                    description: "Cut base cast time of all skills by 50%"
                 },  
                 "Proelium": {
                     reqPoints: 61,
@@ -924,6 +973,11 @@ const classSkillData = {
                     castTime: 0.5,
                     cooldown: 1.5,
                     duration: 480,
+                    buffEffectTable: {
+                        str: 9,
+                        agi: 9,
+                        int: 9,
+                    },
                     description: "Increase player's STR, AGI, and INT"
                 },  
                 "Locomitigation": {
@@ -1035,6 +1089,22 @@ const classSkillData = {
                     castTime: 0,
                     cooldown: 5,
                     duration: 0,
+                    buffEffectTable: {
+                        sprValues: [
+                            {value: 33, 
+                                Blessing: [
+                                    {value: 8, dodgeChance: 1},
+                                    {value: 16, dodgeChance: 2},
+                                    {value: 24, dodgeChance: 3},
+                                    {value: 31, dodgeChance: 4},
+                                    {value: 39, dodgeChance: 5},
+                                    {value: 47, dodgeChance: 6},
+                                    {value: 54, dodgeChance: 7},
+                                    {value: 62, dodgeChance: 8},
+                                ],
+                            },
+                        ],
+                    },
                     description: "Increase accuracy and dodge for those in song range"
                 },
                 "Luminous Chant (Passive)": {

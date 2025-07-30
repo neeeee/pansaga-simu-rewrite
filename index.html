@@ -36,15 +36,12 @@
             <!-- MODAL BUTTONS ROW -->
             <div class="modal-buttons-row">
                 <button id="buffs-modal-btn" class="modal-btn">
-                    <span>⚡</span>
                     <span>Buffs</span>
                 </button>
                 <button id="equipment-modal-btn" class="modal-btn">
-                    <span>⚔️</span>
                     <span>Equipment</span>
                 </button>
                 <button id="preview-skills" class="modal-btn">
-                    <span>🎯</span>
                     <span>Skills</span>
                 </button>
             </div>
@@ -90,6 +87,7 @@
                             min="0"
                             max="99"
                         />
+                        <span class="stat-buff-bonus" id="buff-bonus-sta"></span>
                     </div>
                     <div class="stat-input-row">
                         <span class="stat-cost" id="cost-str">2p</span>
@@ -102,6 +100,7 @@
                             min="0"
                             max="99"
                         />
+                        <span class="stat-buff-bonus" id="buff-bonus-str"></span>
                     </div>
                     <div class="stat-input-row">
                         <span class="stat-cost" id="cost-agi">2p</span>
@@ -114,6 +113,7 @@
                             min="0"
                             max="99"
                         />
+                        <span class="stat-buff-bonus" id="buff-bonus-agi"></span>
                     </div>
                     <div class="stat-input-row">
                         <span class="stat-cost" id="cost-dex">2p</span>
@@ -126,6 +126,7 @@
                             min="0"
                             max="99"
                         />
+                        <span class="stat-buff-bonus" id="buff-bonus-dex"></span>
                     </div>
                     <div class="stat-input-row">
                         <span class="stat-cost" id="cost-spr">2p</span>
@@ -138,6 +139,7 @@
                             min="0"
                             max="99"
                         />
+                        <span class="stat-buff-bonus" id="buff-bonus-spr"></span>
                     </div>
                     <div class="stat-input-row">
                         <span class="stat-cost" id="cost-int">2p</span>
@@ -150,6 +152,7 @@
                             min="0"
                             max="99"
                         />
+                        <span class="stat-buff-bonus" id="buff-bonus-int"></span>
                     </div>
                     
                     <!-- Reset Buttons -->
@@ -451,24 +454,7 @@
                 </div>
                 <div class="modal-body">
                     <div id="buffs-display">
-                        <p>Buff management system coming soon...</p>
-                        <div class="buff-section">
-                            <h3>Temporary Buffs</h3>
-                            <div class="buff-grid">
-                                <label class="buff-item">
-                                    <input type="checkbox" id="buff-proelium" data-buff="proelium">
-                                    <span>Proelium (+STR/AGI/INT)</span>
-                                </label>
-                                <label class="buff-item">
-                                    <input type="checkbox" id="buff-velox" data-buff="velox">
-                                    <span>Velox (+Attack Speed)</span>
-                                </label>
-                                <label class="buff-item">
-                                    <input type="checkbox" id="buff-lapis-mediow" data-buff="lapis">
-                                    <span>Lapis Mediow (+Defense)</span>
-                                </label>
-                            </div>
-                        </div>
+                        <!-- Buffs will be populated dynamically by JavaScript -->
                     </div>
                 </div>
             </div>

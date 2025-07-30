@@ -38,7 +38,7 @@ h1 {
 /* --- Modal Buttons Row --- */
 .modal-buttons-row {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     gap: 15px;
     background-color: #e8f4e8;
@@ -105,7 +105,7 @@ h1 {
 /* --- Main Calculator Grid --- */
 .calculator-grid {
     display: grid;
-    grid-template-columns: 15% 37% 47%; /* Fixed left/right, flexible middle */
+    grid-template-columns: 17% 37% 45%; /* Slightly wider left panel for buff bonuses */
     grid-template-rows: auto 1fr; /* Top row auto, bottom row takes remaining space */
     gap: 5px; /* Gap between panels */
     padding: 5px;
@@ -206,6 +206,14 @@ h1 {
     border: 1px solid #777;
     background-color: #fff;
     font-family: monospace;
+}
+
+.stat-buff-bonus {
+    color: #0a8400;
+    font-weight: bold;
+    font-size: 0.9rem;
+    min-width: 30px;
+    text-align: left;
 }
 
 /* --- Middle Panel (Derived Stats) --- */
@@ -706,13 +714,13 @@ select {
 
 .unlocked-skill-item {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
     padding: 8px 10px;
     margin-bottom: 5px;
     background-color: #e8f4e1;
     border: 1px solid #b5d6a9;
     border-radius: 3px;
+    gap: 4px;
 }
 
 .unlocked-skill-item.locked {
@@ -746,6 +754,17 @@ select {
 
 .skill-requirement.not-met {
     color: #a52a2a;
+}
+
+.skill-modal-stats {
+    font-size: 0.85rem;
+    color: #0066cc;
+    background-color: #f0f8ff;
+    padding: 3px 6px;
+    border-radius: 3px;
+    border: 1px solid #b3d9ff;
+    font-family: monospace;
+    align-self: flex-start;
 }
 
 /* Equipment Modal Styles */
@@ -820,6 +839,30 @@ select {
 
 .buff-item input[type="checkbox"] {
     margin: 0;
+}
+
+.buff-item-container {
+    margin-bottom: 15px;
+}
+
+.enchanter-spr-controls {
+    margin-left: 20px;
+    margin-top: 5px;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.enchanter-spr-controls label {
+    margin-right: 8px;
+    font-weight: normal;
+}
+
+.enchanter-spr-controls select {
+    padding: 2px 5px;
+    font-size: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background: white;
 }
 
 .buff-item span {

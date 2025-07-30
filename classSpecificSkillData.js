@@ -828,6 +828,9 @@ const classSpecificSkillData = {
             castTime: 4,
             cooldown: 1.54,
             duration: 480,
+            buffEffectTable: {
+                "lp": "15.00 + 250", // lp + (lp * 15%) + 250
+            },
             description: "Increase LP for party"
         },
         "Revive": {

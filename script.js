@@ -32,9 +32,10 @@ const character = {
     ring2: "ring2-none",
   },
   buffs: {
-    proelium: false,
-    velox: false,
-    lapis: false,
+    // Skill buffs will be dynamically added
+  },
+  enchanterSpr: {
+    // SPR values for enchanter-cast buffs (Prayer category)
   },
   skills: {}, // { [skillId]: { adeptness: 0, potential: 0 } }
   points: {
@@ -73,6 +74,14 @@ const elements = {
     dex: document.getElementById("cost-dex"),
     spr: document.getElementById("cost-spr"),
     int: document.getElementById("cost-int"),
+  },
+  buffBonuses: {
+    sta: document.getElementById("buff-bonus-sta"),
+    str: document.getElementById("buff-bonus-str"),
+    agi: document.getElementById("buff-bonus-agi"),
+    dex: document.getElementById("buff-bonus-dex"),
+    spr: document.getElementById("buff-bonus-spr"),
+    int: document.getElementById("buff-bonus-int"),
   },
   equipmentSelectors: {
     weapon: document.getElementById("equip-weapon"),
@@ -190,6 +199,9 @@ function initializeSkills() {
       };
     }
   }
+
+  // Initialize skill buffs
+  initializeSkillBuffs();
 }
 
 /**
@@ -546,11 +558,21 @@ function runCalculations() {
   applyEquipmentBonuses(bonuses);
   applySetBonuses(bonuses);
   applyRacialSkillEffects(bonuses);
+  applySkillBuffEffects(bonuses);
 
   for (const stat of PRIMARY_STATS) {
     const total =
       baseStats[stat] + character.addedStats[stat] + (bonuses.stats[stat] || 0);
     character.finalStats[stat] = Math.min(gameData.maxStatValue, total);
+  }
+
+  // Apply SPR-based buff effects after final stats are calculated
+  if (bonuses.sprBasedEffects) {
+    for (const effect of bonuses.sprBasedEffects) {
+      // Use enchanter SPR instead of current character SPR
+      const enchanterSpr = character.enchanterSpr[effect.buffId] || effect.data[0]?.value || 33;
+      applySprBasedBuffEffects(effect.skillName, effect.data, bonuses, enchanterSpr);
+    }
   }
 
   calculateDerivedStats(bonuses);
@@ -602,6 +624,227 @@ function applySetBonuses(bonuses) {
       for (const stat in set.bonus.stats) {
         bonuses.stats[stat] =
           (bonuses.stats[stat] || 0) + set.bonus.stats[stat];
+      }
+    }
+  }
+}
+
+/**
+ * Collects all skills with buffEffectTable from both skill data files.
+ * Returns an array of {name, buffId, buffEffectTable, description} objects.
+ */
+function getAllSkillBuffs() {
+  const skillBuffs = [];
+  
+  // Helper function to extract buffs from a skill category
+  function extractBuffsFromCategory(skills, categoryName) {
+    for (const [skillName, skillData] of Object.entries(skills)) {
+      if (skillData.buffEffectTable) {
+        const buffId = `skill-${categoryName}-${skillName}`.toLowerCase().replace(/\s+/g, '-');
+        skillBuffs.push({
+          name: skillName,
+          buffId: buffId,
+          buffEffectTable: skillData.buffEffectTable,
+          description: skillData.description || `${skillName} buff effect`,
+          category: categoryName
+        });
+      }
+    }
+  }
+  
+  // Search through classSkillData
+  for (const [classId, classData] of Object.entries(classSkillData)) {
+    if (classData.skills) {
+      for (const category of classData.skills) {
+        if (category.skills) {
+          extractBuffsFromCategory(category.skills, category.name);
+        }
+      }
+    }
+  }
+  
+  // Search through classSpecificSkillData
+  for (const [classId, classData] of Object.entries(classSpecificSkillData)) {
+    if (classData.skills) {
+      extractBuffsFromCategory(classData.skills, `${classData.name} Specific`);
+    }
+  }
+  
+  return skillBuffs;
+}
+
+/**
+ * Initializes skill buffs in the character.buffs object.
+ */
+function initializeSkillBuffs() {
+  const skillBuffs = getAllSkillBuffs();
+  
+  // Add each skill buff to character.buffs if not already present
+  for (const skillBuff of skillBuffs) {
+    if (!(skillBuff.buffId in character.buffs)) {
+      character.buffs[skillBuff.buffId] = false;
+    }
+  }
+}
+
+/**
+ * Looks up detailed skill data from classSkillData and classSpecificSkillData.
+ * Returns null if not found.
+ */
+function getDetailedSkillData(skillName) {
+  // Search through classSkillData
+  for (const [classId, classData] of Object.entries(classSkillData)) {
+    if (classData.skills) {
+      for (const category of classData.skills) {
+        if (category.skills && category.skills[skillName]) {
+          return category.skills[skillName];
+        }
+      }
+    }
+  }
+  
+  // Search through classSpecificSkillData
+  for (const [classId, classData] of Object.entries(classSpecificSkillData)) {
+    if (classData.skills && classData.skills[skillName]) {
+      return classData.skills[skillName];
+    }
+  }
+  
+  return null;
+}
+
+/**
+ * Calculates the effective MP cost for a skill based on character stats and bonuses.
+ */
+function calculateEffectiveMpCost(baseMpCost, bonuses) {
+  if (!baseMpCost) return 0;
+  
+  let effectiveCost = baseMpCost;
+  
+  // Apply MP cost reduction from racial skills
+  if (bonuses.mpCostReduction) {
+    effectiveCost = Math.ceil(effectiveCost * (100 - bonuses.mpCostReduction) / 100);
+  }
+  
+  // Apply MP cost reduction from set bonuses
+  if (bonuses.stats.redMp) {
+    const reduction = Math.abs(bonuses.stats.redMp);
+    effectiveCost = Math.ceil(effectiveCost * (100 - reduction) / 100);
+  }
+  
+  return Math.max(1, effectiveCost); // Minimum 1 MP
+}
+
+/**
+ * Calculates the effective cast time for a skill based on character stats and bonuses.
+ */
+function calculateEffectiveCastTime(baseCastTime, bonuses) {
+  if (!baseCastTime) return 0;
+  
+  let effectiveTime = baseCastTime;
+  
+  // Apply cast speed bonus from DEX (from finalStats.castSpd)
+  const castSpeedBonus = character.finalStats.castSpd || 100;
+  effectiveTime = effectiveTime * (100 / castSpeedBonus);
+  
+  // Apply cast time reduction from skill buffs (like Saltio)
+  if (bonuses.castTimeReduction) {
+    effectiveTime = effectiveTime * (100 - bonuses.castTimeReduction) / 100;
+  }
+  
+  return Math.max(0.1, effectiveTime); // Minimum 0.1 seconds
+}
+
+/**
+ * Calculates the effective cooldown for a skill based on character stats and bonuses.
+ */
+function calculateEffectiveCooldown(baseCooldown, bonuses) {
+  if (!baseCooldown) return 0;
+  
+  let effectiveCooldown = baseCooldown;
+  
+  // Apply cooldown reduction from INT (from finalStats.cooldown)
+  const cooldownReduction = character.finalStats.cooldown || 100;
+  effectiveCooldown = effectiveCooldown * (cooldownReduction / 100);
+  
+  return Math.max(0.1, effectiveCooldown); // Minimum 0.1 seconds
+}
+
+/**
+ * Applies SPR-based buff effects like Lapis Mediow.
+ * This function should be called after final stats are calculated.
+ */
+function applySprBasedBuffEffects(skillName, sprData, bonuses, enchanterSpr) {
+  // Find the appropriate SPR tier
+  let selectedTier = null;
+  for (const tier of sprData) {
+    if (enchanterSpr >= tier.value) {
+      selectedTier = tier;
+    }
+  }
+  
+  if (!selectedTier || !selectedTier.Blessing) return;
+  
+  // For now, use the highest tier blessing (could be made configurable)
+  const blessing = selectedTier.Blessing[selectedTier.Blessing.length - 1];
+  
+  if (blessing && blessing.def) {
+    bonuses.stats.def = (bonuses.stats.def || 0) + blessing.def;
+  }
+  
+  if (blessing && blessing.dodgeChance) {
+    bonuses.dodgeChance = (bonuses.dodgeChance || 0) + blessing.dodgeChance;
+  }
+}
+
+/**
+ * Applies active skill buff effects to the bonuses object.
+ */
+function applySkillBuffEffects(bonuses) {
+  const skillBuffs = getAllSkillBuffs();
+  
+  for (const skillBuff of skillBuffs) {
+    const isActive = character.buffs[skillBuff.buffId];
+    if (!isActive) continue;
+    
+    const effects = skillBuff.buffEffectTable;
+    
+    // Add description
+    bonuses.description.push(`${skillBuff.name}: ${skillBuff.description}`);
+    
+    // Apply stat bonuses
+    for (const [stat, value] of Object.entries(effects)) {
+      if (PRIMARY_STATS.includes(stat)) {
+        // Direct stat bonus (e.g., str: 9)
+        if (!bonuses.stats[stat]) bonuses.stats[stat] = 0;
+        bonuses.stats[stat] += value;
+      } else if (stat === 'castTime') {
+        // Cast time reduction (e.g., castTime: -50)
+        bonuses.castTimeReduction = (bonuses.castTimeReduction || 0) + Math.abs(value);
+      } else if (stat === 'lp') {
+        // LP bonus handling
+        if (typeof value === 'string' && value.includes('+')) {
+          // Complex LP formula like "15.00 + 250"
+          const parts = value.split('+').map(p => parseFloat(p.trim()));
+          if (parts.length === 2) {
+            bonuses.lpBuff = (bonuses.lpBuff || 0) + parts[1]; // Add flat amount
+            bonuses.lpPercentBuff = (bonuses.lpPercentBuff || 0) + (parts[0] / 100); // Add percentage
+          }
+        } else if (typeof value === 'number') {
+          // Simple numeric LP bonus
+          bonuses.lpBuff = (bonuses.lpBuff || 0) + value;
+        } else {
+          bonuses.lpBuff = (bonuses.lpBuff || 0) + value;
+        }
+      } else if (stat === 'sprValues') {
+        // Complex SPR-based effects (like Lapis Mediow)
+        // Store for later processing after final stats are calculated
+        bonuses.sprBasedEffects = bonuses.sprBasedEffects || [];
+        bonuses.sprBasedEffects.push({
+          skillName: skillBuff.name,
+          buffId: skillBuff.buffId,
+          data: value
+        });
       }
     }
   }
@@ -727,7 +970,20 @@ function calculateDerivedStats(bonuses = {}) {
   const levelLPComponent = Math.ceil(level * (100 / mod[2]));
   const staMultiplier = Math.ceil(100 / mod[4]);
   const staLPComponent = Math.ceil(stats.sta * staMultiplier);
-  stats.lp = mod[0] + levelLPComponent + staLPComponent;
+  let totalLp = mod[0] + levelLPComponent + staLPComponent;
+  
+  // Apply LP buff from skills (e.g., Divine Aid)
+  if (bonuses.lpPercentBuff) {
+    // Apply percentage increase first
+    totalLp = Math.floor(totalLp * (1 + bonuses.lpPercentBuff));
+  }
+  
+  if (bonuses.lpBuff) {
+    // Apply flat increase
+    totalLp += bonuses.lpBuff;
+  }
+  
+  stats.lp = totalLp;
 
   // MP Calculation
   const levelMPComponent = Math.ceil(level * (100 / mod[3]));
@@ -838,6 +1094,11 @@ function calculateDerivedStats(bonuses = {}) {
       stats.def += item.stats.def;
     }
   }
+  
+  // Apply DEF bonus from buffs
+  if (bonuses.stats.def) {
+    stats.def += bonuses.stats.def;
+  }
 
   // Front DEF bonus
   stats.frontDef = Math.floor(stats.def * 1.1);
@@ -902,7 +1163,13 @@ function calculateDerivedStats(bonuses = {}) {
 
   // Cast Speed - starts at 100%, increases by 5% every 10 DEX
   stats.castSpd = 100 + Math.floor(stats.dex / 10) * 5;
-  stats.castTime = 100; // Cast time - base 100%
+  
+  // Cast time - base 100%, reduced by skill buffs
+  let baseCastTime = 100;
+  if (bonuses.castTimeReduction) {
+    baseCastTime = Math.floor(baseCastTime * (100 - bonuses.castTimeReduction) / 100);
+  }
+  stats.castTime = baseCastTime;
 
   // Cooldown - -2% every 10 INT (base 100%)
   stats.cooldown = Math.max(0, 100 - Math.floor(stats.int / 10) * 2);
@@ -1013,10 +1280,11 @@ function updateUI(bonuses) {
   elements.displayRacialSkill.textContent = selectedRacialSkill?.name || "";
   elements.displayJob.textContent = selectedJob ? selectedJob.name : "";
 
-  // Update primary stat displays
+  // Update primary stat displays and buff bonuses
   for (const stat of PRIMARY_STATS) {
     const totalElement = elements.outputs[stat];
     const inputElement = elements.addedStatInputs[stat];
+    const buffBonusElement = elements.buffBonuses[stat];
     
     if (totalElement) {
       const combinedBase = getCombinedBaseStats()[stat]; // Get base stat after race/job modifiers
@@ -1030,7 +1298,22 @@ function updateUI(bonuses) {
       // Format the output display as "Final (Total)" where Total = base + additional
       totalElement.innerHTML = `${final} (${totalStat})`;
     }
+    
+    // Update buff bonus display
+    if (buffBonusElement) {
+      const buffBonus = bonuses.stats[stat] || 0;
+      if (buffBonus > 0) {
+        buffBonusElement.textContent = `+${buffBonus}`;
+        buffBonusElement.style.display = 'inline';
+      } else {
+        buffBonusElement.textContent = '';
+        buffBonusElement.style.display = 'none';
+      }
+    }
   }
+  
+  // Update skill preview modal if it's open
+  updateSkillPreviewModal();
   // Update other outputs
   elements.outputs.lp.textContent = Math.floor(character.finalStats.lp);
   elements.outputs.mp.textContent = Math.floor(character.finalStats.mp);
@@ -1435,10 +1718,41 @@ function displayUnlockedSkills() {
             const statusClass = skill.isUnlocked ? 'unlocked' : 'locked';
             const reqClass = skill.isUnlocked ? 'met' : 'not-met';
             
+            // Get detailed skill data for stats calculation
+            const detailedSkillData = getDetailedSkillData(skill.name);
+            let skillStatsHtml = '';
+            
+            if (detailedSkillData && skill.isUnlocked) {
+              // Calculate bonuses for this skill calculation
+              const bonuses = { description: [], stats: {} };
+              applyEquipmentBonuses(bonuses);
+              applySetBonuses(bonuses);
+              applyRacialSkillEffects(bonuses);
+              applySkillBuffEffects(bonuses);
+              
+              // Calculate effective values
+              const effectiveMp = calculateEffectiveMpCost(detailedSkillData.mpCost, bonuses);
+              const effectiveCastTime = calculateEffectiveCastTime(detailedSkillData.castTime, bonuses);
+              const effectiveCooldown = calculateEffectiveCooldown(detailedSkillData.cooldown, bonuses);
+              const duration = detailedSkillData.duration || 0;
+              
+              // Build skill stats string
+              let statsParts = [];
+              if (effectiveMp > 0) statsParts.push(`MP: ${effectiveMp}`);
+              if (effectiveCastTime > 0) statsParts.push(`Cast: ${effectiveCastTime.toFixed(1)}s`);
+              if (effectiveCooldown > 0) statsParts.push(`Cooldown: ${effectiveCooldown.toFixed(1)}s`);
+              if (duration > 0) statsParts.push(`Duration: ${duration}s`);
+              
+              if (statsParts.length > 0) {
+                skillStatsHtml = `<div class="skill-modal-stats">${statsParts.join(' | ')}</div>`;
+              }
+            }
+            
             html += `
               <div class="unlocked-skill-item ${statusClass}">
                 <div class="skill-name-unlock">${skill.name}</div>
                 <div class="skill-description-unlock">${skill.description}</div>
+                ${skillStatsHtml}
                 <div class="skill-requirement ${reqClass}">
                   Req: ${skill.requirement}
                 </div>
@@ -1466,6 +1780,15 @@ function openSkillPreviewModal() {
 }
 
 /**
+ * Updates the skill preview modal if it's open.
+ */
+function updateSkillPreviewModal() {
+  if (elements.skillPreviewModal.style.display === "block") {
+    displayUnlockedSkills();
+  }
+}
+
+/**
  * Closes the skill preview modal.
  */
 function closeSkillPreviewModal() {
@@ -1473,9 +1796,128 @@ function closeSkillPreviewModal() {
 }
 
 /**
+ * Gets the SPR breakpoints for a skill with sprValues.
+ */
+function getSprBreakpoints(sprData) {
+  return sprData.map(tier => tier.value).sort((a, b) => a - b);
+}
+
+/**
+ * Populates the buffs modal with skill buffs.
+ */
+function populateBuffsModal() {
+  const buffsDisplay = document.getElementById('buffs-display');
+  const skillBuffs = getAllSkillBuffs();
+  
+  let html = '';
+  
+  // Skill buffs section
+  if (skillBuffs.length > 0) {
+    html += '<div class="buff-section">';
+    html += '<h3>Skill Buffs</h3>';
+    html += '<div class="buff-grid">';
+    
+    for (const skillBuff of skillBuffs) {
+      const isChecked = character.buffs[skillBuff.buffId] ? 'checked' : '';
+      const hasSprValues = skillBuff.buffEffectTable.sprValues;
+      
+      const effectsText = Object.entries(skillBuff.buffEffectTable)
+        .map(([stat, value]) => {
+          if (PRIMARY_STATS.includes(stat)) {
+            return `+${value} ${stat.toUpperCase()}`;
+          } else if (stat === 'castTime') {
+            return `${value}% Cast Time`;
+          } else if (stat === 'lp') {
+            if (typeof value === 'string' && value.includes('+')) {
+              return `LP: ${value}`;
+            } else {
+              return `+${value} LP`;
+            }
+          } else if (stat === 'sprValues') {
+            return `(SPR-based)`;
+          }
+          return `${stat}: ${value}`;
+        })
+        .join(', ');
+      
+      html += `
+        <div class="buff-item-container">
+          <label class="buff-item">
+            <input type="checkbox" id="buff-${skillBuff.buffId}" data-buff="${skillBuff.buffId}" ${isChecked}>
+            <span>${skillBuff.name} (${effectsText})</span>
+          </label>
+      `;
+      
+      // Add SPR dropdown for skills with sprValues (Prayer category skills)
+      if (hasSprValues && (skillBuff.category === 'Blessing' || skillBuff.category === 'Hymn')) {
+        const sprBreakpoints = getSprBreakpoints(skillBuff.buffEffectTable.sprValues);
+        const currentSpr = character.enchanterSpr[skillBuff.buffId] || sprBreakpoints[0];
+        
+        html += `
+          <div class="enchanter-spr-controls" style="margin-left: 20px; margin-top: 5px;">
+            <label for="spr-${skillBuff.buffId}">Enchanter SPR:</label>
+            <select id="spr-${skillBuff.buffId}" data-buff-id="${skillBuff.buffId}">
+        `;
+        
+        for (const sprValue of sprBreakpoints) {
+          const selected = sprValue === currentSpr ? 'selected' : '';
+          html += `<option value="${sprValue}" ${selected}>${sprValue}</option>`;
+        }
+        
+        html += `
+            </select>
+          </div>
+        `;
+      }
+      
+      html += '</div>';
+    }
+    
+    html += '</div></div>';
+  }
+  
+  buffsDisplay.innerHTML = html;
+  
+  // Add event listeners for all buff checkboxes
+  buffsDisplay.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+    checkbox.addEventListener('change', handleBuffChange);
+  });
+  
+  // Add event listeners for SPR dropdowns
+  buffsDisplay.querySelectorAll('select[id^="spr-"]').forEach(dropdown => {
+    dropdown.addEventListener('change', handleEnchanterSprChange);
+  });
+}
+
+/**
+ * Handles buff checkbox changes.
+ */
+function handleBuffChange(event) {
+  const buffId = event.target.dataset.buff;
+  const isChecked = event.target.checked;
+  
+  character.buffs[buffId] = isChecked;
+  runCalculations();
+  updateSkillPreviewModal(); // Update skill stats in modal
+}
+
+/**
+ * Handles enchanter SPR dropdown changes.
+ */
+function handleEnchanterSprChange(event) {
+  const buffId = event.target.dataset.buffId;
+  const sprValue = parseInt(event.target.value);
+  
+  character.enchanterSpr[buffId] = sprValue;
+  runCalculations();
+  updateSkillPreviewModal(); // Update skill stats in modal
+}
+
+/**
  * Opens the buffs modal.
  */
 function openBuffsModal() {
+  populateBuffsModal();
   elements.buffsModal.style.display = "block";
 }
 
@@ -1521,6 +1963,7 @@ document.getElementById("level").addEventListener("input", (event) => {
   }
   
   runCalculations();
+  updateSkillPreviewModal(); // Update skill stats in modal
 }); // Add listener for level changes
 
 for (const statInput of Object.values(elements.addedStatInputs)) {
@@ -1537,10 +1980,14 @@ for (const statInput of Object.values(elements.addedStatInputs)) {
     }
     
     runCalculations();
+    updateSkillPreviewModal(); // Update skill stats in modal
   });
 }
 for (const equipSelector of Object.values(elements.equipmentSelectors)) {
-  equipSelector.addEventListener("change", runCalculations);
+  equipSelector.addEventListener("change", () => {
+    runCalculations();
+    updateSkillPreviewModal(); // Update skill stats in modal
+  });
 }
 
 // Add event listeners for reset buttons
