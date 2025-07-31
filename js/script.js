@@ -577,6 +577,7 @@ function runCalculations() {
 
   calculateDerivedStats(bonuses);
   
+  updateStatCostIndicators(); // Update cost indicators for stat increases
   updateUI(bonuses);
 }
 
@@ -587,9 +588,8 @@ function getCombinedBaseStats() {
   const jobModifiers = gameData.jobBaseStatModifiers[jobInfo.baseClass]; // Use baseClass from jobInfo
 
   for (const stat of PRIMARY_STATS) {
-    // Only apply job modifiers at level 10 and above
-    const jobModifier = character.level >= 10 ? jobModifiers[stat] : 0;
-    combined[stat] = raceStats[stat] + jobModifier;
+    // Job modifiers are always applied to base stats
+    combined[stat] = raceStats[stat] + jobModifiers[stat];
   }
   return combined;
 }
