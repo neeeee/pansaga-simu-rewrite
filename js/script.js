@@ -1972,6 +1972,148 @@ function closeEquipmentModal() {
   elements.equipmentModal.style.display = "none";
 }
 
+/**
+ * Exports character data to JSON format and downloads it as a file.
+ */
+function exportCharacter() {
+  // Read current inputs to ensure we have the latest data
+  readInputs();
+  
+  // Get current derived stats
+  const bonuses = { description: [], stats: {} };
+  applyEquipmentBonuses(bonuses);
+  applySetBonuses(bonuses);
+  applyRacialSkillEffects(bonuses);
+  applySkillBuffEffects(bonuses);
+  
+  const baseStats = getCombinedBaseStats();
+  calculateDerivedStats(bonuses); // This modifies character.finalStats
+  
+  // Create export object matching the structure of exportExample.json
+  const exportData = {
+    level: character.level,
+    race: gameData.races[character.raceId]?.name || "Unknown",
+    job: gameData.jobs[character.jobId]?.name || "Unknown",
+    racialSkill: gameData.racialSkills[character.raceId]?.skills?.[character.racialSkillId]?.name || "Unknown",
+    statusPoints: {
+      sta: character.finalStats.sta,
+      str: character.finalStats.str,
+      agi: character.finalStats.agi,
+      dex: character.finalStats.dex,
+      spi: character.finalStats.spi,
+      int: character.finalStats.int
+    },
+    equipment: {
+      weapon: character.equipment.weapon,
+      shield: character.equipment.shield,
+      head: character.equipment.head,
+      torso: character.equipment.torso,
+      gloves: character.equipment.gloves,
+      pants: character.equipment.pants,
+      boots: character.equipment.boots,
+      cape: character.equipment.cape,
+      earring1: character.equipment.earring1,
+      earring2: character.equipment.earring2,
+      necklace: character.equipment.necklace,
+      belt: character.equipment.belt,
+      ring1: character.equipment.ring1,
+      ring2: character.equipment.ring2
+    },
+    abilityPoints: {},
+    derivedStats: {
+      hp: Math.round(character.finalStats.lp || 0),
+      mp: Math.round(character.finalStats.mp || 0),
+      acc: Math.round(character.finalStats.acc || 0),
+      accFront: Math.round(character.finalStats.accFront || 0),
+      atk: Math.round(character.finalStats.atk || 0),
+      dodge: Math.round(character.finalStats.dodge || 0),
+      def: Math.round(character.finalStats.def || 0),
+      crit: Math.round(character.finalStats.crit || 0),
+      critDamage: Math.round(character.finalStats.criD || 0),
+      critChance: Math.round(character.finalStats.criRes || 0),
+      reducedMpCost: Math.round(character.finalStats.redMp || 0),
+      frontDamageIncrease: Math.round(character.finalStats.frontAtk || 0),
+      backDamageIncrease: Math.round(character.finalStats.backAtk || 0),
+      magicAttack: Math.round(character.finalStats.matk || 0),
+      frontDamageResistance: Math.round(character.finalStats.frontDef || 0),
+      backDamageResistance: Math.round(character.finalStats.backDef || 0),
+      critDamageResistance: Math.round(character.finalStats.cdamRes || 0),
+      meleeEvasion: Math.round(character.finalStats.melEva || 0),
+      rangedEvasion: Math.round(character.finalStats.ranEva || 0),
+      magicEvasion: Math.round(character.finalStats.magEva || 0),
+      magicResistance: Math.round(character.finalStats.magRes || 0),
+      fireResistance: Math.round(character.finalStats.fireR || 0),
+      iceResistance: Math.round(character.finalStats.iceR || 0),
+      lightningResistance: Math.round(character.finalStats.thundR || 0),
+      poisonResistance: Math.round(character.finalStats.poisonR || 0),
+      charmResistance: Math.round(character.finalStats.charmR || 0),
+      lightResistance: Math.round(character.finalStats.lightR || 0),
+      darkResistance: Math.round(character.finalStats.darkR || 0),
+      atkSpeed: Math.round(character.finalStats.atkSpd || 0),
+      castSpeed: Math.round(character.finalStats.castSpd || 0),
+      castTime: Math.round(character.finalStats.castTime || 0),
+      cooldown: Math.round(character.finalStats.cooldown || 0),
+      lpHealPercent: Math.round(character.finalStats.lpHeal || 0),
+      potionEfficiency: Math.round(character.finalStats.pot || 0)
+    },
+    skills: {}
+  };
+  
+  // Populate ability points with actual skill names and adeptness levels
+  const jobSkillData = skills[character.jobId];
+  if (jobSkillData) {
+    for (const categoryId in jobSkillData) {
+      if (categoryId === 'name') continue;
+      
+      const category = jobSkillData[categoryId];
+      for (const skillData of category.skills) {
+        const skillId = skillData.id;
+        const skillLevel = character.skills[skillId]?.adeptness || 0;
+        // Use skill name as the key (lowercase, no spaces)
+        const skillName = (skillData.name || skillId).toLowerCase().replace(/\s+/g, '');
+        exportData.abilityPoints[skillName] = skillLevel;
+      }
+    }
+  }
+  
+  // Populate skills array with actual unlocked skill names
+  const unlockedSkills = calculateUnlockedSkills();
+  
+  // Collect all unlocked skill names
+  const unlockedSkillNames = [];
+  for (const categoryName in unlockedSkills) {
+    const category = unlockedSkills[categoryName];
+    for (const skill of category.skills) {
+      if (skill.isUnlocked) {
+        unlockedSkillNames.push(skill.name);
+      }
+    }
+  }
+  
+  // Fill the skills array with unlocked skill names or "skillX-none"
+  for (let i = 1; i <= 31; i++) {
+    if (i <= unlockedSkillNames.length) {
+      exportData.skills[`skill${i}`] = unlockedSkillNames[i - 1];
+    } else {
+      exportData.skills[`skill${i}`] = `skill${i}-none`;
+    }
+  }
+  
+  // Convert to JSON string
+  const jsonString = JSON.stringify(exportData, null, 4);
+  
+  // Create and download the file
+  const blob = new Blob([jsonString], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `character_export_${Date.now()}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 // --- Event Listeners and Initial Population (Same as before) ---
 document.getElementById("race").addEventListener("change", handleJobRaceChange);
 document
@@ -2028,6 +2170,9 @@ elements.skillPreviewButton.addEventListener("click", openSkillPreviewModal);
 elements.modalClose.addEventListener("click", closeSkillPreviewModal);
 elements.buffsModalButton.addEventListener("click", openBuffsModal);
 elements.equipmentModalButton.addEventListener("click", openEquipmentModal);
+
+// Add event listener for export button
+document.getElementById("export-character").addEventListener("click", exportCharacter);
 
 // Close modal when clicking outside of it or on close button
 window.addEventListener("click", (event) => {
