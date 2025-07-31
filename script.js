@@ -1456,6 +1456,9 @@ function resetStatusPoints() {
  * Resets ability points to the current job base values.
  */
 function resetAbilityPoints() {
+  // Reset spent skill points to 0
+  character.points.spentSkill = 0;
+  
   // Re-initialize skills to get base values for current job
   initializeSkills();
   
