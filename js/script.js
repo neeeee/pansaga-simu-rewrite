@@ -2138,12 +2138,48 @@ document.getElementById("level").addEventListener("input", (event) => {
 }); // Add listener for level changes
 
 for (const statInput of Object.values(elements.addedStatInputs)) {
+  // Handle input changes with debounced validation
   statInput.addEventListener("input", (event) => {
-    const value = parseInt(event.target.value) || 0;
+    // Allow temporary invalid states while typing
+    // Only validate if the value is a complete number
+    const inputValue = event.target.value.trim();
+    
+    // If the input is empty or not a complete number, don't validate yet
+    if (inputValue === '' || isNaN(parseInt(inputValue))) {
+      return; // Let the user continue typing
+    }
+    
+    const value = parseInt(inputValue);
     const min = parseInt(event.target.min) || 0;
     const max = parseInt(event.target.max) || 99;
     
-    // Enforce min/max limits
+    // Only enforce max limit during typing (min will be enforced in readInputs)
+    if (value > max) {
+      event.target.value = max;
+    }
+    
+    runCalculations();
+    updateSkillPreviewModal(); // Update skill stats in modal
+  });
+  
+  // Handle when user finishes editing (loses focus)
+  statInput.addEventListener("blur", (event) => {
+    const inputValue = event.target.value.trim();
+    
+    // If empty or invalid, reset to minimum
+    if (inputValue === '' || isNaN(parseInt(inputValue))) {
+      const min = parseInt(event.target.min) || 0;
+      event.target.value = min;
+      runCalculations();
+      updateSkillPreviewModal();
+      return;
+    }
+    
+    const value = parseInt(inputValue);
+    const min = parseInt(event.target.min) || 0;
+    const max = parseInt(event.target.max) || 99;
+    
+    // Enforce both min/max limits when user finishes editing
     if (value < min) {
       event.target.value = min;
     } else if (value > max) {
