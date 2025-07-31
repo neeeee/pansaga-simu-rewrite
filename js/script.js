@@ -1,12 +1,12 @@
 import { gameData } from "./gameData.js";
-import { skills } from "./jobSkillValues.js";
-import { items } from "./equipData.js";
-import { setBonuses } from "./setBonuses.js";
-import { classSkillData } from "./classSkillData.js";
-import { classSpecificSkillData } from "./classSpecificSkillData.js";
+import { skills } from "./skills/jobSkillValues.js";
+import { items } from "./items/equipData.js";
+import { setBonuses } from "./items/setBonuses.js";
+import { classSkillData } from "./skills/classSkillData.js";
+import { classSpecificSkillData } from "./skills/classSpecificSkillData.js";
 
 // --- CONSTANTS ---
-const PRIMARY_STATS = ["sta", "str", "agi", "dex", "spr", "int"];
+const PRIMARY_STATS = ["sta", "str", "agi", "dex", "spi", "int"];
 
 // --- CHARACTER STATE ---
 const character = {
@@ -14,7 +14,7 @@ const character = {
   raceId: 0, // Default Human
   racialSkillId: 0, // Default Fighting Spirit
   jobId: 0, // Default Monk (job ID 19)
-  addedStats: { sta: 0, str: 0, agi: 0, dex: 0, spr: 0, int: 0 }, // Set to 0 added for the image
+      addedStats: { sta: 0, str: 0, agi: 0, dex: 0, spi: 0, int: 0 }, // Set to 0 added for the image
   equipment: {
     weapon: "weapon-none",
     shield: "shield-none", 
@@ -34,8 +34,8 @@ const character = {
   buffs: {
     // Skill buffs will be dynamically added
   },
-  enchanterSpr: {
-    // SPR values for enchanter-cast buffs (Prayer category)
+      enchanterSpi: {
+        // SPI values for enchanter-cast buffs (Prayer category)
   },
   skills: {}, // { [skillId]: { adeptness: 0, potential: 0 } }
   points: {
@@ -64,7 +64,7 @@ const elements = {
     str: document.getElementById("base-str"),
     agi: document.getElementById("base-agi"),
     dex: document.getElementById("base-dex"),
-    spr: document.getElementById("base-spr"),
+    spi: document.getElementById("base-spi"),
     int: document.getElementById("base-int"),
   },
   statCosts: {
@@ -72,7 +72,7 @@ const elements = {
     str: document.getElementById("cost-str"),
     agi: document.getElementById("cost-agi"),
     dex: document.getElementById("cost-dex"),
-    spr: document.getElementById("cost-spr"),
+    spi: document.getElementById("cost-spi"),
     int: document.getElementById("cost-int"),
   },
   buffBonuses: {
@@ -80,7 +80,7 @@ const elements = {
     str: document.getElementById("buff-bonus-str"),
     agi: document.getElementById("buff-bonus-agi"),
     dex: document.getElementById("buff-bonus-dex"),
-    spr: document.getElementById("buff-bonus-spr"),
+    spi: document.getElementById("buff-bonus-spi"),
     int: document.getElementById("buff-bonus-int"),
   },
   equipmentSelectors: {
@@ -104,7 +104,7 @@ const elements = {
     str: document.getElementById("total-str"),
     agi: document.getElementById("total-agi"),
     dex: document.getElementById("total-dex"),
-    spr: document.getElementById("total-spr"),
+    spi: document.getElementById("total-spi"),
     int: document.getElementById("total-int"),
     lp: document.getElementById("total-lp"),
     mp: document.getElementById("total-mp"),
@@ -566,12 +566,12 @@ function runCalculations() {
     character.finalStats[stat] = Math.min(gameData.maxStatValue, total);
   }
 
-  // Apply SPR-based buff effects after final stats are calculated
-  if (bonuses.sprBasedEffects) {
-    for (const effect of bonuses.sprBasedEffects) {
-      // Use enchanter SPR instead of current character SPR
-      const enchanterSpr = character.enchanterSpr[effect.buffId] || effect.data[0]?.value || 33;
-      applySprBasedBuffEffects(effect.skillName, effect.data, bonuses, enchanterSpr);
+      // Apply SPI-based buff effects after final stats are calculated
+    if (bonuses.spiBasedEffects) {
+            for (const effect of bonuses.spiBasedEffects) {
+            // Use enchanter SPI instead of current character SPI
+            const enchanterSpi = character.enchanterSpi[effect.buffId] || effect.data[0]?.value || 33;
+            applySpiBasedBuffEffects(effect.skillName, effect.data, bonuses, enchanterSpi);
     }
   }
 
@@ -774,14 +774,14 @@ function calculateEffectiveCooldown(baseCooldown, bonuses) {
 }
 
 /**
- * Applies SPR-based buff effects like Lapis Mediow.
+ * Applies SPI-based buff effects like Lapis Mediow.
  * This function should be called after final stats are calculated.
  */
-function applySprBasedBuffEffects(skillName, sprData, bonuses, enchanterSpr) {
-  // Find the appropriate SPR tier
+function applySpiBasedBuffEffects(skillName, spiData, bonuses, enchanterSpi) {
+      // Find the appropriate SPI tier
   let selectedTier = null;
-  for (const tier of sprData) {
-    if (enchanterSpr >= tier.value) {
+      for (const tier of spiData) {
+        if (enchanterSpi >= tier.value) {
       selectedTier = tier;
     }
   }
@@ -839,11 +839,11 @@ function applySkillBuffEffects(bonuses) {
         } else {
           bonuses.lpBuff = (bonuses.lpBuff || 0) + value;
         }
-      } else if (stat === 'sprValues') {
-        // Complex SPR-based effects (like Lapis Mediow)
+              } else if (stat === 'spiValues') {
+            // Complex SPI-based effects (like Lapis Mediow)
         // Store for later processing after final stats are calculated
-        bonuses.sprBasedEffects = bonuses.sprBasedEffects || [];
-        bonuses.sprBasedEffects.push({
+                        bonuses.spiBasedEffects = bonuses.spiBasedEffects || [];
+                bonuses.spiBasedEffects.push({
           skillName: skillBuff.name,
           buffId: skillBuff.buffId,
           data: value
@@ -990,9 +990,9 @@ function calculateDerivedStats(bonuses = {}) {
 
   // MP Calculation
   const levelMPComponent = Math.ceil(level * (100 / mod[3]));
-  const sprMultiplier = Math.ceil(100 / mod[5]);
-  const sprMPComponent = Math.ceil(stats.spr * sprMultiplier);
-  stats.mp = mod[1] + levelMPComponent + sprMPComponent;
+          const spiMultiplier = Math.ceil(100 / mod[5]);
+        const spiMPComponent = Math.ceil(stats.spi * spiMultiplier);
+        stats.mp = mod[1] + levelMPComponent + spiMPComponent;
 
   // POT (Potential) - Potion effectiveness
   let potValue = 100; // Base 100%
@@ -1825,10 +1825,10 @@ function closeSkillPreviewModal() {
 }
 
 /**
- * Gets the SPR breakpoints for a skill with sprValues.
+ * Gets the SPI breakpoints for a skill with spiValues.
  */
-function getSprBreakpoints(sprData) {
-  return sprData.map(tier => tier.value).sort((a, b) => a - b);
+function getSpiBreakpoints(spiData) {
+    return spiData.map(tier => tier.value).sort((a, b) => a - b);
 }
 
 /**
@@ -1848,7 +1848,7 @@ function populateBuffsModal() {
     
     for (const skillBuff of skillBuffs) {
       const isChecked = character.buffs[skillBuff.buffId] ? 'checked' : '';
-      const hasSprValues = skillBuff.buffEffectTable.sprValues;
+      const hasSpiValues = skillBuff.buffEffectTable.spiValues;
       
       const effectsText = Object.entries(skillBuff.buffEffectTable)
         .map(([stat, value]) => {
@@ -1862,8 +1862,8 @@ function populateBuffsModal() {
             } else {
               return `+${value} LP`;
             }
-          } else if (stat === 'sprValues') {
-            return `(SPR-based)`;
+          } else if (stat === 'spiValues') {
+            return `(SPI-based)`;
           }
           return `${stat}: ${value}`;
         })
@@ -1877,20 +1877,20 @@ function populateBuffsModal() {
           </label>
       `;
       
-      // Add SPR dropdown for skills with sprValues (Prayer category skills)
-      if (hasSprValues && (skillBuff.category === 'Blessing' || skillBuff.category === 'Hymn')) {
-        const sprBreakpoints = getSprBreakpoints(skillBuff.buffEffectTable.sprValues);
-        const currentSpr = character.enchanterSpr[skillBuff.buffId] || sprBreakpoints[0];
+      // Add SPI dropdown for skills with spiValues (Prayer category skills)
+      if (hasSpiValues && (skillBuff.category === 'Blessing' || skillBuff.category === 'Hymn')) {
+        const spiBreakpoints = getSpiBreakpoints(skillBuff.buffEffectTable.spiValues);
+        const currentSpi = character.enchanterSpi[skillBuff.buffId] || spiBreakpoints[0];
         
         html += `
-          <div class="enchanter-spr-controls" style="margin-left: 20px; margin-top: 5px;">
-            <label for="spr-${skillBuff.buffId}">Enchanter SPR:</label>
-            <select id="spr-${skillBuff.buffId}" data-buff-id="${skillBuff.buffId}">
+          <div class="enchanter-spi-controls" style="margin-left: 20px; margin-top: 5px;">
+            <label for="spi-${skillBuff.buffId}">Enchanter SPI:</label>
+            <select id="spi-${skillBuff.buffId}" data-buff-id="${skillBuff.buffId}">
         `;
         
-        for (const sprValue of sprBreakpoints) {
-          const selected = sprValue === currentSpr ? 'selected' : '';
-          html += `<option value="${sprValue}" ${selected}>${sprValue}</option>`;
+        for (const spiValue of spiBreakpoints) {
+          const selected = spiValue === currentSpi ? 'selected' : '';
+          html += `<option value="${spiValue}" ${selected}>${spiValue}</option>`;
         }
         
         html += `
@@ -1912,9 +1912,9 @@ function populateBuffsModal() {
     checkbox.addEventListener('change', handleBuffChange);
   });
   
-  // Add event listeners for SPR dropdowns
-  buffsDisplay.querySelectorAll('select[id^="spr-"]').forEach(dropdown => {
-    dropdown.addEventListener('change', handleEnchanterSprChange);
+      // Add event listeners for SPI dropdowns
+    buffsDisplay.querySelectorAll('select[id^="spi-"]').forEach(dropdown => {
+      dropdown.addEventListener('change', handleEnchanterSpiChange);
   });
 }
 
@@ -1931,13 +1931,13 @@ function handleBuffChange(event) {
 }
 
 /**
- * Handles enchanter SPR dropdown changes.
+ * Handles enchanter SPI dropdown changes.
  */
-function handleEnchanterSprChange(event) {
+function handleEnchanterSpiChange(event) {
   const buffId = event.target.dataset.buffId;
-  const sprValue = parseInt(event.target.value);
+  const spiValue = parseInt(event.target.value);
   
-  character.enchanterSpr[buffId] = sprValue;
+  character.enchanterSpi[buffId] = spiValue;
   runCalculations();
   updateSkillPreviewModal(); // Update skill stats in modal
 }

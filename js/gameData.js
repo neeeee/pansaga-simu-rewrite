@@ -347,12 +347,12 @@ export const gameData = {
     },
   },
   raceBaseStats: {
-    0: { sta: 5, str: 5, agi: 5, dex: 5, spr: 5, int: 5 }, // Human
-    1: { sta: 3, str: 3, agi: 6, dex: 4, spr: 7, int: 7 }, // Elf
-    2: { sta: 6, str: 7, agi: 5, dex: 6, spr: 3, int: 3 }, // Dwarf
-    3: { sta: 5, str: 5, agi: 9, dex: 6, spr: 3, int: 2 }, // Myrine
-    4: { sta: 8, str: 6, agi: 4, dex: 4, spr: 6, int: 2 }, // Enkidu
-    5: { sta: 3, str: 1, agi: 6, dex: 5, spr: 9, int: 6 }, // Lapin
+    0: { sta: 5, str: 5, agi: 5, dex: 5, spi: 5, int: 5 }, // Human
+    1: { sta: 3, str: 3, agi: 6, dex: 4, spi: 7, int: 7 }, // Elf
+    2: { sta: 6, str: 7, agi: 5, dex: 6, spi: 3, int: 3 }, // Dwarf
+    3: { sta: 5, str: 5, agi: 9, dex: 6, spi: 3, int: 2 }, // Myrine
+    4: { sta: 8, str: 6, agi: 4, dex: 4, spi: 6, int: 2 }, // Enkidu
+    5: { sta: 3, str: 1, agi: 6, dex: 5, spi: 9, int: 6 }, // Lapin
   },
 
   skills: {
@@ -435,13 +435,13 @@ export const gameData = {
   ],
 
   jobBaseStatModifiers: {
-    0: { sta: 2, str: 3, agi: -1, dex: 1, spr: -1, int: 0 }, // Warrior-type
-    1: { sta: 0, str: 2, agi: 1, dex: 2, spr: -1, int: 0 }, // Scout-type
-    2: { sta: 0, str: 2, agi: -1, dex: 0, spr: 1, int: 2 }, // Acolyte-type
-    3: { sta: -1, str: 1, agi: -1, dex: 1, spr: 1, int: 3 }, // Mage-type
+    0: { sta: 2, str: 3, agi: -1, dex: 1, spi: -1, int: 0 }, // Warrior-type
+    1: { sta: 0, str: 2, agi: 1, dex: 2, spi: -1, int: 0 }, // Scout-type
+    2: { sta: 0, str: 2, agi: -1, dex: 0, spi: 1, int: 2 }, // Acolyte-type
+    3: { sta: -1, str: 1, agi: -1, dex: 1, spi: 1, int: 3 }, // Mage-type
   },
 
-  // [baseLP, baseMP, levelLP_Div, levelMP_Div, staLP_Div, sprMP_Div]
+  // [baseLP, baseMP, levelLP_Div, levelMP_Div, staLP_Div, spiMP_Div]
   jobModifiers: {
     // --- Warrior Line ---
     0: [98, 16, 5.847, 44.55, 15.5, 48.3], // Warrior

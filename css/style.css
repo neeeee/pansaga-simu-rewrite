@@ -1,16 +1,16 @@
 body {
-    font-family: monospace; /* Monospace font for retro feel */
-    background-color: #e6e6e6; /* Lighter background */
+    font-family: monospace;
+    background-color: #e6e6e6;
     color: #000;
     line-height: 1.4;
     padding: 10px;
-    font-size: 13px; /* Slightly smaller font to fit more */
+    font-size: 13px;
 }
 
 .container {
     width: 1100px;
     margin: auto;
-    background: #c0d9a9; /* Main background color from image */
+    background: #c0d9a9;
     border: 2px solid #555;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     display: flex;
@@ -25,17 +25,15 @@ h1 {
     padding: 0;
 }
 
-/* --- Top Selector Row (Race, Skill, Job) --- */
 .top-selectors-row {
     display: flex;
     justify-content: flex-start;
     padding: 5px 10px;
-    background-color: #aed6a1; /* Header green */
+    background-color: #aed6a1;
     border-bottom: 1px solid #777;
     font-weight: bold;
 }
 
-/* --- Modal Buttons Row --- */
 .modal-buttons-row {
     display: flex;
     justify-content: flex-start;
@@ -95,35 +93,33 @@ h1 {
 }
 
 .selector-group .selector-display {
-    background-color: #d4edda; /* Light green display */
+    background-color: #d4edda;
     border: 1px solid #777;
     padding: 1px 5px;
-    min-width: 80px; /* Adjust as needed */
+    min-width: 80px;
     text-align: center;
 }
 
-/* --- Main Calculator Grid --- */
 .calculator-grid {
     display: grid;
-    grid-template-columns: 17% 37% 45%; /* Slightly wider left panel for buff bonuses */
-    grid-template-rows: auto 1fr; /* Top row auto, bottom row takes remaining space */
-    gap: 5px; /* Gap between panels */
+    grid-template-columns: 17% 37% 45%;
+    grid-template-rows: auto 1fr;
+    gap: 5px;
     padding: 5px;
-    align-items: start; /* Align panels to the top */
+    align-items: start;
     width: 100%;
     box-sizing: border-box;
 }
 
 .panel {
-    background-color: #d4edda; /* General panel background from image */
-    border: 1px solid #777; /* Panel borders */
-    padding: 5px; /* Consistent padding inside panels */
+    background-color: #d4edda;
+    border: 1px solid #777;
+    padding: 5px;
 }
 
-/* Specific Panel Placements (based on image) */
 .panel-left {
     grid-column: 1;
-    grid-row: 1; /* Top-left panel */
+    grid-row: 1;
 }
 
 .panel-middle{
@@ -132,23 +128,23 @@ h1 {
     width: 100%;
     box-sizing: border-box;
     overflow-x: auto;
+    overflow-y: hidden;
 }
 
 .panel-right {
     grid-column: 3;
-    grid-row: 1; /* Top-right panel */
+    grid-row: 1;
 }
 
 .panel-bottom {
-    grid-column: 1 / span 3; /* Bottom panel spans all 3 columns */
+    grid-column: 1 / span 3;
     grid-row: 2;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px; /* Gap between equipment selectors and set bonuses */
+    gap: 10px;
 }
 
-/* --- Left Panel (Level & Stats) --- */
 .panel-left .stat-row-top {
     display: flex;
     justify-content: space-between;
@@ -158,7 +154,7 @@ h1 {
 }
 
 .panel-left .stat-row-top input {
-    width: 50px; /* Smaller input for level */
+    width: 50px;
     padding: 1px;
     border: 1px solid #777;
     background-color: #fff;
@@ -173,14 +169,16 @@ h1 {
     text-align: right;
     font-size: 0.9em;
 }
+
 #points-unallocated {
     visibility: hidden;
 }
+
 .panel-left h3 {
     font-size: 1em;
     margin: 10px 0 5px 0;
     text-align: center;
-    border-bottom: 1px dashed #777; /* Dashed line for section header */
+    border-bottom: 1px dashed #777;
     padding-bottom: 3px;
 }
 
@@ -216,7 +214,6 @@ h1 {
     text-align: left;
 }
 
-/* --- Middle Panel (Derived Stats) --- */
 .derived-stats-section {
     font-size: 0.9em;
     width: 100%;
@@ -231,7 +228,7 @@ h1 {
     min-height: 17px;
     max-height: 17px;
     margin-top: 2px;
-    text-align: left; /* Labels align left */
+    text-align: left;
     font-weight: bold;
 }
 
@@ -243,7 +240,7 @@ h1 {
     max-height: 13px;
     padding-left: 5px;
     margin-top: 2px;
-    background-color: #fff; /* White background for values */
+    background-color: #fff;
     box-sizing: border-box;
 }
 
@@ -265,7 +262,6 @@ h1 {
     background-color: rgba(0, 0, 0, 0);
 }
 
-/* Specific alignment for Horsemanship row */
 .horsemanship-row {
     display: flex;
     justify-content: space-between;
@@ -289,9 +285,8 @@ h1 {
     text-align: right;
 }
 
-/* --- Right Panel (Skills) --- */
 #skills-panel {
-    padding: 5px; /* Skills panel has less padding from image */
+    padding: 5px;
     background-color: #d4edda;
 }
 
@@ -304,9 +299,9 @@ h1 {
 }
 
 .skill-category {
-    background-color: #aed6a1; /* Darker green for category headers */
-    padding: 2px 5px; /* Tighter padding */
-    margin-bottom: 2px; /* Smaller margin */
+    background-color: #aed6a1;
+    padding: 2px 5px;
+    margin-bottom: 2px;
     font-weight: bold;
     display: flex;
     justify-content: space-between;
@@ -315,23 +310,23 @@ h1 {
 }
 
 .skill-name {
-    flex-basis: 45px; /* Shorter name column */
+    flex-basis: 45px;
     text-align: left;
     font-weight: bold;
-    white-space: nowrap; /* Prevent wrapping */
-    overflow: hidden; /* Hide overflow */
-    text-overflow: ellipsis; /* Add ellipsis for overflow */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .skill-bar-container {
     flex-grow: 1;
-    height: 8px; /* Thinner bar */
+    height: 8px;
     background-color: #ccc;
     position: relative;
-    margin: 0 3px; /* Tighter margin */
-    border-radius: 1px; /* Smaller radius */
+    margin: 0 3px;
+    border-radius: 1px;
     overflow: hidden;
-    border: 1px solid #888; /* Bar border */
+    border: 1px solid #888;
 }
 
 .skill-adeptness-bar {
@@ -339,7 +334,7 @@ h1 {
     top: 0;
     left: 0;
     height: 100%;
-    background-color: #33b5e5; /* Blue color for adeptness */
+    background-color: #33b5e5;
     width: 0%;
     z-index: 1;
 }
@@ -348,13 +343,12 @@ h1 {
     position: absolute;
     top: 0;
     height: 100%;
-    background-color: #007bff; /* Darker blue for potential line */
-    width: 1px; /* Thinner line */
+    background-color: #007bff;
+    width: 1px;
     left: 0%;
     z-index: 2;
 }
 
-/* New skill level line styles with gradients */
 .skill-level-line {
     position: absolute;
     top: 0;
@@ -370,29 +364,27 @@ h1 {
 }
 
 .skill-level-line.filled-gradient {
-    background: linear-gradient(to right, #4CAF50, #8BC34A); /* Green gradient */
+    background: linear-gradient(to right, #4CAF50, #8BC34A);
 }
 
 .skill-level-line.max-gradient {
-    background: linear-gradient(to right, #000000, #007bff); /* Black to blue gradient */
+    background: linear-gradient(to right, #000000, #007bff);
 }
 
 .skill-level-display {
-    width: 35px; /* Smaller width for levels */
+    width: 35px;
     text-align: right;
     font-family: monospace;
-    font-size: 0.8em; /* Smaller font */
+    font-size: 0.8em;
     font-weight: bold;
-    margin-left: 2px; /* Tighter margin */
+    margin-left: 2px;
 }
 
-/* Remove skill controls buttons as per image */
 .skill-controls,
 .skill-cost {
-    display: none; /* Hide these controls for now */
+    display: none;
 }
 
-/* --- Bottom Panel (Equipment & Set Bonuses) --- */
 .panel-bottom h2,
 .panel-bottom h3 {
     font-size: 1em;
@@ -400,7 +392,7 @@ h1 {
     text-align: center;
     border-bottom: 1px dashed #777;
     padding-bottom: 2px;
-    width: 90%; /* To center the dashed line */
+    width: 90%;
 }
 
 .equipment-selectors-grid {
@@ -408,13 +400,13 @@ h1 {
     grid-template-columns: repeat(
         3,
         1fr
-    ); /* 3 columns for equipment dropdowns */
-    gap: 5px 10px; /* Row and column gap */
+    );
+    gap: 5px 10px;
     width: 100%;
 }
 
 .equipment-selectors-grid .input-group {
-    margin-bottom: 0; /* Remove default margin */
+    margin-bottom: 0;
 }
 
 .equipment-selectors-grid label {
@@ -434,29 +426,27 @@ h1 {
 
 #set-bonus-display {
     width: 90%;
-    background-color: #e0f2d4; /* Lighter background for bonuses */
+    background-color: #e0f2d4;
     border: 1px solid #777;
     padding: 5px;
-    margin-top: 5px; /* Space from equipment */
+    margin-top: 5px;
 }
 
 #set-bonus-list {
     list-style-type: none;
     padding-left: 0;
     font-size: 0.85em;
-    color: #0056b3; /* A blue color for bonuses */
+    color: #0056b3;
     margin: 0;
 }
 
-/* General Input and Display consistency */
 .stat-value.overspent {
     color: #e63946;
 }
 
-/* Hide default scroll bars for select elements if possible */
 select {
-    -moz-appearance: none; /* Firefox */
-    -webkit-appearance: none; /* Safari and Chrome */
+    -moz-appearance: none;
+    -webkit-appearance: none;
     appearance: none;
     background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000%22%20d%3D%22M287%2C197.3L146.2%2C56.6L5.4%2C197.3H287z%22%2F%3E%3C%2Fsvg%3E");
     background-repeat: no-repeat;
@@ -464,7 +454,6 @@ select {
     background-size: 8px auto;
 }
 
-/* --- Unified Row Style --- */
 .sim-row {
     height: 1.5em;
     display: flex;
@@ -475,7 +464,6 @@ select {
     box-sizing: border-box;
 }
 
-/* Update stat, derived, and skill rows to use .sim-row */
 .panel-left .stat-row-top,
 .stat-input-row,
 .derived-row {
@@ -579,7 +567,6 @@ select {
     white-space: nowrap;
 }
 
-/* Remove conflicting paddings/margins */
 .panel-left .stat-row-top,
 .stat-input-row,
 .derived-row,
@@ -588,31 +575,26 @@ select {
     padding-bottom: 0;
 }
 
-/* Remove extra margin from .stat-input-row */
 .stat-input-row {
     margin-bottom: 0;
 }
 
-/* Remove extra margin from .panel-left .stat-row-top */
 .panel-left .stat-row-top {
     margin-bottom: 0;
 }
 
-/* Remove extra margin from .derived-row */
 .derived-row {
     margin-bottom: 0;
     background-color: #e0f2d4;
     border: 1px solid #bbd0ae;
 }
 
-/* Optionally, make .panel use grid for inner content */
 .panel {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
 }
 
-/* Reset Buttons */
 .reset-buttons-row {
     display: flex;
     flex-direction: column;
@@ -639,26 +621,25 @@ select {
     background-color: #d0d0d0;
 }
 
-/* --- Modal Styles --- */
 .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1000; /* Sit on top */
+    display: none;
+    position: fixed;
+    z-index: 1000;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .modal-content {
     background-color: #c0d9a9;
-    margin: 5% auto; /* 5% from the top and centered */
+    margin: 5% auto;
     padding: 0;
     border: 2px solid #555;
     border-radius: 5px;
-    width: 80%; /* Could be more or less, depending on screen size */
+    width: 80%;
     max-width: 800px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     font-family: monospace;
@@ -698,7 +679,6 @@ select {
     overflow-y: auto;
 }
 
-/* Unlocked Skills Display */
 .unlocked-skill-category {
     margin-bottom: 20px;
 }
@@ -780,7 +760,6 @@ select {
     margin: 1px 0;
 }
 
-/* Equipment Modal Styles */
 .modal-content-wide {
     width: 90%;
     max-width: 1000px;
@@ -814,7 +793,6 @@ select {
     font-size: 0.9em;
 }
 
-/* Buffs Modal Styles */
 .buff-section {
     margin-bottom: 20px;
 }
@@ -858,19 +836,19 @@ select {
     margin-bottom: 15px;
 }
 
-.enchanter-spr-controls {
+.enchanter-spi-controls {
     margin-left: 20px;
     margin-top: 5px;
     font-size: 0.85rem;
     color: #666;
 }
 
-.enchanter-spr-controls label {
+.enchanter-spi-controls label {
     margin-right: 8px;
     font-weight: normal;
 }
 
-.enchanter-spr-controls select {
+.enchanter-spi-controls select {
     padding: 2px 5px;
     font-size: 0.8rem;
     border: 1px solid #ccc;
@@ -883,7 +861,6 @@ select {
     color: #333;
 }
 
-/* Additional modal content styles */
 .no-skills-message {
     padding: 20px;
     text-align: center;
@@ -910,7 +887,6 @@ select {
     font-weight: bold;
 }
 
-/* Skill tree grouping within categories */
 .skill-tree-group {
     margin-bottom: 15px;
     padding-left: 10px;

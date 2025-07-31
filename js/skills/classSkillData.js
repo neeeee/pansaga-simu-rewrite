@@ -1,4 +1,5 @@
-const classSkillData = {
+export const classSkillData = {
+    // use skill category IDs from gameData.js
     0: {
         skills: [
             { id: 1, name: "Slash", skills: {
@@ -886,7 +887,7 @@ const classSkillData = {
                     duration: 480,
                     buff: "lapis",
                     buffEffectTable: {
-                        sprValues: [
+                        spiValues: [
                             {value: 33, 
                                 Blessing: [
                                     {value: 24.9, def: 5},
@@ -967,7 +968,7 @@ const classSkillData = {
                     },
                     description: "Cut base cast time of all skills by 50%"
                 },  
-                "Proelium": {
+                "Battle Prayer": {
                     reqPoints: 61,
                     mpCost: 78,
                     castTime: 0.5,
@@ -1090,7 +1091,7 @@ const classSkillData = {
                     cooldown: 5,
                     duration: 0,
                     buffEffectTable: {
-                        sprValues: [
+                        spiValues: [
                             {value: 33, 
                                 Blessing: [
                                     {value: 8, dodgeChance: 1},
@@ -1602,4 +1603,3 @@ const classSkillData = {
     }
 }
 
-export { classSkillData };

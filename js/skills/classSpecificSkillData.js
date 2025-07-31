@@ -1,4 +1,4 @@
-const classSpecificSkillData = {
+export const classSpecificSkillData = {
    // use job IDs from gameData.js
    0: {
         // Warrior
@@ -831,7 +831,7 @@ const classSpecificSkillData = {
             buffEffectTable: {
                 "lp": "15.00 + 250", // lp + (lp * 15%) + 250
             },
-            description: "Increase LP for party"
+            description: "Increase LP for party, 15% of base LP + 250"
         },
         "Revive": {
             reqLevel: 35,
@@ -844,7 +844,7 @@ const classSpecificSkillData = {
     },
     16: {
         // Cleric
-        "Meditation": {
+        "Meditation (Passive)": {
             reqLevel: 5,
             mpCost: 0,
             castTime: 0,
@@ -903,7 +903,7 @@ const classSpecificSkillData = {
     },
     17: {
         // Enchanter
-          "Meditation": {
+          "Meditation (Passive)": {
             reqLevel: 5,
             mpCost: 0,
             castTime: 0,
@@ -962,7 +962,7 @@ const classSpecificSkillData = {
     },
     18: {
         // Ascetic
-        "Meditation": {
+        "Meditation (Passive)": {
             reqLevel: 5,
             mpCost: 0,
             castTime: 0,
@@ -1005,7 +1005,7 @@ const classSpecificSkillData = {
     },
     19: {
         // Monk
-            "Meditation": {
+            "Meditation (Passive)": {
             reqLevel: 5,
             mpCost: 0,
             castTime: 0,
@@ -1064,7 +1064,7 @@ const classSpecificSkillData = {
     },
     20: {
         // Exorcist
-             "Meditation": {
+             "Meditation (Passive)": {
             reqLevel: 5,
             mpCost: 0,
             castTime: 0,
@@ -1391,5 +1391,3 @@ const classSpecificSkillData = {
        }
     },
 }
-
-export { classSpecificSkillData };
