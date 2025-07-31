@@ -2138,32 +2138,55 @@ document.getElementById("level").addEventListener("input", (event) => {
 }); // Add listener for level changes
 
 for (const statInput of Object.values(elements.addedStatInputs)) {
+  let inputTimeout;
+  
+  // Select all text when input is focused (allows easy replacement)
+  statInput.addEventListener("focus", (event) => {
+    event.target.select();
+  });
+  
   // Handle input changes with debounced validation
   statInput.addEventListener("input", (event) => {
-    // Allow temporary invalid states while typing
-    // Only validate if the value is a complete number
+    // Clear any existing timeout
+    if (inputTimeout) {
+      clearTimeout(inputTimeout);
+    }
+    
+    // Don't run calculations immediately while typing
+    // Only validate for extremely high values that would break things
     const inputValue = event.target.value.trim();
-    
-    // If the input is empty or not a complete number, don't validate yet
-    if (inputValue === '' || isNaN(parseInt(inputValue))) {
-      return; // Let the user continue typing
+    if (inputValue !== '' && !isNaN(parseInt(inputValue))) {
+      const value = parseInt(inputValue);
+      // Only enforce a reasonable upper limit to prevent extreme values
+      if (value > 999) {
+        event.target.value = 99;
+        runCalculations();
+        updateSkillPreviewModal();
+        return;
+      }
     }
     
-    const value = parseInt(inputValue);
-    const min = parseInt(event.target.min) || 0;
-    const max = parseInt(event.target.max) || 99;
-    
-    // Only enforce max limit during typing (min will be enforced in readInputs)
-    if (value > max) {
-      event.target.value = max;
-    }
-    
-    runCalculations();
-    updateSkillPreviewModal(); // Update skill stats in modal
+    // Debounce the calculations - only run after user stops typing for 300ms
+    inputTimeout = setTimeout(() => {
+      const finalValue = event.target.value.trim();
+      
+      if (finalValue === '' || isNaN(parseInt(finalValue))) {
+        // Don't run calculations for empty/invalid values
+        return;
+      }
+      
+      runCalculations();
+      updateSkillPreviewModal();
+    }, 300);
   });
   
   // Handle when user finishes editing (loses focus)
   statInput.addEventListener("blur", (event) => {
+    // Clear any pending timeout since we're handling this immediately
+    if (inputTimeout) {
+      clearTimeout(inputTimeout);
+    }
+    
     const inputValue = event.target.value.trim();
     
     // If empty or invalid, reset to minimum
