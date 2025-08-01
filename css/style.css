@@ -479,7 +479,7 @@ select {
     display: flex;
     align-items: center;
     padding: 1px 2px;
-    height: 1.5em;
+    height: 1.9em;
     box-sizing: border-box;
     margin-bottom: 1px;
     background-color: #e0f2d4;
@@ -499,7 +499,7 @@ select {
 
 .skill-level-line-container {
     flex: 1;
-    height: 5px;
+    height: 8px;
     background-color: #ccc;
     position: relative;
     border-radius: 1px;
@@ -512,7 +512,7 @@ select {
     flex: 0 0 50px;
     text-align: center;
     font-family: monospace;
-    font-size: 0.8em;
+    font-size: 1em;
     font-weight: bold;
     white-space: nowrap;
     overflow: hidden;
@@ -529,8 +529,8 @@ select {
 }
 
 .skill-btn {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     border: 1px solid #666;
     background-color: #f0f0f0;
     cursor: pointer;
@@ -542,7 +542,7 @@ select {
 
 .skill-btn.skill-btn-wide {
     width: 22px;
-    font-size: 7px;
+    font-size: 10px;
 }
 
 .skill-btn[data-amount="min"] {
@@ -585,6 +585,7 @@ select {
     margin-bottom: 0;
     background-color: #e0f2d4;
     border: 1px solid #bbd0ae;
+    height: 2em;
 }
 
 .panel {
@@ -899,4 +900,52 @@ select {
     border-radius: 3px;
     font-size: 1em;
     color: #2d5a2d;
+}
+
+/* Proficiency Progress Bars */
+.proficiency-progress {
+    margin: 8px 0;
+    padding: 4px 0;
+}
+
+.proficiency-progress-text {
+    font-size: 0.9em;
+    color: #555;
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+
+.proficiency-progress-bar {
+    width: 100%;
+    height: 12px;
+    background-color: #e0e0e0;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #ccc;
+}
+
+.proficiency-progress-fill {
+    height: 100%;
+    transition: width 0.3s ease;
+    border-radius: 5px;
+}
+
+.proficiency-progress-fill.incomplete {
+    background: linear-gradient(90deg, #ff9800, #ffb74d);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.proficiency-progress-fill.completed {
+    background: linear-gradient(90deg, #4caf50, #81c784);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Enhance unlocked skill items with proficiency info */
+.unlocked-skill-item.unlocked .proficiency-progress-text {
+    color: #2d5a2d;
+    font-weight: 600;
+}
+
+.unlocked-skill-item.locked .proficiency-progress-text {
+    color: #8d6e63;
 }

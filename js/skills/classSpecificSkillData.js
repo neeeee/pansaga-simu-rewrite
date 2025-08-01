@@ -770,7 +770,7 @@ export const classSpecificSkillData = {
     },
     14: {
         // Acolyte
-       "Meditation": {
+        "Meditation (Passive)": {
             reqLevel: 5,
             mpCost: 0,
             castTime: 0,
@@ -790,7 +790,7 @@ export const classSpecificSkillData = {
     },
     15: {
         // Priest
-        "Meditation": {
+        "Meditation (Passive)": {
             reqLevel: 5,
             mpCost: 0,
             castTime: 0,
@@ -903,7 +903,7 @@ export const classSpecificSkillData = {
     },
     17: {
         // Enchanter
-          "Meditation (Passive)": {
+        "Meditation (Passive)": {
             reqLevel: 5,
             mpCost: 0,
             castTime: 0,
@@ -1005,7 +1005,7 @@ export const classSpecificSkillData = {
     },
     19: {
         // Monk
-            "Meditation (Passive)": {
+        "Meditation (Passive)": {
             reqLevel: 5,
             mpCost: 0,
             castTime: 0,
@@ -1064,7 +1064,7 @@ export const classSpecificSkillData = {
     },
     20: {
         // Exorcist
-             "Meditation (Passive)": {
+        "Meditation (Passive)": {
             reqLevel: 5,
             mpCost: 0,
             castTime: 0,

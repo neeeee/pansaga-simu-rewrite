@@ -1,3 +1,92 @@
+// Proficiency-based skills that unlock based on category totals
+export const proficiencySkills = {
+  // Melee proficiency skills
+  melee: [
+    {
+      name: "Slash",
+      requiredProficiency: 3,
+      mpCost: 10,
+      castTime: 0,
+      cooldown: 10,
+      duration: 0,
+      description: "A quick slash with higher accuracy"
+    },
+    {
+      name: "Bash ",
+      requiredProficiency: 35,
+      mpCost: 18,
+      castTime: 0,
+      cooldown: 10,
+      duration: 0,
+      description: "Bash the enemy, knocking them back"
+    },
+    {
+      name: "Misdirection",
+      requiredProficiency: 70,
+      mpCost: 10,
+      castTime: 0,
+      cooldown: 60,
+      duration: 0,
+      description: "Enemy loses target focus on you"
+    },
+    {
+        name: "Ossify",
+        requiredProficiency: 100,
+        mpCost: 24,
+        castTime: 0,
+        cooldown: 30,
+        duration: 0,
+        description: "Knockdown, movement speed reduction, and movement restriction effects are nullified, but your attack power is halved"
+    }
+  ],
+  // Magic proficiency skills
+  magic: [],
+  // Prayer proficiency skills
+  prayer: [
+    {
+      name: "Mental Aid",
+      requiredProficiency: 35,
+      mpCost: 14,
+      castTime: 2,
+      cooldown: 10,
+      duration: 0,
+      description: "Remove a single magical debuff"
+    },
+    {
+      name: "Physical Barrier",
+      requiredProficiency: 102,
+      mpCost: 128,
+      castTime: 2,
+      cooldown: 10,
+      duration: 60,
+      description: "Create a barrier that absorbs one physical attack"
+    },
+    {
+        name: "Magical Barrier",
+        requiredProficiency: 102,
+        mpCost: 128,
+        castTime: 2,
+        cooldown: 10,
+        duration: 60,
+        description: "Create a barrier that absorbs one magical attack"
+    }
+  ],
+  // Technique proficiency skills
+  technique: [
+    {
+      name: "Backstep",
+      requiredProficiency: 3,
+      mpCost: 5,
+      castTime: 0,
+      cooldown: 3,
+      duration: 1,
+      description: "Move backwards, +100 dodge for one second"
+    }
+  ],
+  // Special proficiency skills
+  special: []
+};
+
 export const classSkillData = {
     // use skill category IDs from gameData.js
     0: {

@@ -2,7 +2,7 @@ import { gameData } from "./gameData.js";
 import { skills } from "./skills/jobSkillValues.js";
 import { items } from "./items/equipData.js";
 import { setBonuses } from "./items/setBonuses.js";
-import { classSkillData } from "./skills/classSkillData.js";
+import { classSkillData, proficiencySkills } from "./skills/classSkillData.js";
 import { classSpecificSkillData } from "./skills/classSpecificSkillData.js";
 
 // --- CONSTANTS ---
@@ -207,6 +207,45 @@ function initializeSkills() {
 /**
  * Renders the skill panel based on character.skills state.
  */
+/**
+ * Calculates the total proficiency (adeptness) for each skill category
+ */
+function calculateCategoryProficiencies() {
+  const proficiencies = {
+    melee: 0,
+    technique: 0,
+    prayer: 0,
+    magic: 0,
+    special: 0
+  };
+
+  // Map category IDs to proficiency names
+  const categoryMapping = {
+    0: 'melee',      // Melee category
+    6: 'technique',  // Technique category  
+    12: 'prayer',    // Prayer category
+    17: 'magic',     // Magic category
+    22: 'special'    // Special category
+  };
+
+  for (const categoryId in gameData.skills) {
+    const category = gameData.skills[categoryId];
+    const proficiencyKey = categoryMapping[categoryId];
+    
+    if (proficiencyKey) {
+      // Calculate category sum based on current character skills
+      for (const skillData of category.skills) {
+        const currentSkill = character.skills[skillData.id];
+        if (currentSkill) {
+          proficiencies[proficiencyKey] += currentSkill.adeptness;
+        }
+      }
+    }
+  }
+
+  return proficiencies;
+}
+
 function renderSkillsPanel() {
   let html = "";
 
@@ -356,8 +395,22 @@ function handleSkillButtonClick(event) {
   } else {
     // Regular numeric amount (+1, -1, +10, -10)
     const amount = parseInt(amountStr, 10);
-    newValue = currentValue + amount;
-    pointsToAllocate = amount;
+    if (amount < 0) {
+      // For negative amounts, only allow if currentValue is above the minimum
+      if (currentValue > baseAdeptnessForJob) {
+        // Don't allow to go below the minimum
+        newValue = Math.max(currentValue + amount, baseAdeptnessForJob);
+        pointsToAllocate = newValue - currentValue;
+      } else {
+        // Already at minimum, do nothing
+        newValue = currentValue;
+        pointsToAllocate = 0;
+      }
+    } else {
+      // For positive amounts, proceed as normal
+      newValue = currentValue + amount;
+      pointsToAllocate = amount;
+    }
   }
 
   // Check limits first
@@ -1673,6 +1726,44 @@ function calculateUnlockedSkills() {
     }
   }
   
+  // Add proficiency-based skills
+  const proficiencies = calculateCategoryProficiencies();
+  
+  for (const categoryName in proficiencySkills) {
+    const categorySkills = proficiencySkills[categoryName];
+    const currentProficiency = proficiencies[categoryName] || 0;
+    
+    // Only add category if there are skills to show
+    const availableSkills = [];
+    
+    for (const skillData of categorySkills) {
+      const isUnlocked = currentProficiency >= skillData.requiredProficiency;
+      const requirementText = `${categoryName.charAt(0).toUpperCase() + categoryName.slice(1)} Proficiency ${skillData.requiredProficiency}`;
+      
+      availableSkills.push({
+        name: skillData.name,
+        description: skillData.description,
+        requirement: requirementText,
+        isUnlocked: isUnlocked,
+        mpCost: skillData.mpCost,
+        castTime: skillData.castTime,
+        cooldown: skillData.cooldown,
+        duration: skillData.duration,
+        skillTree: "Proficiency",
+        currentProficiency: currentProficiency,
+        requiredProficiency: skillData.requiredProficiency
+      });
+    }
+    
+    if (availableSkills.length > 0) {
+      const displayCategoryName = `${categoryName.charAt(0).toUpperCase() + categoryName.slice(1)} Mastery`;
+      unlockedSkills[displayCategoryName] = {
+        name: displayCategoryName,
+        skills: availableSkills
+      };
+    }
+  }
+  
   return unlockedSkills;
 }
 
@@ -1777,11 +1868,29 @@ function displayUnlockedSkills() {
               skillStatsHtml = baseStatsHtml + modifiedStatsHtml;
             }
             
+            // Add proficiency progress for proficiency-based skills
+            let proficiencyProgressHtml = '';
+            if (skill.skillTree === 'Proficiency' && skill.currentProficiency !== undefined && skill.requiredProficiency !== undefined) {
+              const progressPercent = Math.min(100, (skill.currentProficiency / skill.requiredProficiency) * 100);
+              const progressClass = skill.isUnlocked ? 'completed' : 'incomplete';
+              proficiencyProgressHtml = `
+                <div class="proficiency-progress">
+                  <div class="proficiency-progress-text">
+                    Progress: ${skill.currentProficiency} / ${skill.requiredProficiency} (${progressPercent.toFixed(1)}%)
+                  </div>
+                  <div class="proficiency-progress-bar">
+                    <div class="proficiency-progress-fill ${progressClass}" style="width: ${progressPercent}%"></div>
+                  </div>
+                </div>
+              `;
+            }
+
             html += `
               <div class="unlocked-skill-item ${statusClass}">
                 <div class="skill-name-unlock">${skill.name}</div>
                 <div class="skill-description-unlock">${skill.description}</div>
                 ${skillStatsHtml}
+                ${proficiencyProgressHtml}
                 <div class="skill-requirement ${reqClass}">
                   Req: ${skill.requirement}
                 </div>
