@@ -9,7 +9,7 @@ export const proficiencySkills = {
       castTime: 0,
       cooldown: 10,
       duration: 0,
-      description: "A quick slash with higher accuracy"
+      description: "A quick slash with high accuracy"
     },
     {
       name: "Bash ",
