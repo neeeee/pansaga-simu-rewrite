@@ -472,18 +472,15 @@ async function fetchEquipmentData() {
 
   const equipmentData = {};
 
-  console.log('Starting to fetch equipment data...');
 
   for (const [slot, filename] of Object.entries(equipmentFiles)) {
     try {
-      console.log(`Fetching ${filename}.csv for slot ${slot}...`);
       const response = await fetch(`js/items/${filename}.csv`);
       if (!response.ok) {
         console.warn(`Failed to load ${filename}.csv: ${response.status} ${response.statusText}`);
         continue;
       }
       const csvText = await response.text();
-      console.log(`Loaded ${filename}.csv, size: ${csvText.length} characters`);
       const items = parseCSV(csvText, slot);
       equipmentData[slot] = items;
     } catch (error) {
@@ -491,7 +488,6 @@ async function fetchEquipmentData() {
     }
   }
 
-  console.log('Finished fetching equipment data:', Object.keys(equipmentData));
   globalEquipmentData = equipmentData;
   return equipmentData;
 }
@@ -501,7 +497,6 @@ function parseCSV(csvText, slot) {
   const headers = lines[0].split(',');
   const items = [];
 
-  console.log(`Parsing CSV for slot ${slot}:`, { lineCount: lines.length, headers });
 
   for (let i = 1; i < lines.length; i++) {
     const line = lines[i].trim();
@@ -522,6 +517,7 @@ function parseCSV(csvText, slot) {
       stats: parseEffects(values[4]),
       effects: parseEffects(values[5]),
       equipclass: parseEffects(values[6]),
+      setBonus: parseEffects(values[7]),
       slot: slot
     };
 
@@ -530,7 +526,6 @@ function parseCSV(csvText, slot) {
     items.push(item);
   }
 
-  console.log(`Parsed ${items.length} items for slot ${slot}`);
   return items;
 }
 
@@ -541,26 +536,70 @@ function parseEffects(effectsString) {
     return effects;
   }
 
-  // Check for enhancement effects first in the entire string before splitting
-  const enhancementMatch = effectsString.match(/^enhancement:(\d+):(.+)$/);
-  if (enhancementMatch) {
-    const enhancementLevel = parseInt(enhancementMatch[1]);
-    const enhancementEffects = enhancementMatch[2];
-
-    effects.enhancement = {
-      level: enhancementLevel,
-      effects: parseEnhancementEffects(enhancementEffects)
-    };
-    return effects; // Return early since this is an enhancement-only effects string
-  }
-
-  // Regular effect parsing for non-enhancement effects
+  // Split by semicolon first to handle multiple enhancement blocks
   const effectPhrases = effectsString.split(';');
+  let hasEnhancement = false;
 
   effectPhrases.forEach((phrase) => {
     const trimmedPhrase = phrase.trim();
 
     if (trimmedPhrase === '') {
+      return;
+    }
+
+    // Check if this phrase is an enhancement effect
+    const enhancementMatch = trimmedPhrase.match(/^enhancement:(\d+):(.+)$/);
+    const exactEnhancementMatch = trimmedPhrase.match(/^enhancement:(\d+):exact:(.+)$/);
+    const progressiveEnhancementMatch = trimmedPhrase.match(/^enhancement:(\d+)-(\d+):(.+)$/);
+    
+    if (enhancementMatch || exactEnhancementMatch || progressiveEnhancementMatch) {
+      let match, enhancementLevel, enhancementEffects, isExact, isProgressive, maxLevel;
+      
+      if (progressiveEnhancementMatch) {
+        match = progressiveEnhancementMatch;
+        enhancementLevel = parseInt(match[1]);
+        maxLevel = parseInt(match[2]);
+        enhancementEffects = match[3];
+        isExact = false;
+        isProgressive = true;
+      } else {
+        match = enhancementMatch || exactEnhancementMatch;
+        enhancementLevel = parseInt(match[1]);
+        enhancementEffects = match[2];
+        isExact = !!exactEnhancementMatch;
+        isProgressive = false;
+        maxLevel = null;
+      }
+
+      // If this is the first enhancement, create the enhancement object
+      if (!hasEnhancement) {
+        effects.enhancement = {
+          level: enhancementLevel,
+          exact: isExact,
+          progressive: isProgressive,
+          maxLevel: maxLevel,
+          effects: parseEnhancementEffects(enhancementEffects)
+        };
+        hasEnhancement = true;
+      } else {
+        // If there are multiple enhancements, merge them
+        // For exact enhancements, use the highest level
+        if (enhancementLevel > effects.enhancement.level) {
+          effects.enhancement.level = enhancementLevel;
+        }
+        // If any enhancement is exact, mark the whole thing as exact
+        if (isExact) {
+          effects.enhancement.exact = true;
+        }
+        // If any enhancement is progressive, mark the whole thing as progressive
+        if (isProgressive) {
+          effects.enhancement.progressive = true;
+          effects.enhancement.maxLevel = maxLevel;
+        }
+        // Merge the effects
+        const additionalEffects = parseEnhancementEffects(enhancementEffects);
+        Object.assign(effects.enhancement.effects, additionalEffects);
+      }
       return;
     }
 
@@ -573,7 +612,15 @@ function parseEffects(effectsString) {
       let value = match[3].trim();
 
       if (value.endsWith('%')) {
-        value = parseFloat(value.replace('%', '')) / 100;
+        // Different stats handle percentages differently:
+        // - LP and MP: actual percentages (divide by 100)
+        // - Cast speed: expects decimal (divide by 100)
+        // - All others: whole numbers (don't divide)
+        if (key === 'lp' || key === 'mp' || key === 'castspeed') {
+          value = parseFloat(value.replace('%', '')) / 100;
+        } else {
+          value = parseFloat(value.replace('%', ''));
+        }
       } else {
         value = isNaN(parseFloat(value)) ? value : parseFloat(value);
       }
@@ -605,7 +652,13 @@ function parseEnhancementEffects(effectsString) {
       let value = match[3].trim();
 
       if (value.endsWith('%')) {
-        value = parseFloat(value.replace('%', '')); // Keep as percentage, don't divide by 100
+        // In enhancements, only cast speed should be treated as percentage
+        // LP and MP are flat values, not percentages
+        if (key === 'castspeed') {
+          value = parseFloat(value.replace('%', '')) / 100;
+        } else {
+          value = parseFloat(value.replace('%', ''));
+        }
       } else {
         value = isNaN(parseFloat(value)) ? value : parseFloat(value);
       }
@@ -649,7 +702,6 @@ async function populateDropdowns() {
 async function populateEquipmentSelectors() {
   try {
     const equipmentData = await fetchEquipmentData();
-    console.log('Loaded equipment data:', equipmentData);
 
     for (const slot in elements.equipmentSelectors) {
       const selector = elements.equipmentSelectors[slot];
@@ -670,7 +722,6 @@ async function populateEquipmentSelectors() {
           .map((item) => `<option value="${item.id}">${item.name}</option>`)
           .join("");
         selector.value = character.equipment[slot] || `${slot}-none`; // Set initial value
-        console.log(`Populated ${slot} with ${sortedItems.length} items`);
       } else {
         // Create a "None" option for empty slots
         selector.innerHTML = `<option value="${slot}-none">None</option>`;
@@ -870,9 +921,27 @@ function applyEquipmentBonuses(bonuses) {
           if (effect === 'enhancement' && effectValue && effectValue.level) {
             // Get current enhancement level for this item (default to 0)
             const currentEnhancement = character.equipmentEnhancements?.[itemId] || 0;
-            const enhancementMultiplier = Math.floor(currentEnhancement / effectValue.level);
+            
+            let shouldApply = false;
+            let enhancementMultiplier = 1;
+            
+            if (effectValue.exact) {
+              // Exact enhancement: only apply if current level equals the required level
+              shouldApply = currentEnhancement === effectValue.level;
+            } else if (effectValue.progressive) {
+              // Progressive enhancement: apply if current level is within the range
+              shouldApply = currentEnhancement >= effectValue.level && currentEnhancement <= effectValue.maxLevel;
+              if (shouldApply) {
+                // Calculate progressive value: base value + (current level - start level)
+                enhancementMultiplier = 1 + (currentEnhancement - effectValue.level);
+              }
+            } else {
+              // Regular enhancement: apply if current level is at least the required level
+              enhancementMultiplier = Math.floor(currentEnhancement / effectValue.level);
+              shouldApply = enhancementMultiplier > 0;
+            }
 
-            if (enhancementMultiplier > 0 && effectValue.effects) {
+            if (shouldApply && effectValue.effects) {
               for (const [enhancementEffect, enhancementEffectValue] of Object.entries(effectValue.effects)) {
                 const totalValue = enhancementEffectValue.value * enhancementMultiplier;
 
@@ -891,11 +960,6 @@ function applyEquipmentBonuses(bonuses) {
                   } else if (enhancementEffectValue.operator === '-') {
                     bonuses[enhancementEffect] = (bonuses[enhancementEffect] || 0) - totalValue;
                   }
-
-                  // Handle special cases for derived stats
-                  if (enhancementEffect === 'mres') {
-                    bonuses.magicResistance = (bonuses.magicResistance || 0) + totalValue;
-                  }
                 }
               }
             }
@@ -908,9 +972,6 @@ function applyEquipmentBonuses(bonuses) {
               bonuses[effect] = (bonuses[effect] || 0) + effectValue.value;
             } else if (effectValue.operator === '-') {
               bonuses[effect] = (bonuses[effect] || 0) - effectValue.value;
-            }
-            if (effect === 'castspeed') {
-              console.log(`Applied castspeed effect from ${item.name}: ${effectValue.operator}${effectValue.value}, total: ${bonuses[effect]}`);
             }
           }
         }
@@ -1237,11 +1298,11 @@ function applyRacialSkillEffects(bonuses) {
       bonuses.magicalDefense = effect.value;
       break;
     case "magicResistance":
-      // Increase magic resistance by 10%
+      // Increase magic resistance
       bonuses.magicResistance = effect.value;
       break;
     case "mpRegeneration":
-      // MP regeneration increases by 15%
+      // MP regeneration
       bonuses.mpRegeneration = effect.value;
       break;
     default:
@@ -1296,13 +1357,25 @@ function calculateDerivedStats(bonuses = {}) {
     totalLp += bonuses.lpBuff;
   }
 
+  // Apply LP bonus from equipment
+  if (bonuses.lp) {
+    totalLp += bonuses.lp;
+  }
+
   stats.lp = totalLp;
 
   // MP Calculation
   const levelMPComponent = Math.ceil(level * (100 / mod[3]));
   const spiMultiplier = Math.ceil(100 / mod[5]);
   const spiMPComponent = Math.ceil(stats.spi * spiMultiplier);
-  stats.mp = mod[1] + levelMPComponent + spiMPComponent;
+  let totalMp = mod[1] + levelMPComponent + spiMPComponent;
+
+  // Apply MP bonus from equipment
+  if (bonuses.mp) {
+    totalMp += bonuses.mp;
+  }
+
+  stats.mp = totalMp;
 
   // POT (Potential) - Potion effectiveness
   let potValue = 100; // Base 100%
@@ -1440,7 +1513,11 @@ function calculateDerivedStats(bonuses = {}) {
   // Apply racial skill bonus for magic resistance
   if (bonuses.magicResistance) {
     stats.magRes += bonuses.magicResistance;
-    console.log(`Applied magicResistance bonus: ${bonuses.magicResistance}, final magRes: ${stats.magRes}`);
+  }
+
+  // Apply equipment magic resistance bonus
+  if (bonuses.mres) {
+    stats.magRes += bonuses.mres;
   }
 
   // Accuracy
@@ -1453,6 +1530,11 @@ function calculateDerivedStats(bonuses = {}) {
   // Apply racial skill bonus for critical hit chance
   if (bonuses.criticalHitChance) {
     stats.crit += bonuses.criticalHitChance;
+  }
+
+  // Apply equipment crit bonus
+  if (bonuses.crit) {
+    stats.crit += bonuses.crit;
   }
 
   stats.criD = 100; // Critical damage bonus (base 100%, only increased by gear)
@@ -2052,7 +2134,6 @@ function calculateUnlockedSkills() {
 function displayUnlockedSkills() {
   try {
     const unlockedSkills = calculateUnlockedSkills();
-    console.log('Unlocked skills:', unlockedSkills);
     let html = "";
 
     // Get current job info for display
