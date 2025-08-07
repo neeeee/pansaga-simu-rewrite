@@ -1,0 +1,8 @@
+name,lvlreq,def,slots,stats,effects,equipclass
+None,0,0,0,,,all
+Cloth Pants,1,1,0,hp+3,,all
+Leather Pants,1,2,0,agi+1,,all
+Iron Greaves,5,4,0,def+2,,all
+Steel Greaves,10,6,1,def+3,,all
+Mage Pants,1,1,0,int+1;mp+3,castspeed+3%,mage
+Priest Pants,1,1,0,spi+1;mp+2,healing+3%,acolyte 

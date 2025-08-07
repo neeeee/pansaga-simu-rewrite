@@ -1,0 +1,8 @@
+name,lvlreq,def,slots,stats,effects,equipclass
+None,0,0,0,,,all
+Wooden Shield,1,2,0,def+1,,all
+Iron Shield,5,5,0,def+3,,all
+Steel Shield,10,8,1,def+5,,all
+Mage Orb,1,1,0,matk+2,mp+3,mage;acolyte
+Iron Orb,5,2,0,matk+4,mp+5,mage;acolyte
+Steel Orb,10,3,1,matk+6,mp+8,mage;acolyte 

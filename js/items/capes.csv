@@ -1,0 +1,7 @@
+name,lvlreq,def,slots,stats,effects,equipclass
+None,0,0,0,,,all
+Cloth Cape,1,1,0,def+1,,all
+Leather Cape,5,2,0,def+2,,all
+Steel Cape,10,3,1,def+3,,all
+Mage Cape,1,1,0,mp+3,castspeed+2%,mage;acolyte
+Priest Cape,1,1,0,mp+2,healing+2%,acolyte 

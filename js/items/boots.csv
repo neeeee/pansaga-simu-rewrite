@@ -1,0 +1,8 @@
+name,lvlreq,def,slots,stats,effects,equipclass
+None,0,0,0,,,all
+Cloth Boots,1,1,0,agi+1,,all
+Leather Boots,1,2,0,agi+2,,all
+Iron Boots,5,4,0,def+2,,all
+Steel Boots,10,6,1,def+3,,all
+Mage Boots,1,1,0,int+1;mp+2,castspeed+3%,mage
+Priest Boots,1,1,0,spi+1;mp+1,healing+3%,acolyte 
