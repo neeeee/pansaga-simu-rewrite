@@ -154,6 +154,14 @@ h1 {
     text-align: center;
 }
 
+#race {
+    width: 100px;
+}
+
+#racial-skill {
+    width: 140px;
+}
+
 .calculator-grid {
     display: grid;
     grid-template-columns: 17% 37% 45%;
