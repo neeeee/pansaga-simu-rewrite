@@ -849,6 +849,7 @@ function runCalculations() {
   applySetBonuses(bonuses);
   applyRacialSkillEffects(bonuses);
   applySkillBuffEffects(bonuses);
+  applyPrayerProficiencySpiBonus(bonuses);
 
   for (const stat of PRIMARY_STATS) {
     const total =
@@ -869,6 +870,24 @@ function runCalculations() {
 
   updateStatCostIndicators(); // Update cost indicators for stat increases
   updateUI(bonuses);
+}
+
+/**
+ * Priest, Cleric, and Enchanter gain +1 SPI by default, plus +1 SPI per 10 Prayer proficiency.
+ * They begin with base Prayer proficiency (~15), so they effectively start at +2 SPI.
+ */
+function applyPrayerProficiencySpiBonus(bonuses) {
+  const eligibleJobsForBonus = new Set([15, 16, 17]); // Priest, Cleric, Enchanter
+  if (!eligibleJobsForBonus.has(character.jobId)) return;
+
+  const proficiencies = calculateCategoryProficiencies();
+  const prayerProficiency = proficiencies.prayer || 0;
+
+  const spiBonusFromPrayer = 1 + Math.floor(prayerProficiency / 10);
+  if (spiBonusFromPrayer > 0) {
+    bonuses.stats.spi = (bonuses.stats.spi || 0) + spiBonusFromPrayer;
+    bonuses.description.push(`Prayer proficiency: +${spiBonusFromPrayer} SPI`);
+  }
 }
 
 function getCombinedBaseStats() {
