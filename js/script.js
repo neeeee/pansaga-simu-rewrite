@@ -1712,15 +1712,24 @@ function updateUI(bonuses) {
       const totalStat = combinedBase + added;
       inputElement.value = totalStat;
 
-      // Format the output display as "Final (Total)" where Total = base + additional
-      totalElement.innerHTML = `${final} (${totalStat})`;
+      // Display as "Allocated (Final)" where Allocated = base + additional and Final = after gear
+      totalElement.innerHTML = `${totalStat} (${final})`;
     }
 
     // Update buff bonus display
     if (buffBonusElement) {
       const buffBonus = bonuses.stats[stat] || 0;
-      if (buffBonus > 0) {
-        buffBonusElement.textContent = `+${buffBonus}`;
+      if (buffBonus !== 0) {
+        const sign = buffBonus > 0 ? '+' : '';
+        buffBonusElement.classList.toggle(
+          "stat-bonus-positive",
+          buffBonus > 0,
+        );
+        buffBonusElement.classList.toggle(
+          "stat-bonus-negative",
+          buffBonus < 0,
+        );
+        buffBonusElement.textContent = `${sign}${buffBonus}`;
         buffBonusElement.style.display = 'inline';
       } else {
         buffBonusElement.textContent = '';
@@ -2589,6 +2598,81 @@ function exportCharacter() {
   URL.revokeObjectURL(url);
 }
 
+/**
+ * Handles stat button actions for +1/+5/MAX and -1/-5/MIN
+ */
+function handleStatButton(stat, action, amount) {
+  // Ensure current inputs are read
+  readInputs();
+
+  const baseStats = getCombinedBaseStats();
+  // Recompute spent to know remaining points
+  calculateSpentStatPoints(baseStats);
+
+  const maxStat = gameData.maxStatValue || 99;
+  let added = character.addedStats[stat] || 0;
+  const base = baseStats[stat] || 0;
+
+  const getNextCost = (currentTotal) => {
+    const nextLevel = currentTotal + 1;
+    return gameData.statPointCosts[nextLevel]?.[0] || 0;
+  };
+
+  const getRemaining = () => (character.points.totalStat - character.points.spentStat);
+
+  if (action === 'inc') {
+    let steps = amount;
+    while (steps > 0 && (base + added) < maxStat) {
+      const cost = getNextCost(base + added);
+      if (cost <= getRemaining()) {
+        added += 1;
+        character.points.spentStat += cost; // optimistic update for remaining calc during loop
+        steps -= 1;
+      } else {
+        break;
+      }
+    }
+  } else if (action === 'dec') {
+    let steps = amount;
+    while (steps > 0 && added > 0) {
+      // Refund using previous level cost
+      const prevTotal = base + added; // current total
+      const prevCost = gameData.statPointCosts[prevTotal]?.[0] || 0;
+      added -= 1;
+      character.points.spentStat = Math.max(0, character.points.spentStat - prevCost);
+      steps -= 1;
+    }
+  } else if (action === 'max') {
+    // Increase until we run out of points or reach cap
+    while ((base + added) < maxStat) {
+      const cost = getNextCost(base + added);
+      if (cost <= getRemaining()) {
+        added += 1;
+        character.points.spentStat += cost;
+      } else {
+        break;
+      }
+    }
+  } else if (action === 'min') {
+    // Reset to racial+job base
+    while (added > 0) {
+      const prevTotal = base + added;
+      const prevCost = gameData.statPointCosts[prevTotal]?.[0] || 0;
+      added -= 1;
+      character.points.spentStat = Math.max(0, character.points.spentStat - prevCost);
+    }
+  }
+
+  // Write back to hidden input as total stat, then recalc
+  const newTotal = Math.min(maxStat, base + added);
+  if (elements.addedStatInputs[stat]) {
+    elements.addedStatInputs[stat].value = newTotal;
+  }
+
+  runCalculations();
+  updateSkillPreviewModal();
+}
+
 // --- Event Listeners and Initial Population (Same as before) ---
 document.getElementById("race").addEventListener("change", handleJobRaceChange);
 document
@@ -2738,6 +2822,21 @@ elements.equipmentModalButton.addEventListener("click", openEquipmentModal);
 
 // Add event listener for export button
 document.getElementById("export-character").addEventListener("click", exportCharacter);
+
+  // Event delegation for stat control buttons
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) return;
+    if (!target.classList.contains("stat-btn")) return;
+
+    const stat = target.dataset.stat;
+    const action = target.dataset.action;
+    const amount = parseInt(target.dataset.amount || '0', 10);
+
+    if (!PRIMARY_STATS.includes(stat)) return;
+
+    handleStatButton(stat, action, amount);
+  });
 
 // Close modal when clicking outside of it or on close button
 window.addEventListener("click", (event) => {

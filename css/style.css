@@ -1,3 +1,57 @@
+/* Left panel stat control redesign */
+.stat-input-row {
+  display: grid;
+  grid-template-columns: 36px 36px 1fr; /* cost, label, rest */
+  grid-auto-rows: min-content;
+  align-items: center;
+  gap: 6px 8px;
+}
+
+.stat-input-row .stat-total {
+  grid-column: 1 / -1;
+  justify-self: end;
+  font-weight: bold;
+}
+
+.stat-buttons-grid {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+
+.stat-btn {
+  width: 18px;
+  height: 18px;
+  border: 1px solid #666;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+}
+
+.stat-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.stat-btn[data-action="min"] {
+  background-color: #ffe6e6;
+  color: #cc0000;
+}
+
+.stat-btn[data-action="max"] {
+  background-color: #e6f3ff;
+  color: #0066cc;
+}
+
+.stat-input.hidden {
+  display: none;
+}
+
+.stat-bonus-positive { color: #2e8b57; }
+.stat-bonus-negative { color: #b22222; }
 body {
     font-family: monospace;
     background-color: #e6e6e6;
@@ -8,7 +62,7 @@ body {
 }
 
 .container {
-    width: 1100px;
+    width: 1200px;
     margin: auto;
     background: #c0d9a9;
     border: 2px solid #555;
@@ -194,12 +248,12 @@ h1 {
 .stat-cost {
     color: #666;
     font-size: 0.9em;
-    min-width: 20px;
+    min-width: 15px;
     text-align: right;
 }
 
 .stat-input-row input {
-    width: 50px;
+    width: 40px;
     padding: 1px;
     border: 1px solid #777;
     background-color: #fff;
@@ -207,11 +261,18 @@ h1 {
 }
 
 .stat-buff-bonus {
-    color: #0a8400;
     font-weight: bold;
     font-size: 0.9rem;
     min-width: 30px;
     text-align: left;
+}
+
+.stat-bonus-positive {
+    color: #0a8400;
+}
+
+.stat-bonus-negative {
+    color: #ff0000;
 }
 
 .derived-stats-section {

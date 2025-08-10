@@ -1,9 +1,2 @@
 name,lvlreq,def,slots,stats,effects,equipclass
 None,0,0,0,,,all
-Wooden Sword,1,0,0,atk+5,,all
-Iron Sword,5,0,0,atk+12,,all
-Steel Sword,10,0,1,atk+20,,all
-Wooden Staff,1,0,0,matk+8,mp+5,mage;acolyte
-Iron Staff,5,0,0,matk+15,mp+8,mage;acolyte
-Steel Staff,10,0,1,atk+25,mp+12,mage;acolyte
-Mystic Staff,1,0,0,matk+10,enhancement:3:int+1;magicResistance+3%,mage 

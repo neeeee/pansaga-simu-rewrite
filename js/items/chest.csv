@@ -1,8 +1,2 @@
 name,lvlreq,def,slots,stats,effects,equipclass
 None,0,0,0,,,all
-Cloth Shirt,1,1,0,hp+5,,all
-Leather Vest,1,3,0,agi+2,,all
-Iron Breastplate,5,8,0,def+4,,all
-Steel Breastplate,10,12,1,def+6,,all
-Mage Robe,1,2,0,int+3;mp+8,castspeed+8%,mage
-Priest Vestment,1,2,0,spi+3;mp+5,healing+8%,acolyte 

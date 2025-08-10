@@ -77,10 +77,19 @@
                     <div class="stat-input-row">
                         <span class="stat-cost" id="cost-sta">2p</span>
                         <span>STA</span>
+                        <span class="stat-total" id="total-sta"></span>
+                        <div class="stat-buttons-grid" data-stat="sta">
+                            <button class="stat-btn" data-stat="sta" data-action="inc" data-amount="1">+1</button>
+                            <button class="stat-btn" data-stat="sta" data-action="inc" data-amount="5">+5</button>
+                            <button class="stat-btn" data-stat="sta" data-action="max">MAX</button>
+                            <button class="stat-btn" data-stat="sta" data-action="dec" data-amount="1">-1</button>
+                            <button class="stat-btn" data-stat="sta" data-action="dec" data-amount="5">-5</button>
+                            <button class="stat-btn" data-stat="sta" data-action="min">MIN</button>
+                        </div>
                         <input
                             type="number"
                             id="base-sta"
-                            class="stat-input"
+                            class="stat-input hidden"
                             value="0"
                             min="0"
                             max="99"
@@ -90,10 +99,19 @@
                     <div class="stat-input-row">
                         <span class="stat-cost" id="cost-str">2p</span>
                         <span>STR</span>
+                        <span class="stat-total" id="total-str"></span>
+                        <div class="stat-buttons-grid" data-stat="str">
+                            <button class="stat-btn" data-stat="str" data-action="inc" data-amount="1">+1</button>
+                            <button class="stat-btn" data-stat="str" data-action="inc" data-amount="5">+5</button>
+                            <button class="stat-btn" data-stat="str" data-action="max">MAX</button>
+                            <button class="stat-btn" data-stat="str" data-action="dec" data-amount="1">-1</button>
+                            <button class="stat-btn" data-stat="str" data-action="dec" data-amount="5">-5</button>
+                            <button class="stat-btn" data-stat="str" data-action="min">MIN</button>
+                        </div>
                         <input
                             type="number"
                             id="base-str"
-                            class="stat-input"
+                            class="stat-input hidden"
                             value="0"
                             min="0"
                             max="99"
@@ -103,10 +121,19 @@
                     <div class="stat-input-row">
                         <span class="stat-cost" id="cost-agi">2p</span>
                         <span>AGI</span>
+                        <span class="stat-total" id="total-agi"></span>
+                        <div class="stat-buttons-grid" data-stat="agi">
+                            <button class="stat-btn" data-stat="agi" data-action="inc" data-amount="1">+1</button>
+                            <button class="stat-btn" data-stat="agi" data-action="inc" data-amount="5">+5</button>
+                            <button class="stat-btn" data-stat="agi" data-action="max">MAX</button>
+                            <button class="stat-btn" data-stat="agi" data-action="dec" data-amount="1">-1</button>
+                            <button class="stat-btn" data-stat="agi" data-action="dec" data-amount="5">-5</button>
+                            <button class="stat-btn" data-stat="agi" data-action="min">MIN</button>
+                        </div>
                         <input
                             type="number"
                             id="base-agi"
-                            class="stat-input"
+                            class="stat-input hidden"
                             value="0"
                             min="0"
                             max="99"
@@ -116,10 +143,19 @@
                     <div class="stat-input-row">
                         <span class="stat-cost" id="cost-dex">2p</span>
                         <span>DEX</span>
+                        <span class="stat-total" id="total-dex"></span>
+                        <div class="stat-buttons-grid" data-stat="dex">
+                            <button class="stat-btn" data-stat="dex" data-action="inc" data-amount="1">+1</button>
+                            <button class="stat-btn" data-stat="dex" data-action="inc" data-amount="5">+5</button>
+                            <button class="stat-btn" data-stat="dex" data-action="max">MAX</button>
+                            <button class="stat-btn" data-stat="dex" data-action="dec" data-amount="1">-1</button>
+                            <button class="stat-btn" data-stat="dex" data-action="dec" data-amount="5">-5</button>
+                            <button class="stat-btn" data-stat="dex" data-action="min">MIN</button>
+                        </div>
                         <input
                             type="number"
                             id="base-dex"
-                            class="stat-input"
+                            class="stat-input hidden"
                             value="0"
                             min="0"
                             max="99"
@@ -129,10 +165,19 @@
                     <div class="stat-input-row">
                         <span class="stat-cost" id="cost-spi">2p</span>
                         <span>SPI</span>
+                        <span class="stat-total" id="total-spi"></span>
+                        <div class="stat-buttons-grid" data-stat="spi">
+                            <button class="stat-btn" data-stat="spi" data-action="inc" data-amount="1">+1</button>
+                            <button class="stat-btn" data-stat="spi" data-action="inc" data-amount="5">+5</button>
+                            <button class="stat-btn" data-stat="spi" data-action="max">MAX</button>
+                            <button class="stat-btn" data-stat="spi" data-action="dec" data-amount="1">-1</button>
+                            <button class="stat-btn" data-stat="spi" data-action="dec" data-amount="5">-5</button>
+                            <button class="stat-btn" data-stat="spi" data-action="min">MIN</button>
+                        </div>
                         <input
                             type="number"
                             id="base-spi"
-                            class="stat-input"
+                            class="stat-input hidden"
                             value="0"
                             min="0"
                             max="99"
@@ -142,10 +187,19 @@
                     <div class="stat-input-row">
                         <span class="stat-cost" id="cost-int">2p</span>
                         <span>INT</span>
+                        <span class="stat-total" id="total-int"></span>
+                        <div class="stat-buttons-grid" data-stat="int">
+                            <button class="stat-btn" data-stat="int" data-action="inc" data-amount="1">+1</button>
+                            <button class="stat-btn" data-stat="int" data-action="inc" data-amount="5">+5</button>
+                            <button class="stat-btn" data-stat="int" data-action="max">MAX</button>
+                            <button class="stat-btn" data-stat="int" data-action="dec" data-amount="1">-1</button>
+                            <button class="stat-btn" data-stat="int" data-action="dec" data-amount="5">-5</button>
+                            <button class="stat-btn" data-stat="int" data-action="min">MIN</button>
+                        </div>
                         <input
                             type="number"
                             id="base-int"
-                            class="stat-input"
+                            class="stat-input hidden"
                             value="0"
                             min="0"
                             max="99"

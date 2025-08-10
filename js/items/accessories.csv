@@ -1,14 +1,2 @@
 name,lvlreq,def,slots,stats,effects,equipclass
 None,0,0,0,,,all
-Copper Ring,1,0,0,hp+2,,all
-Silver Ring,5,0,0,hp+5,,all
-Gold Ring,10,0,1,hp+8,,all
-Copper Earring,1,0,0,mp+2,,all
-Silver Earring,5,0,0,mp+5,,all
-Gold Earring,10,0,1,mp+8,,all
-Copper Necklace,1,0,0,sta+1,,all
-Silver Necklace,5,0,0,sta+2,,all
-Gold Necklace,10,0,1,sta+3,,all
-Leather Belt,1,0,0,def+1,,all
-Iron Belt,5,0,0,def+2,,all
-Steel Belt,10,0,1,def+3,,all 
