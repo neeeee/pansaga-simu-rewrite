@@ -132,6 +132,7 @@ const elements = {
     pot: document.getElementById("pot"),
     lpHeal: document.getElementById("lp-heal"),
     redMp: document.getElementById("red-mp"),
+    incMp: document.getElementById("inc-mp"),
 
     frontAtk: document.getElementById("front-atk"),
     backAtk: document.getElementById("back-atk"),
@@ -523,16 +524,24 @@ function parseCSV(csvText, slot) {
     const line = lines[i].trim();
     if (!line) continue;
 
-    const values = line.split(',');
+    let values = line.split(',');
+    // Be lenient with missing trailing fields (e.g., empty setbonus column)
     if (values.length < headers.length) {
-      console.warn(`Skipping line ${i + 1} for ${slot}: insufficient values`);
-      continue;
+      while (values.length < headers.length) {
+        values.push('');
+      }
+    } else if (values.length > headers.length) {
+      // If there are extra commas, merge the extras into the last column
+      const base = values.slice(0, headers.length - 1);
+      const tail = values.slice(headers.length - 1).join(',');
+      values = [...base, tail];
     }
 
     const item = {
       id: `${slot}-${values[0].toLowerCase().replace(/\s+/g, '-')}`,
       name: values[0],
       lvlreq: parseInt(values[1]) || 0,
+      atk: parseInt(values[2]) || 0,
       def: parseInt(values[2]) || 0,
       slots: parseInt(values[3]) || 0,
       stats: parseEffects(values[4]),
@@ -1458,10 +1467,6 @@ function calculateDerivedStats(bonuses = {}) {
   // Calculate MP cost reduction from both racial skills and set bonuses
   let totalMpReduction = 0;
 
-  if (bonuses.mpCostReduction) {
-    totalMpReduction += bonuses.mpCostReduction;
-  }
-
   if (bonuses.stats.redMp) {
     // Set bonus redMp is negative for reduction (e.g., -5 means 5% reduction)
     totalMpReduction += Math.abs(bonuses.stats.redMp);
@@ -1473,10 +1478,28 @@ function calculateDerivedStats(bonuses = {}) {
   }
 
   stats.redMp = 100 - totalMpReduction;
+  stats.incMp = 0;
+
+  if (bonuses.incMp) {
+    stats.incMp += bonuses.incMp;
+  }
 
 
   // ATK Calculations
   stats.atk = Math.floor(stats.str / 2); // STR/2 only, gear added separately when equipped
+  for (const slot in character.equipment) {
+    const itemId = character.equipment[slot];
+
+    // Find the item in the global equipment data
+    let item = null;
+    if (globalEquipmentData[slot]) {
+      item = globalEquipmentData[slot].find(item => item.id === itemId);
+    }
+
+    if (item?.atk) {
+      stats.atk += item.atk;
+    }
+  }
 
   // Front ATK bonus - base 0%
   stats.frontAtk = 0;
@@ -1819,34 +1842,44 @@ function updateUI(bonuses) {
   // Update additional derived stats
   elements.outputs.pot.textContent = Math.floor(character.finalStats.pot);
   elements.outputs.lpHeal.textContent = Math.floor(character.finalStats.lpHeal) + "%";
+
   elements.outputs.redMp.textContent = Math.floor(character.finalStats.redMp);
+  elements.outputs.incMp.textContent = Math.floor(character.finalStats.incMp);
+
   elements.outputs.frontAtk.textContent = Math.floor(character.finalStats.frontAtk);
   elements.outputs.backAtk.textContent = Math.floor(character.finalStats.backAtk);
+
   elements.outputs.frontDef.textContent = Math.floor(character.finalStats.frontDef);
   elements.outputs.backDef.textContent = Math.floor(character.finalStats.backDef);
+
   elements.outputs.phyRes.textContent = Math.floor(character.finalStats.phyRes) + "%";
   elements.outputs.magRes.textContent = Math.floor(character.finalStats.magRes) + "%";
+
   elements.outputs.criD.textContent = Math.floor(character.finalStats.criD) + "%";
   elements.outputs.criRes.textContent = Math.floor(character.finalStats.criRes) + "%";
   elements.outputs.cdamRes.textContent = Math.floor(character.finalStats.cdamRes) + "%";
+
   elements.outputs.melEva.textContent = Math.floor(character.finalStats.melEva) + "%";
   elements.outputs.ranEva.textContent = Math.floor(character.finalStats.ranEva) + "%";
   elements.outputs.magEva.textContent = Math.floor(character.finalStats.magEva) + "%";
+
   elements.outputs.melee.textContent = character.finalStats.melee;
   elements.outputs.range.textContent = character.finalStats.range;
-  elements.outputs.fireR.textContent = Math.floor(character.finalStats.fireR) + "%";
+
   elements.outputs.atkSpd.textContent = Math.floor(character.finalStats.atkSpd) + "%";
-  elements.outputs.iceR.textContent = Math.floor(character.finalStats.iceR) + "%";
   elements.outputs.castSpd.textContent = Math.floor(character.finalStats.castSpd) + "%";
   elements.outputs.castTime.textContent = Math.floor(character.finalStats.castTime) + "%";
-  elements.outputs.thundR.textContent = Math.floor(character.finalStats.thundR) + "%";
+
   elements.outputs.cooldown.textContent = Math.floor(character.finalStats.cooldown) + "%";
+
+  elements.outputs.fireR.textContent = Math.floor(character.finalStats.fireR) + "%";
+  elements.outputs.iceR.textContent = Math.floor(character.finalStats.iceR) + "%";
+  elements.outputs.thundR.textContent = Math.floor(character.finalStats.thundR) + "%";
   elements.outputs.poisonR.textContent = Math.floor(character.finalStats.poisonR) + "%";
-  elements.outputs.moveSpd.textContent = Math.floor(character.finalStats.moveSpd) + "%";
-  elements.outputs.townMsp.textContent = Math.floor(character.finalStats.townMsp) + "%";
   elements.outputs.charmR.textContent = Math.floor(character.finalStats.charmR) + "%";
   elements.outputs.lightR.textContent = Math.floor(character.finalStats.lightR) + "%";
   elements.outputs.darkR.textContent = Math.floor(character.finalStats.darkR) + "%";
+
   elements.outputs.tripR.textContent = Math.floor(character.finalStats.tripR) + "%";
   elements.outputs.stunR.textContent = Math.floor(character.finalStats.stunR) + "%";
   elements.outputs.freezeR.textContent = Math.floor(character.finalStats.freezeR) + "%";
@@ -1859,6 +1892,9 @@ function updateUI(bonuses) {
   elements.outputs.knockbackR.textContent = Math.floor(character.finalStats.knockbackR) + "%";
   elements.outputs.ailmentR.textContent = Math.floor(character.finalStats.ailmentR) + "%";
   elements.outputs.disorderR.textContent = Math.floor(character.finalStats.disorderR) + "%";
+
+  elements.outputs.moveSpd.textContent = Math.floor(character.finalStats.moveSpd) + "%";
+  elements.outputs.townMsp.textContent = Math.floor(character.finalStats.townMsp) + "%";
 
   elements.points.stat.textContent = `${character.points.totalStat - character.points.spentStat}/${character.points.totalStat}`;
   elements.points.stat.classList.toggle(

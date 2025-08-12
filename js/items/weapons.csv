@@ -1,2 +1,45 @@
-name,lvlreq,def,slots,stats,effects,equipclass
-None,0,0,0,,,all
+name,lvlreq,atk,slot,stats,effects,equipclass,setbonus
+None,0,0,0,,,warrior;gladiator;knight;juggernaut;dragoon;warlord;paladin;scout;archer;provocateur;sniper;hunter;saboteur;assassin;acolyte;priest;ascetic;cleric;enchanter;monk;exorcist;mage;wizard;sorcerer;warlock;conjurer;shadowblade;corruptor,
+treat bringer,1,5,0,,,warrior;scout;acolyte;mage
+short sword,1,9,1,,,warrior;shadowblade
+falchion,7,12,3,,,warrior;shadowblade
+rapier,14,16,3,,,warrior;shadowblade
+long sword,20,28,3,,,warrior;shadowblade
+ice sword,22,25,3,,,warrior;shadowblade
+bronze sword,26,32,3,,,warrior;shadowblade
+cutlass,30,36,3,str+2,,warrior;shadowblade
+crystal sword,35,45,3,int+3,,warrior;shadowblade
+saber,35,51,3,,,warrior;shadowblade
+mythril sword,38,55,3,agi+1,,warrior;shadowblade
+gladius,40,48,1,agi+2,,warrior;provocateur;shadowblade
+rune sword,50,55,1,,auradamage+20%,shadowblade
+gross messer,51,58,1,dex+2;acc+25,,warrior;shadowblade
+sukiavona,54,68,2,,,warrior
+menace sword,57,79,0,,critdam-20%;incMp+20％,warrior;shadowblade
+ice gen1 1h sword,40,60,2,acc+4,,warrior;shadowblade
+fire gen1 1h sword,40,62,2,,,warrior;shadowblade
+dark gen1 1h sword,40,55,2,,,warrior;shadowblade
+lightning gen1 1h sword,40,58,2,,,warrior;shadowblade
+poison gen1 1h sword,40,58,2,,,warrior;shadowblade
+holy gen1 1h sword,40,57,2,,,warrior;shadowblade
+prismatic gen1 1h sword,45,61,2,,,warrior;shadowblade
+poison gen2 1h sword,45,60,2,,,warrior;shadowblade
+fire gen2 1h sword,45,66,2,,,warrior;shadowblade
+prismatic gen2 1h sword,45,62,2,,,warrior;shadowblade
+obelisk 1h sword,45,31,2,,,warrior;shadowblade
+holy gen2 1h sword,45,63,2,,,warrior;shadowblade
+ice gen2 1h sword,45,69,2,,,warrior;shadowblade
+dark gen2 1h sword,45,69,2,,,warrior;shadowblade
+雹剣アイシクルエッジ,55,69,2,,,warrior;shadowblade
+焔剣フレイムブレイド,55,67,2,,,warrior;shadowblade
+迅剣ライトニングエッジ,55,64,2,,,warrior;shadowblade
+蝕剣ヴェノムエッジ,55,64,2,,,warrior;shadowblade
+滅剣アーガレス,55,67,2,,,warrior;shadowblade
+輝剣アロンダイト,55,66,2,,,warrior;shadowblade
+狂剣ケイオスソード,55,64,,,,warrior
+星剣ペルセウス,55,84,,,,warrior;shadowblade
+奏剣デンナーソード,55,68,,,,warrior
+鑛剣パリスムゾー?,55,66,,,,warrior
+彩剣ガラティン,55,87,,,,warrior
+虚剣アーガレス,60,94,,,,warrior;shadowblade
+元服刀,1,43,2,,,acolyte;mage
