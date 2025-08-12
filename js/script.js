@@ -52,11 +52,11 @@ const character = {
 const elements = {
   level: document.getElementById("level"),
   race: document.getElementById("race"),
-  racialSkill: document.getElementById("racial-skill"), // NEW
+  racialSkill: document.getElementById("racial-skill"),
   job: document.getElementById("job"),
-  displayRace: document.getElementById("display-race"), // NEW
-  displayRacialSkill: document.getElementById("display-racial-skill"), // NEW
-  displayJob: document.getElementById("display-job"), // NEW
+  displayRace: document.getElementById("display-race"),
+  displayRacialSkill: document.getElementById("display-racial-skill"),
+  displayJob: document.getElementById("display-job"),
 
   addedStatInputs: {
     sta: document.getElementById("base-sta"),
@@ -114,56 +114,71 @@ const elements = {
     dex: document.getElementById("total-dex"),
     spi: document.getElementById("total-spi"),
     int: document.getElementById("total-int"),
+
     lp: document.getElementById("total-lp"),
     mp: document.getElementById("total-mp"),
+
     atk: document.getElementById("total-atk"),
     def: document.getElementById("total-def"),
-    matk: document.getElementById("total-matk"), // Added MATK display
+    matk: document.getElementById("total-matk"),
+
     dodge: document.getElementById("total-dodge"),
     acc: document.getElementById("total-acc"),
-    accFront: document.getElementById("total-acc-front"), // Added Acc/Front
+    accFront: document.getElementById("total-acc-front"),
     crit: document.getElementById("total-crit"),
-    reHorse: document.getElementById("total-re-horse"), // Added Re Horse
+    reHorse: document.getElementById("total-re-horse"),
 
     // Additional derived stats
     pot: document.getElementById("pot"),
     lpHeal: document.getElementById("lp-heal"),
     redMp: document.getElementById("red-mp"),
+
     frontAtk: document.getElementById("front-atk"),
     backAtk: document.getElementById("back-atk"),
     atkSpd: document.getElementById("atk-spd"),
+
     frontDef: document.getElementById("front-def"),
     backDef: document.getElementById("back-def"),
     phyRes: document.getElementById("phy-res"),
     magRes: document.getElementById("mag-res"),
+
     criD: document.getElementById("cri-d"),
     criRes: document.getElementById("cri-res"),
     cdamRes: document.getElementById("cdam-res"),
+
     melEva: document.getElementById("mel-eva"),
     ranEva: document.getElementById("ran-eva"),
     magEva: document.getElementById("mag-eva"),
+
     melee: document.getElementById("melee"),
     range: document.getElementById("range"),
     fireR: document.getElementById("fire-r"),
+
     iceR: document.getElementById("ice-r"),
     thundR: document.getElementById("thund-r"),
     poisonR: document.getElementById("poison-r"),
     charmR: document.getElementById("charm-r"),
     lightR: document.getElementById("light-r"),
     darkR: document.getElementById("dark-r"),
+
     tripR: document.getElementById("trip-r"),
     stunR: document.getElementById("stun-r"),
     bleedR: document.getElementById("bleed-r"),
     freezeR: document.getElementById("freeze-r"),
     burnR: document.getElementById("burn-r"),
     sleepR: document.getElementById("sleep-r"),
+    curseR: document.getElementById("curse-r"),
+    weakR: document.getElementById("weak-r"),
+
     knockbackR: document.getElementById("knockback-r"),
     knockdownR: document.getElementById("knockdown-r"),
     ailmentR: document.getElementById("ailment-r"),
     disorderR: document.getElementById("disorder-r"),
+
     castSpd: document.getElementById("cast-spd"),
     castTime: document.getElementById("cast-time"),
     cooldown: document.getElementById("cooldown"),
+
     moveSpd: document.getElementById("move-spd"),
     townMsp: document.getElementById("town-msp"),
   },
@@ -184,7 +199,6 @@ const elements = {
   modalClose: document.querySelector("#skill-preview-modal .close"),
   unlockedSkillsDisplay: document.getElementById("unlocked-skills-display"),
 
-  // New modal elements
   buffsModalButton: document.getElementById("buffs-modal-btn"),
   buffsModal: document.getElementById("buffs-modal"),
   equipmentModalButton: document.getElementById("equipment-modal-btn"),
@@ -213,12 +227,11 @@ function initializeSkills() {
     for (const skillData of category.skills) {
       character.skills[skillData.id] = {
         adeptness: skillData.minAdeptness, // Base adeptness from job
-        potential: skillData.minAdeptness, // Keep potential for compatibility, but it's not used
+        potential: skillData.minAdeptness,
       };
     }
   }
 
-  // Initialize skill buffs
   initializeSkillBuffs();
 }
 
@@ -240,7 +253,7 @@ function calculateCategoryProficiencies() {
   // Map category IDs to proficiency names
   const categoryMapping = {
     0: 'melee',      // Melee category
-    6: 'technique',  // Technique category  
+    6: 'technique',  // Technique category
     12: 'prayer',    // Prayer category
     17: 'magic',     // Magic category
     22: 'special'    // Special category
@@ -251,7 +264,6 @@ function calculateCategoryProficiencies() {
     const proficiencyKey = categoryMapping[categoryId];
 
     if (proficiencyKey) {
-      // Calculate category sum based on current character skills
       for (const skillData of category.skills) {
         const currentSkill = character.skills[skillData.id];
         if (currentSkill) {
@@ -360,7 +372,6 @@ function renderSkillsPanel() {
   }
   elements.skillsDisplay.innerHTML = html;
 
-  // Add event listeners dynamically for the new buttons
   elements.skillsDisplay.querySelectorAll(".skill-btn").forEach((button) => {
     button.addEventListener("click", handleSkillButtonClick);
   });
@@ -559,10 +570,12 @@ function parseEffects(effectsString) {
 
     // Check if this phrase is an enhancement effect
     const enhancementMatch = trimmedPhrase.match(/^enhancement:(\d+):(.+)$/);
-    const exactEnhancementMatch = trimmedPhrase.match(/^enhancement:(\d+):exact:(.+)$/);
+    const exactEnhancementMatchA = trimmedPhrase.match(/^enhancement:(\d+):exact:(.+)$/);
+    // Support alternate ordering: enhancement:exact:<level>:<effects>
+    const exactEnhancementMatchB = trimmedPhrase.match(/^enhancement:exact:(\d+):(.+)$/);
     const progressiveEnhancementMatch = trimmedPhrase.match(/^enhancement:(\d+)-(\d+):(.+)$/);
 
-    if (enhancementMatch || exactEnhancementMatch || progressiveEnhancementMatch) {
+    if (enhancementMatch || exactEnhancementMatchA || exactEnhancementMatchB || progressiveEnhancementMatch) {
       let match, enhancementLevel, enhancementEffects, isExact, isProgressive, maxLevel;
 
       if (progressiveEnhancementMatch) {
@@ -573,10 +586,10 @@ function parseEffects(effectsString) {
         isExact = false;
         isProgressive = true;
       } else {
-        match = enhancementMatch || exactEnhancementMatch;
+        match = enhancementMatch || exactEnhancementMatchA || exactEnhancementMatchB;
         enhancementLevel = parseInt(match[1]);
         enhancementEffects = match[2];
-        isExact = !!exactEnhancementMatch;
+        isExact = !!(exactEnhancementMatchA || exactEnhancementMatchB);
         isProgressive = false;
         maxLevel = null;
       }
@@ -1534,13 +1547,8 @@ function calculateDerivedStats(bonuses = {}) {
   stats.magRes = 0;
 
   // Apply racial skill bonus for magic resistance
-  if (bonuses.magicResistance) {
-    stats.magRes += bonuses.magicResistance;
-  }
-
-  // Apply equipment magic resistance bonus
-  if (bonuses.mres) {
-    stats.magRes += bonuses.mres;
+  if (bonuses.magicres) {
+    stats.magRes += bonuses.magicres;
   }
 
   // Accuracy
@@ -1632,22 +1640,36 @@ function calculateDerivedStats(bonuses = {}) {
   stats.bleedR = 0;
   stats.freezeR = 0;
   stats.sleepR = 0;
+  stats.curseR = 0;
+  stats.weakR = 0;
   stats.ailmentR = Math.floor(stats.sta / 28) * 7;
   stats.disorderR = Math.floor(stats.spi / 28) * 7;
 
+  // Apply resistance bonuses directly to stats
+  const resistanceKeyMap = {
+    fireres: 'fireR',
+    iceres: 'iceR',
+    thundres: 'thundR',
+    poisonres: 'poisonR',
+    lightres: 'lightR',
+    darkres: 'darkR',
+    charmres: 'charmR',
+    charmResistance: 'charmR',
+    tripres: 'tripR',
+    stunres: 'stunR',
+    bleedres: 'bleedR',
+    freezeres: 'freezeR',
+    sleepres: 'sleepR',
+    curseres: 'curseR',
+    weakres: 'weakR',
+    physicalDamageReduction: 'phyRes'
+  };
 
-
-  // Apply racial skill bonuses for resistances
-  if (bonuses.charmResistance) {
-    stats.charmR += bonuses.charmResistance;
-  }
-  // Also check for charmres effect from equipment
-  if (bonuses.charmres) {
-    stats.charmR += bonuses.charmres;
-  }
-
-  if (bonuses.physicalDamageReduction) {
-    stats.phyRes += bonuses.physicalDamageReduction;
+  for (const [bonusKey, bonusValue] of Object.entries(bonuses)) {
+    const statKey = resistanceKeyMap[bonusKey];
+    if (statKey) {
+      stats[statKey] += Number(bonusValue) || 0;
+    }
   }
 
   // Re Horse (stats after mount) i.e dragoon 100% all stats mounted
@@ -1830,6 +1852,8 @@ function updateUI(bonuses) {
   elements.outputs.freezeR.textContent = Math.floor(character.finalStats.freezeR) + "%";
   elements.outputs.burnR.textContent = Math.floor(character.finalStats.burnR) + "%";
   elements.outputs.sleepR.textContent = Math.floor(character.finalStats.sleepR) + "%";
+  elements.outputs.weakR.textContent = Math.floor(character.finalStats.weakR) + "%";
+  elements.outputs.curseR.textContent = Math.floor(character.finalStats.curseR) + "%";
   elements.outputs.bleedR.textContent = Math.floor(character.finalStats.bleedR) + "%";
   elements.outputs.knockdownR.textContent = Math.floor(character.finalStats.knockdownR) + "%";
   elements.outputs.knockbackR.textContent = Math.floor(character.finalStats.knockbackR) + "%";
