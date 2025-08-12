@@ -82,6 +82,7 @@ const elements = {
     spi: document.getElementById("buff-bonus-spi"),
     int: document.getElementById("buff-bonus-int"),
   },
+  weaponTypeSelector: document.getElementById("equip-weapon-type"),
   equipmentSelectors: {
     weapon: document.getElementById("equip-weapon"),
     shield: document.getElementById("equip-shield"),
@@ -481,7 +482,20 @@ async function fetchEquipmentData() {
     gloves: 'gloves',
     pants: 'pants',
     boots: 'boots',
-    weapon: 'weapons',
+    weapon_1h_sword: 'weapons-1h-sword',
+    weapon_2h_sword: 'weapons-2h-sword',
+    weapon_1h_wand: 'weapons-1h-wand',
+    weapon_2h_wand: 'weapons-2h-wand',
+    weapon_1h_blunt: 'weapons-1h-blunt',
+    weapon_2h_blunt: 'weapons-2h-blunt',
+    weapon_1h_axe: 'weapons-1h-axe',
+    weapon_2h_axe: 'weapons-2h-axe',
+    weapon_1h_spear: 'weapons-1h-spear',
+    weapon_2h_spear: 'weapons-2h-spear',
+    weapon_bow: 'weapons-bow',
+    weapon_crossbow: 'weapons-crossbow',
+    weapon_dagger: 'weapons-dagger',
+    weapon_claw: 'weapons-claw',
     shield: 'shields',
     earring1: 'earrings',
     earring2: 'earrings',
@@ -503,7 +517,7 @@ async function fetchEquipmentData() {
         continue;
       }
       const csvText = await response.text();
-      const items = parseCSV(csvText, slot);
+      const items = parseCSV(csvText, slot, filename);
       equipmentData[slot] = items;
     } catch (error) {
       console.error(`Error loading ${filename}.csv:`, error);
@@ -514,7 +528,7 @@ async function fetchEquipmentData() {
   return equipmentData;
 }
 
-function parseCSV(csvText, slot) {
+function parseCSV(csvText, slot, filename) {
   const lines = csvText.trim().split('\n');
   const headers = lines[0].split(',');
   const items = [];
@@ -525,13 +539,11 @@ function parseCSV(csvText, slot) {
     if (!line) continue;
 
     let values = line.split(',');
-    // Be lenient with missing trailing fields (e.g., empty setbonus column)
     if (values.length < headers.length) {
       while (values.length < headers.length) {
         values.push('');
       }
     } else if (values.length > headers.length) {
-      // If there are extra commas, merge the extras into the last column
       const base = values.slice(0, headers.length - 1);
       const tail = values.slice(headers.length - 1).join(',');
       values = [...base, tail];
@@ -541,8 +553,7 @@ function parseCSV(csvText, slot) {
       id: `${slot}-${values[0].toLowerCase().replace(/\s+/g, '-')}`,
       name: values[0],
       lvlreq: parseInt(values[1]) || 0,
-      atk: parseInt(values[2]) || 0,
-      def: parseInt(values[2]) || 0,
+      // atk/def parsed conditionally below based on filename
       slots: parseInt(values[3]) || 0,
       stats: parseEffects(values[4]),
       effects: parseEffects(values[5]),
@@ -550,6 +561,15 @@ function parseCSV(csvText, slot) {
       setBonus: parseEffects(values[7]),
       slot: slot
     };
+
+    // Determine whether this CSV represents weapons to decide whether column[2] is ATK or DEF
+    const isWeaponFile = typeof filename === 'string' && filename.startsWith('weapons');
+    const atkOrDefValue = parseInt(values[2]) || 0;
+    if (isWeaponFile) {
+      item.atk = atkOrDefValue;
+    } else {
+      item.def = atkOrDefValue;
+    }
 
 
 
@@ -726,6 +746,68 @@ async function populateDropdowns() {
 
   // Equipment - will be populated asynchronously
   await populateEquipmentSelectors();
+
+  // Wire up weapon type selection handling once selectors are populated
+  if (elements.weaponTypeSelector) {
+    elements.weaponTypeSelector.addEventListener('change', () => {
+      const selectedTypeKey = elements.weaponTypeSelector.value;
+      const weaponSelector = elements.equipmentSelectors.weapon;
+
+      if (!selectedTypeKey) {
+        // No type selected: disable weapon selector and clear choices
+        if (weaponSelector) {
+          weaponSelector.disabled = true;
+          weaponSelector.innerHTML = `<option value="weapon-none">Select a weapon type first</option>`;
+          weaponSelector.value = `weapon-none`;
+        }
+        // Clear current equipped weapon in state
+        character.equipment.weapon = 'weapon-none';
+        runCalculations();
+        return;
+      }
+
+      // Populate weapon selector from the chosen type's items
+      const items = globalEquipmentData[selectedTypeKey] || [];
+      if (weaponSelector) {
+        if (items.length === 0) {
+          weaponSelector.disabled = true;
+          weaponSelector.innerHTML = `<option value="weapon-none">No weapons available</option>`;
+          weaponSelector.value = `weapon-none`;
+        } else {
+          // Sort so None first if present
+          const sortedItems = items.slice().sort((a, b) => {
+            if (a.name === 'None') return -1;
+            if (b.name === 'None') return 1;
+            return a.name.localeCompare(b.name);
+          });
+          weaponSelector.innerHTML = sortedItems
+            .map((item) => `<option value="${item.id}">${item.name}</option>`) 
+            .join('');
+          weaponSelector.disabled = false;
+
+          // Choose current equipped if it belongs to this list; otherwise default to None or first
+          const currentId = character.equipment.weapon;
+          const exists = sortedItems.some(i => i.id === currentId);
+          if (exists) {
+            weaponSelector.value = currentId;
+          } else {
+            const noneOption = sortedItems.find(i => i.name === 'None');
+            weaponSelector.value = noneOption ? noneOption.id : sortedItems[0].id;
+          }
+        }
+      }
+
+      // Mirror the selectedTypeKey list into a generic weapon slot list so downstream lookups work
+      // Consumers of globalEquipmentData expect weapon items under the 'weapon' slot.
+      globalEquipmentData.weapon = (globalEquipmentData[selectedTypeKey] || []).map(item => ({ ...item }));
+
+      // Update state and recalc
+      if (weaponSelector) {
+        character.equipment.weapon = weaponSelector.value;
+      }
+      runCalculations();
+    });
+  }
 }
 
 /**
@@ -735,11 +817,45 @@ async function populateEquipmentSelectors() {
   try {
     const equipmentData = await fetchEquipmentData();
 
+    // Build weapon type options dynamically from available weapon keys
+    const weaponTypeSelector = elements.weaponTypeSelector;
+    if (weaponTypeSelector) {
+      const weaponTypeEntries = Object.entries(equipmentData)
+        .filter(([slotKey]) => slotKey.startsWith("weapon_"));
+
+      // Create placeholder first option
+      const weaponTypeOptions = [
+        `<option value="">-- Select weapon type --</option>`
+      ];
+      for (const [slotKey, items] of weaponTypeEntries) {
+        // Derive a human-friendly label from the filename mapping in fetchEquipmentData
+        // slotKey looks like weapon_1h_sword → label "1h sword"
+        const label = slotKey.replace(/^weapon_/, '').replace(/_/g, ' ');
+        weaponTypeOptions.push(`<option value="${slotKey}">${label}</option>`);
+      }
+      weaponTypeSelector.innerHTML = weaponTypeOptions.join("");
+    }
+
+    // Ensure weapon select is disabled until a type is chosen
+    if (elements.equipmentSelectors.weapon) {
+      const hasSelectedType = !!(elements.weaponTypeSelector && elements.weaponTypeSelector.value);
+      elements.equipmentSelectors.weapon.disabled = !hasSelectedType;
+      if (!hasSelectedType) {
+        elements.equipmentSelectors.weapon.innerHTML = `<option value="weapon-none">Select a weapon type first</option>`;
+        elements.equipmentSelectors.weapon.value = `weapon-none`;
+      }
+    }
+
     for (const slot in elements.equipmentSelectors) {
       const selector = elements.equipmentSelectors[slot];
       if (!selector) {
         console.warn(`Selector not found for slot: ${slot}`);
         continue; // Skip if element doesn't exist
+      }
+
+      // Skip weapon here; it's populated via weapon type selection logic
+      if (slot === 'weapon') {
+        continue;
       }
 
       if (equipmentData[slot] && equipmentData[slot].length > 0) {
@@ -1496,7 +1612,7 @@ function calculateDerivedStats(bonuses = {}) {
       item = globalEquipmentData[slot].find(item => item.id === itemId);
     }
 
-    if (item?.atk) {
+    if (item?.atk && typeof item.def == "undefined") {
       stats.atk += item.atk;
     }
   }
@@ -1547,7 +1663,7 @@ function calculateDerivedStats(bonuses = {}) {
       item = globalEquipmentData[slot].find(item => item.id === itemId);
     }
 
-    if (item?.def) {
+    if (item?.def && typeof item.atk == "undefined") {
       stats.def += item.def;
     }
   }
