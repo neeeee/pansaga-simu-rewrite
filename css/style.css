@@ -164,7 +164,7 @@ h1 {
 
 .calculator-grid {
     display: grid;
-    grid-template-columns: 17% 37% 45%;
+    grid-template-columns: 17% 34% 48%;
     grid-template-rows: auto 1fr;
     gap: 5px;
     padding: 5px;
@@ -581,11 +581,10 @@ select {
     flex: 0 0 50px;
     text-align: center;
     font-family: monospace;
-    font-size: 1em;
+    font-size: 0.9em;
     font-weight: bold;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .skill-add-sub-controls {

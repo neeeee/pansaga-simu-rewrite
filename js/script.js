@@ -131,6 +131,7 @@ const elements = {
     redMp: document.getElementById("red-mp"),
     frontAtk: document.getElementById("front-atk"),
     backAtk: document.getElementById("back-atk"),
+    atkSpd: document.getElementById("atk-spd"),
     frontDef: document.getElementById("front-def"),
     backDef: document.getElementById("back-def"),
     phyRes: document.getElementById("phy-res"),
@@ -144,18 +145,27 @@ const elements = {
     melee: document.getElementById("melee"),
     range: document.getElementById("range"),
     fireR: document.getElementById("fire-r"),
-    atkSpd: document.getElementById("atk-spd"),
     iceR: document.getElementById("ice-r"),
-    castSpd: document.getElementById("cast-spd"),
-    castTime: document.getElementById("cast-time"),
     thundR: document.getElementById("thund-r"),
-    cooldown: document.getElementById("cooldown"),
     poisonR: document.getElementById("poison-r"),
-    moveSpd: document.getElementById("move-spd"),
-    townMsp: document.getElementById("town-msp"),
     charmR: document.getElementById("charm-r"),
     lightR: document.getElementById("light-r"),
     darkR: document.getElementById("dark-r"),
+    tripR: document.getElementById("trip-r"),
+    stunR: document.getElementById("stun-r"),
+    bleedR: document.getElementById("bleed-r"),
+    freezeR: document.getElementById("freeze-r"),
+    burnR: document.getElementById("burn-r"),
+    sleepR: document.getElementById("sleep-r"),
+    knockbackR: document.getElementById("knockback-r"),
+    knockdownR: document.getElementById("knockdown-r"),
+    ailmentR: document.getElementById("ailment-r"),
+    disorderR: document.getElementById("disorder-r"),
+    castSpd: document.getElementById("cast-spd"),
+    castTime: document.getElementById("cast-time"),
+    cooldown: document.getElementById("cooldown"),
+    moveSpd: document.getElementById("move-spd"),
+    townMsp: document.getElementById("town-msp"),
   },
   setBonusList: document.getElementById("set-bonus-list"),
   skillsDisplay: document.getElementById("skills-display"),
@@ -461,12 +471,12 @@ async function fetchEquipmentData() {
     boots: 'boots',
     weapon: 'weapons',
     shield: 'shields',
-    earring1: 'accessories',
-    earring2: 'accessories',
-    necklace: 'accessories',
-    belt: 'accessories',
-    ring1: 'accessories',
-    ring2: 'accessories',
+    earring1: 'earrings',
+    earring2: 'earrings',
+    necklace: 'necklaces',
+    belt: 'belts',
+    ring1: 'rings',
+    ring2: 'rings',
     cape: 'capes'
   };
 
@@ -551,10 +561,10 @@ function parseEffects(effectsString) {
     const enhancementMatch = trimmedPhrase.match(/^enhancement:(\d+):(.+)$/);
     const exactEnhancementMatch = trimmedPhrase.match(/^enhancement:(\d+):exact:(.+)$/);
     const progressiveEnhancementMatch = trimmedPhrase.match(/^enhancement:(\d+)-(\d+):(.+)$/);
-    
+
     if (enhancementMatch || exactEnhancementMatch || progressiveEnhancementMatch) {
       let match, enhancementLevel, enhancementEffects, isExact, isProgressive, maxLevel;
-      
+
       if (progressiveEnhancementMatch) {
         match = progressiveEnhancementMatch;
         enhancementLevel = parseInt(match[1]);
@@ -940,10 +950,10 @@ function applyEquipmentBonuses(bonuses) {
           if (effect === 'enhancement' && effectValue && effectValue.level) {
             // Get current enhancement level for this item (default to 0)
             const currentEnhancement = character.equipmentEnhancements?.[itemId] || 0;
-            
+
             let shouldApply = false;
             let enhancementMultiplier = 1;
-            
+
             if (effectValue.exact) {
               // Exact enhancement: only apply if current level equals the required level
               shouldApply = currentEnhancement === effectValue.level;
@@ -1490,12 +1500,6 @@ function calculateDerivedStats(bonuses = {}) {
 
   stats.matk = matkValue;
 
-  // Front MATK bonus
-  stats.frontMatk = Math.floor(stats.matk * 1.1);
-
-  // Back MATK bonus
-  stats.backMatk = Math.floor(stats.matk * 1.3);
-
   // DEF Calculations
   stats.def = 0;
   for (const slot in character.equipment) {
@@ -1619,6 +1623,20 @@ function calculateDerivedStats(bonuses = {}) {
   stats.lightR = 0;
   stats.darkR = 0;
 
+  // Ailments and Disorders
+  stats.knockbackR = 0;
+  stats.knockdownR = 0;
+  stats.stunR = 0;
+  stats.burnR = 0;
+  stats.tripR = 0;
+  stats.bleedR = 0;
+  stats.freezeR = 0;
+  stats.sleepR = 0;
+  stats.ailmentR = Math.floor(stats.sta / 28) * 7;
+  stats.disorderR = Math.floor(stats.spi / 28) * 7;
+
+
+
   // Apply racial skill bonuses for resistances
   if (bonuses.charmResistance) {
     stats.charmR += bonuses.charmResistance;
@@ -1632,7 +1650,7 @@ function calculateDerivedStats(bonuses = {}) {
     stats.phyRes += bonuses.physicalDamageReduction;
   }
 
-  // Re Horse (mounted movement speed)
+  // Re Horse (stats after mount) i.e dragoon 100% all stats mounted
   stats.reHorse = 10;
 }
 
@@ -1782,7 +1800,6 @@ function updateUI(bonuses) {
   elements.outputs.redMp.textContent = Math.floor(character.finalStats.redMp);
   elements.outputs.frontAtk.textContent = Math.floor(character.finalStats.frontAtk);
   elements.outputs.backAtk.textContent = Math.floor(character.finalStats.backAtk);
-  // Max ATK is displayed in the first row, no need to update atk element again
   elements.outputs.frontDef.textContent = Math.floor(character.finalStats.frontDef);
   elements.outputs.backDef.textContent = Math.floor(character.finalStats.backDef);
   elements.outputs.phyRes.textContent = Math.floor(character.finalStats.phyRes) + "%";
@@ -1808,6 +1825,16 @@ function updateUI(bonuses) {
   elements.outputs.charmR.textContent = Math.floor(character.finalStats.charmR) + "%";
   elements.outputs.lightR.textContent = Math.floor(character.finalStats.lightR) + "%";
   elements.outputs.darkR.textContent = Math.floor(character.finalStats.darkR) + "%";
+  elements.outputs.tripR.textContent = Math.floor(character.finalStats.tripR) + "%";
+  elements.outputs.stunR.textContent = Math.floor(character.finalStats.stunR) + "%";
+  elements.outputs.freezeR.textContent = Math.floor(character.finalStats.freezeR) + "%";
+  elements.outputs.burnR.textContent = Math.floor(character.finalStats.burnR) + "%";
+  elements.outputs.sleepR.textContent = Math.floor(character.finalStats.sleepR) + "%";
+  elements.outputs.bleedR.textContent = Math.floor(character.finalStats.bleedR) + "%";
+  elements.outputs.knockdownR.textContent = Math.floor(character.finalStats.knockdownR) + "%";
+  elements.outputs.knockbackR.textContent = Math.floor(character.finalStats.knockbackR) + "%";
+  elements.outputs.ailmentR.textContent = Math.floor(character.finalStats.ailmentR) + "%";
+  elements.outputs.disorderR.textContent = Math.floor(character.finalStats.disorderR) + "%";
 
   elements.points.stat.textContent = `${character.points.totalStat - character.points.spentStat}/${character.points.totalStat}`;
   elements.points.stat.classList.toggle(
@@ -2619,7 +2646,7 @@ function exportCharacter() {
 
 /**
  * Handles stat button actions for +1/+5/MAX and -1/-5/MIN
- */
+*/
 function handleStatButton(stat, action, amount) {
   // Ensure current inputs are read
   readInputs();
@@ -2842,20 +2869,20 @@ elements.equipmentModalButton.addEventListener("click", openEquipmentModal);
 // Add event listener for export button
 document.getElementById("export-character").addEventListener("click", exportCharacter);
 
-  // Event delegation for stat control buttons
-  document.addEventListener("click", (event) => {
-    const target = event.target;
-    if (!(target instanceof HTMLElement)) return;
-    if (!target.classList.contains("stat-btn")) return;
+// Event delegation for stat control buttons
+document.addEventListener("click", (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLElement)) return;
+  if (!target.classList.contains("stat-btn")) return;
 
-    const stat = target.dataset.stat;
-    const action = target.dataset.action;
-    const amount = parseInt(target.dataset.amount || '0', 10);
+  const stat = target.dataset.stat;
+  const action = target.dataset.action;
+  const amount = parseInt(target.dataset.amount || '0', 10);
 
-    if (!PRIMARY_STATS.includes(stat)) return;
+  if (!PRIMARY_STATS.includes(stat)) return;
 
-    handleStatButton(stat, action, amount);
-  });
+  handleStatButton(stat, action, amount);
+});
 
 // Close modal when clicking outside of it or on close button
 window.addEventListener("click", (event) => {

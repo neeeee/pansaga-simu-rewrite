@@ -1,630 +1,601 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Pandora Saga Simulator</title>
-        <link rel="icon" href="./img/favicon.avif" type="image/x-icon">
-        <link rel="stylesheet" href="./css/style.css" />
-    </head>
-    <body>
-        <div class="container">
-            <h1>Pandora Saga Simulator</h1>
 
-            <div class="top-selectors-row">
-                <div class="selector-group">
-                    <span>Race</span>
-                    <select id="race"></select>
-                    <span class="selector-display" id="display-race"></span>
-                </div>
-                <div class="selector-group">
-                    <span>Skill</span>
-                    <select id="racial-skill"></select>
-                    <span
-                        class="selector-display"
-                        id="display-racial-skill"
-                    ></span>
-                </div>
-                <div class="selector-group">
-                    <span>Job</span>
-                    <select id="job"></select>
-                    <span class="selector-display" id="display-job"></span>
-                </div>
-            </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pandora Saga Simulator</title>
+  <link rel="icon" href="./img/favicon.avif" type="image/x-icon">
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
 
-            <div class="modal-buttons-row">
-                <button id="buffs-modal-btn" class="modal-btn">
-                    <span>Buffs</span>
-                </button>
-                <button id="equipment-modal-btn" class="modal-btn">
-                    <span>Equipment</span>
-                </button>
-                <button id="preview-skills" class="modal-btn">
-                    <span>Skills</span>
-                </button>
-                <button id="export-character" class="modal-btn">
-                    <span>Export</span>
-                </button>
-            </div>
+<body>
+  <div class="container">
+    <h1>Pandora Saga Simulator</h1>
 
-            <div class="calculator-grid">
-                <div class="panel panel-left">
-                    <div class="stat-row-top">
-                        <span>Level</span>
-                        <input
-                            type="number"
-                            id="level"
-                            value="1"
-                            min="1"
-                            max="60"
-                        />
-                    </div>
-                    <div class="stat-row-top">
-                        <span>Status</span>
-                        <span class="stat-display" id="points-stat"></span>
-                    </div>
-                    <div class="stat-row-top">
-                        <span>Skill</span>
-                        <span class="stat-display" id="points-skill"></span>
-                    </div>
-                    <div class="stat-row-top">
-                        <span
-                            class="stat-display"
-                            id="points-unallocated"
-                        ></span>
-                    </div>
+    <div class="top-selectors-row">
+      <div class="selector-group">
+        <span>Race</span>
+        <select id="race"></select>
+        <span class="selector-display" id="display-race"></span>
+      </div>
+      <div class="selector-group">
+        <span>Skill</span>
+        <select id="racial-skill"></select>
+        <span class="selector-display" id="display-racial-skill"></span>
+      </div>
+      <div class="selector-group">
+        <span>Job</span>
+        <select id="job"></select>
+        <span class="selector-display" id="display-job"></span>
+      </div>
+    </div>
 
-                    <div class="stat-input-row">
-                        <span class="stat-cost" id="cost-sta">2p</span>
-                        <span>STA</span>
-                        <span class="stat-total" id="total-sta"></span>
-                        <div class="stat-buttons-grid" data-stat="sta">
-                            <button class="stat-btn" data-stat="sta" data-action="inc" data-amount="1">+1</button>
-                            <button class="stat-btn" data-stat="sta" data-action="inc" data-amount="5">+5</button>
-                            <button class="stat-btn" data-stat="sta" data-action="max">Max</button>
-                            <button class="stat-btn" data-stat="sta" data-action="dec" data-amount="1">-1</button>
-                            <button class="stat-btn" data-stat="sta" data-action="dec" data-amount="5">-5</button>
-                            <button class="stat-btn" data-stat="sta" data-action="min">Min</button>
-                        </div>
-                        <input
-                            type="number"
-                            id="base-sta"
-                            class="stat-input hidden"
-                            value="0"
-                            min="0"
-                            max="99"
-                        />
-                        <span class="stat-buff-bonus" id="buff-bonus-sta"></span>
-                    </div>
-                    <div class="stat-input-row">
-                        <span class="stat-cost" id="cost-str">2p</span>
-                        <span>STR</span>
-                        <span class="stat-total" id="total-str"></span>
-                        <div class="stat-buttons-grid" data-stat="str">
-                            <button class="stat-btn" data-stat="str" data-action="inc" data-amount="1">+1</button>
-                            <button class="stat-btn" data-stat="str" data-action="inc" data-amount="5">+5</button>
-                            <button class="stat-btn" data-stat="str" data-action="max">Max</button>
-                            <button class="stat-btn" data-stat="str" data-action="dec" data-amount="1">-1</button>
-                            <button class="stat-btn" data-stat="str" data-action="dec" data-amount="5">-5</button>
-                            <button class="stat-btn" data-stat="str" data-action="min">Min</button>
-                        </div>
-                        <input
-                            type="number"
-                            id="base-str"
-                            class="stat-input hidden"
-                            value="0"
-                            min="0"
-                            max="99"
-                        />
-                        <span class="stat-buff-bonus" id="buff-bonus-str"></span>
-                    </div>
-                    <div class="stat-input-row">
-                        <span class="stat-cost" id="cost-agi">2p</span>
-                        <span>AGI</span>
-                        <span class="stat-total" id="total-agi"></span>
-                        <div class="stat-buttons-grid" data-stat="agi">
-                            <button class="stat-btn" data-stat="agi" data-action="inc" data-amount="1">+1</button>
-                            <button class="stat-btn" data-stat="agi" data-action="inc" data-amount="5">+5</button>
-                            <button class="stat-btn" data-stat="agi" data-action="max">Max</button>
-                            <button class="stat-btn" data-stat="agi" data-action="dec" data-amount="1">-1</button>
-                            <button class="stat-btn" data-stat="agi" data-action="dec" data-amount="5">-5</button>
-                            <button class="stat-btn" data-stat="agi" data-action="min">Min</button>
-                        </div>
-                        <input
-                            type="number"
-                            id="base-agi"
-                            class="stat-input hidden"
-                            value="0"
-                            min="0"
-                            max="99"
-                        />
-                        <span class="stat-buff-bonus" id="buff-bonus-agi"></span>
-                    </div>
-                    <div class="stat-input-row">
-                        <span class="stat-cost" id="cost-dex">2p</span>
-                        <span>DEX</span>
-                        <span class="stat-total" id="total-dex"></span>
-                        <div class="stat-buttons-grid" data-stat="dex">
-                            <button class="stat-btn" data-stat="dex" data-action="inc" data-amount="1">+1</button>
-                            <button class="stat-btn" data-stat="dex" data-action="inc" data-amount="5">+5</button>
-                            <button class="stat-btn" data-stat="dex" data-action="max">Max</button>
-                            <button class="stat-btn" data-stat="dex" data-action="dec" data-amount="1">-1</button>
-                            <button class="stat-btn" data-stat="dex" data-action="dec" data-amount="5">-5</button>
-                            <button class="stat-btn" data-stat="dex" data-action="min">Min</button>
-                        </div>
-                        <input
-                            type="number"
-                            id="base-dex"
-                            class="stat-input hidden"
-                            value="0"
-                            min="0"
-                            max="99"
-                        />
-                        <span class="stat-buff-bonus" id="buff-bonus-dex"></span>
-                    </div>
-                    <div class="stat-input-row">
-                        <span class="stat-cost" id="cost-spi">2p</span>
-                        <span>SPI</span>
-                        <span class="stat-total" id="total-spi"></span>
-                        <div class="stat-buttons-grid" data-stat="spi">
-                            <button class="stat-btn" data-stat="spi" data-action="inc" data-amount="1">+1</button>
-                            <button class="stat-btn" data-stat="spi" data-action="inc" data-amount="5">+5</button>
-                            <button class="stat-btn" data-stat="spi" data-action="max">Max</button>
-                            <button class="stat-btn" data-stat="spi" data-action="dec" data-amount="1">-1</button>
-                            <button class="stat-btn" data-stat="spi" data-action="dec" data-amount="5">-5</button>
-                            <button class="stat-btn" data-stat="spi" data-action="min">Min</button>
-                        </div>
-                        <input
-                            type="number"
-                            id="base-spi"
-                            class="stat-input hidden"
-                            value="0"
-                            min="0"
-                            max="99"
-                        />
-                        <span class="stat-buff-bonus" id="buff-bonus-spi"></span>
-                    </div>
-                    <div class="stat-input-row">
-                        <span class="stat-cost" id="cost-int">2p</span>
-                        <span>INT</span>
-                        <span class="stat-total" id="total-int"></span>
-                        <div class="stat-buttons-grid" data-stat="int">
-                            <button class="stat-btn" data-stat="int" data-action="inc" data-amount="1">+1</button>
-                            <button class="stat-btn" data-stat="int" data-action="inc" data-amount="5">+5</button>
-                            <button class="stat-btn" data-stat="int" data-action="max">Max</button>
-                            <button class="stat-btn" data-stat="int" data-action="dec" data-amount="1">-1</button>
-                            <button class="stat-btn" data-stat="int" data-action="dec" data-amount="5">-5</button>
-                            <button class="stat-btn" data-stat="int" data-action="min">Min</button>
-                        </div>
-                        <input
-                            type="number"
-                            id="base-int"
-                            class="stat-input hidden"
-                            value="0"
-                            min="0"
-                            max="99"
-                        />
-                        <span class="stat-buff-bonus" id="buff-bonus-int"></span>
-                    </div>
-                    
-                    <div class="reset-buttons-row">
-                        <button id="reset-status-points" class="reset-btn">Reset Status Points</button>
-                        <button id="reset-ability-points" class="reset-btn">Reset Ability Points</button>
-                    </div>
-                </div>
+    <div class="modal-buttons-row">
+      <button id="buffs-modal-btn" class="modal-btn">
+        <span>Buffs</span>
+      </button>
+      <button id="equipment-modal-btn" class="modal-btn">
+        <span>Equipment</span>
+      </button>
+      <button id="preview-skills" class="modal-btn">
+        <span>Skills</span>
+      </button>
+      <button id="export-character" class="modal-btn">
+        <span>Export</span>
+      </button>
+    </div>
 
-                <div class="panel panel-middle">
-                    <div class="derived-stats-section">
-                        <div class="derived-row">
-                            <div class="derived-row-column">
-                                <span>LP</span>
-                                <span id="total-lp"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>MP</span>
-                                <span id="total-mp"></span>
-                            </div>
-                            <div class="derived-row-column-spacer">
-                                <span class="spacer-item"></span>
-                                <span class="spacer-item"></span>
-                            </div>
-                        </div>
-                        <div class="derived-row">
-                            <div class="derived-row-column">
-                                <span>POT</span>
-                                <span id="pot"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>%LP Heal</span>
-                                <span id="lp-heal"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>Red. MP</span>
-                                <span id="red-mp"></span>
-                            </div>
-                        </div>
-                        <div class="derived-row">
-                            <div class="derived-row-column">
-                                <span>MaxATK</span>
-                                <span id="total-atk"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>Front+</span>
-                                <span id="front-atk"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>Back+</span>
-                                <span id="back-atk"></span>
-                            </div>
-                        </div>
-
-                        <div class="derived-row">
-                            <div class="derived-row-column">
-                                <span>MATK</span>
-                                <span id="total-matk"></span>
-                            </div>
-                            <div class="derived-row-column-spacer">
-                                <span class="spacer-item"></span>
-                                <span class="spacer-item"></span>
-                            </div>
-                            <div class="derived-row-column-spacer">
-                                <span class="spacer-item"></span>
-                                <span class="spacer-item"></span>
-                            </div>
-                        </div>
-                        <div class="derived-row">
-                            <div class="derived-row-column">
-                                <span>DEF</span>
-                                <span id="total-def"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>R/Front</span>
-                                <span id="front-def"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>R/Back</span>
-                                <span id="back-def"></span>
-                            </div>
-                        </div>
-                        <div class="derived-row">
-                            <div class="derived-row-column">
-                                <span>Phy RES</span>
-                                <span id="phy-res"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>Phy RES</span>
-                                <span id="phy-res"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>Mag RES</span>
-                                <span id="mag-res"></span>
-                            </div>
-                        </div>
-                        <div class="derived-row">
-                            <div class="derived-row-column">
-                                <span>Acc</span>
-                                <span id="total-acc"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>Acc/Fr</span>
-                                <span id="total-acc-front"></span>
-                            </div>
-                            <div class="derived-row-column-spacer">
-                                <span class="spacer-item"></span>
-                                <span class="spacer-item"></span>
-                            </div>
-                        </div>
-                        <div class="derived-row">
-                            <div class="derived-row-column-spacer">
-                                <span class="spacer-item"></span>
-                                <span class="spacer-item"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>Crit</span>
-                                <span id="total-crit"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>Crit DAM</span>
-                                <span id="cri-d"></span>
-                            </div>
-                        </div>
-                        <div class="derived-row">
-                            <div class="derived-row-column">
-                                <span>Dodge</span>
-                                <span id="total-dodge"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>Crit RES</span>
-                                <span id="cri-res"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>CDAM RES</span>
-                                <span id="cdam-res"></span>
-                            </div>
-                        </div>
-                        <div class="derived-row">
-                            <div class="derived-row-column">
-                                <span>Mel EVA</span>
-                                <span id="mel-eva"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>Ran EVA</span>
-                                <span id="ran-eva"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>Mag EVA</span>
-                                <span id="mag-eva"></span>
-                            </div>
-                        </div>
-                        <div class="derived-row">
-                            <div class="derived-row-column">
-                                <span>Melee</span>
-                                <span id="melee"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>Range</span>
-                                <span id="range"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>Fire R</span>
-                                <span id="fire-r"></span>
-                            </div>
-                        </div>
-                        <div class="derived-row">
-                            <div class="derived-row-column">
-                                <span>ATK SPD</span>
-                                <span id="atk-spd"></span>
-                            </div>
-                            <div class="derived-row-column-spacer">
-                                <span class="spacer-item"></span>
-                                <span class="spacer-item"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>Ice R</span>
-                                <span id="ice-r"></span>
-                            </div>
-                        </div>
-                        <div class="derived-row">
-                            <div class="derived-row-column">
-                                <span>Cast SPD</span>
-                                <span id="cast-spd"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>CastTime</span>
-                                <span id="cast-time"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>Thund R</span>
-                                <span id="thund-r"></span>
-                            </div>
-                        </div>
-                        <div class="derived-row">
-                            <div class="derived-row-column">
-                                <span>CD</span>
-                                <span id="cooldown"></span>
-                            </div>
-                            <div class="derived-row-column-spacer">
-                                <span class="spacer-item"></span>
-                                <span class="spacer-item"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>Psn R</span>
-                                <span id="poison-r"></span>
-                            </div>
-                        </div>
-                        <div class="derived-row">
-                            <div class="derived-row-column">
-                                <span>MoveSPD</span>
-                                <span id="move-spd"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>TownMSP</span>
-                                <span id="town-msp"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>Charm R</span>
-                                <span id="charm-r"></span>
-                            </div>
-                        </div>
-                        <div class="derived-row">
-                            <div class="derived-row-column-spacer">
-                                <span class="spacer-item"></span>
-                                <span class="spacer-item"></span>
-                            </div>
-                            <div class="derived-row-column-spacer">
-                                <span class="spacer-item"></span>
-                                <span class="spacer-item"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>Light R</span>
-                                <span id="light-r"></span>
-                            </div>
-                        </div>
-                        <div class="derived-row">
-                            <div class="derived-row-column-spacer">
-                                <span class="spacer-item"></span>
-                                <span class="spacer-item"></span>
-                            </div>
-                            <div class="derived-row-column-spacer">
-                                <span class="spacer-item"></span>
-                                <span class="spacer-item"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>Dark R</span>
-                                <span id="dark-r"></span>
-                            </div>
-                        </div>
-                        <div class="derived-row">
-                            <div class="derived-row-column">
-                                <span>PDe-B R</span>
-                                <span id="pde-b-r"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>MDe-B R</span>
-                                <span id="mde-b-r"></span>
-                            </div>
-                            <div class="derived-row-column">
-                                <span>Magic R</span>
-                                <span id="magic-r"></span>
-                            </div>
-                        </div>
-                        <div class="derived-row">
-                            <div class="derived-row-column">
-                                <span>Horse</span>
-                                <span id="total-re-horse"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-right">
-                    <div id="skills-display">
-                    </div>
-                </div>
-                <div class="panel panel-bottom">
-                    <div id="set-bonus-display">
-                        <h3>Active Bonuses</h3>
-                        <ul id="set-bonus-list"></ul>
-                    </div>
-                </div>
-            </div>
+    <div class="calculator-grid">
+      <div class="panel panel-left">
+        <div class="stat-row-top">
+          <span>Level</span>
+          <input type="number" id="level" value="1" min="1" max="60" />
         </div>
-        
-        <div id="buffs-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>Active Buffs</h2>
-                    <span class="close">&times;</span>
-                </div>
-                <div class="modal-body">
-                    <div id="buffs-display">
-                    </div>
-                </div>
-            </div>
+        <div class="stat-row-top">
+          <span>Status</span>
+          <span class="stat-display" id="points-stat"></span>
         </div>
-        
-        <div id="equipment-modal" class="modal">
-            <div class="modal-content modal-content-wide">
-                <div class="modal-header">
-                    <h2>Equipment Management</h2>
-                    <span class="close">&times;</span>
-                </div>
-                <div class="modal-body">
-                    <div id="equipment-display">
-                        <div class="equipment-grid">
-                            <div class="equipment-slot">
-                                <label for="equip-weapon">Weapon</label>
-                                <select id="equip-weapon" class="equip-selector"></select>
-                                <label for="equip-weapon-enhancement">Enhancement</label>
-                                <select id="equip-weapon-enhancement" class="equip-selector"></select>
-                                <label for="equip-weapon-soul1">Soul</label>
-                                <select id="equip-weapon-soul1" class="equip-selector"></select>
-                                <select id="equip-weapon-soul2" class="equip-selector"></select>
-                                <select id="equip-weapon-soul3" class="equip-selector"></select>
-                            </div>
-                            <div class="equipment-slot">
-                                <label for="equip-shield">Shield</label>
-                                <select id="equip-shield" class="equip-selector"></select>
-                                <label for="equip-shield-enhancement">Enhancement</label>
-                                <select id="equip-shield-enhancement" class="equip-selector"></select>
-                                <label for="equip-weapon-soul1">Soul</label>
-                                <select id="equip-shield-soul1" class="equip-selector"></select>
-                            </div>
-                            <div class="equipment-slot">
-                                <label for="equip-earring1">Earring 1</label>
-                                <select id="equip-earring1" class="equip-selector"></select>
-                            </div>
-                            <div class="equipment-slot">
-                                <label for="equip-earring2">Earring 2</label>
-                                <select id="equip-earring2" class="equip-selector"></select>
-                            </div>
-                            <div class="equipment-slot">
-                                <label for="equip-head">Head</label>
-                                <select id="equip-head" class="equip-selector"></select>
-                                <label for="equip-head-enhancement">Enhancement</label>
-                                <select id="equip-head-enhancement" class="equip-selector"></select>
-                                <label for="equip-head-soul1">Soul</label>
-                                <select id="equip-head-soul1" class="equip-selector"></select>
-                            </div>
-                            <div class="equipment-slot">
-                                <label for="equip-torso">Torso</label>
-                                <select id="equip-torso" class="equip-selector"></select>
-                                <label for="equip-torso-enhancement">Enhancement</label>
-                                <select id="equip-torso-enhancement" class="equip-selector"></select>
-                                <label for="equip-torso-soul1">Soul</label>
-                                <select id="equip-torso-soul1" class="equip-selector"></select>
-                                <select id="equip-torso-soul2" class="equip-selector"></select>
-                                <select id="equip-torso-soul3" class="equip-selector"></select>
-                            </div>
-                            <div class="equipment-slot">
-                                <label for="equip-necklace">Necklace</label>
-                                <select id="equip-necklace" class="equip-selector"></select>
-                            </div>
-                            <div class="equipment-slot">
-                                <label for="equip-belt">Belt</label>
-                                <select id="equip-belt" class="equip-selector"></select>
-                                <label for="equip-belt-soul1">Soul</label>
-                                <select id="equip-belt-soul1" class="equip-selector"></select>
-                                <select id="equip-belt-soul2" class="equip-selector"></select>
-                                <select id="equip-belt-soul3" class="equip-selector"></select>
-                            </div>
-                            <div class="equipment-slot">
-                                <label for="equip-gloves">Gloves</label>
-                                <select id="equip-gloves" class="equip-selector"></select>
-                                <label for="equip-gloves-enhancement">Enhancement</label>
-                                <select id="equip-gloves-enhancement" class="equip-selector"></select>
-                                <label for="equip-gloves-soul1">Soul</label>
-                                <select id="equip-gloves-soul1" class="equip-selector"></select>
-                            </div>
-                            <div class="equipment-slot">
-                                <label for="equip-pants">Pants</label>
-                                <select id="equip-pants" class="equip-selector"></select>
-                                <label for="equip-pants-enhancement">Enhancement</label>
-                                <select id="equip-pants-enhancement" class="equip-selector"></select>
-                                <label for="equip-pants-soul1">Soul</label>
-                                <select id="equip-pants-soul1" class="equip-selector"></select>
-                                <select id="equip-pants-soul2" class="equip-selector"></select>
-                                <select id="equip-pants-soul3" class="equip-selector"></select>
-                            </div>
-                            <div class="equipment-slot">
-                                <label for="equip-ring1">Ring 1</label>
-                                <select id="equip-ring1" class="equip-selector"></select>
-                            </div>
-                            <div class="equipment-slot">
-                                <label for="equip-ring2">Ring 2</label>
-                                <select id="equip-ring2" class="equip-selector"></select>
-                            </div>
+        <div class="stat-row-top">
+          <span>Skill</span>
+          <span class="stat-display" id="points-skill"></span>
+        </div>
+        <div class="stat-row-top">
+          <span class="stat-display" id="points-unallocated"></span>
+        </div>
 
-                            <div class="equipment-slot">
-                                <label for="equip-boots">Boots</label>
-                                <select id="equip-boots" class="equip-selector"></select>
-                                <label for="equip-boots-enhancement">Enhancement</label>
-                                <select id="equip-boots-enhancement" class="equip-selector"></select>
-                                <label for="equip-boots-soul1">Soul</label>
-                                <select id="equip-boots-soul1" class="equip-selector"></select>
-                            </div>
-                            <div class="equipment-slot">
-                                <label for="equip-cape">Cape</label>
-                                <select id="equip-cape" class="equip-selector"></select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="stat-input-row">
+          <span class="stat-cost" id="cost-sta">2p</span>
+          <span>STA</span>
+          <span class="stat-total" id="total-sta"></span>
+          <div class="stat-buttons-grid" data-stat="sta">
+            <button class="stat-btn" data-stat="sta" data-action="inc" data-amount="1">+1</button>
+            <button class="stat-btn" data-stat="sta" data-action="inc" data-amount="5">+5</button>
+            <button class="stat-btn" data-stat="sta" data-action="max">Max</button>
+            <button class="stat-btn" data-stat="sta" data-action="dec" data-amount="1">-1</button>
+            <button class="stat-btn" data-stat="sta" data-action="dec" data-amount="5">-5</button>
+            <button class="stat-btn" data-stat="sta" data-action="min">Min</button>
+          </div>
+          <input type="number" id="base-sta" class="stat-input hidden" value="0" min="0" max="99" />
+          <span class="stat-buff-bonus" id="buff-bonus-sta"></span>
         </div>
-        
-        <div id="skill-preview-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>Unlocked Skills Preview</h2>
-                    <span class="close">&times;</span>
-                </div>
-                <div class="modal-body">
-                    <div id="unlocked-skills-display">
-                    </div>
-                </div>
-            </div>
+        <div class="stat-input-row">
+          <span class="stat-cost" id="cost-str">2p</span>
+          <span>STR</span>
+          <span class="stat-total" id="total-str"></span>
+          <div class="stat-buttons-grid" data-stat="str">
+            <button class="stat-btn" data-stat="str" data-action="inc" data-amount="1">+1</button>
+            <button class="stat-btn" data-stat="str" data-action="inc" data-amount="5">+5</button>
+            <button class="stat-btn" data-stat="str" data-action="max">Max</button>
+            <button class="stat-btn" data-stat="str" data-action="dec" data-amount="1">-1</button>
+            <button class="stat-btn" data-stat="str" data-action="dec" data-amount="5">-5</button>
+            <button class="stat-btn" data-stat="str" data-action="min">Min</button>
+          </div>
+          <input type="number" id="base-str" class="stat-input hidden" value="0" min="0" max="99" />
+          <span class="stat-buff-bonus" id="buff-bonus-str"></span>
         </div>
-        
-        <script type="module" src="./js/script.js"></script>
-    </body>
+        <div class="stat-input-row">
+          <span class="stat-cost" id="cost-agi">2p</span>
+          <span>AGI</span>
+          <span class="stat-total" id="total-agi"></span>
+          <div class="stat-buttons-grid" data-stat="agi">
+            <button class="stat-btn" data-stat="agi" data-action="inc" data-amount="1">+1</button>
+            <button class="stat-btn" data-stat="agi" data-action="inc" data-amount="5">+5</button>
+            <button class="stat-btn" data-stat="agi" data-action="max">Max</button>
+            <button class="stat-btn" data-stat="agi" data-action="dec" data-amount="1">-1</button>
+            <button class="stat-btn" data-stat="agi" data-action="dec" data-amount="5">-5</button>
+            <button class="stat-btn" data-stat="agi" data-action="min">Min</button>
+          </div>
+          <input type="number" id="base-agi" class="stat-input hidden" value="0" min="0" max="99" />
+          <span class="stat-buff-bonus" id="buff-bonus-agi"></span>
+        </div>
+        <div class="stat-input-row">
+          <span class="stat-cost" id="cost-dex">2p</span>
+          <span>DEX</span>
+          <span class="stat-total" id="total-dex"></span>
+          <div class="stat-buttons-grid" data-stat="dex">
+            <button class="stat-btn" data-stat="dex" data-action="inc" data-amount="1">+1</button>
+            <button class="stat-btn" data-stat="dex" data-action="inc" data-amount="5">+5</button>
+            <button class="stat-btn" data-stat="dex" data-action="max">Max</button>
+            <button class="stat-btn" data-stat="dex" data-action="dec" data-amount="1">-1</button>
+            <button class="stat-btn" data-stat="dex" data-action="dec" data-amount="5">-5</button>
+            <button class="stat-btn" data-stat="dex" data-action="min">Min</button>
+          </div>
+          <input type="number" id="base-dex" class="stat-input hidden" value="0" min="0" max="99" />
+          <span class="stat-buff-bonus" id="buff-bonus-dex"></span>
+        </div>
+        <div class="stat-input-row">
+          <span class="stat-cost" id="cost-spi">2p</span>
+          <span>SPI</span>
+          <span class="stat-total" id="total-spi"></span>
+          <div class="stat-buttons-grid" data-stat="spi">
+            <button class="stat-btn" data-stat="spi" data-action="inc" data-amount="1">+1</button>
+            <button class="stat-btn" data-stat="spi" data-action="inc" data-amount="5">+5</button>
+            <button class="stat-btn" data-stat="spi" data-action="max">Max</button>
+            <button class="stat-btn" data-stat="spi" data-action="dec" data-amount="1">-1</button>
+            <button class="stat-btn" data-stat="spi" data-action="dec" data-amount="5">-5</button>
+            <button class="stat-btn" data-stat="spi" data-action="min">Min</button>
+          </div>
+          <input type="number" id="base-spi" class="stat-input hidden" value="0" min="0" max="99" />
+          <span class="stat-buff-bonus" id="buff-bonus-spi"></span>
+        </div>
+        <div class="stat-input-row">
+          <span class="stat-cost" id="cost-int">2p</span>
+          <span>INT</span>
+          <span class="stat-total" id="total-int"></span>
+          <div class="stat-buttons-grid" data-stat="int">
+            <button class="stat-btn" data-stat="int" data-action="inc" data-amount="1">+1</button>
+            <button class="stat-btn" data-stat="int" data-action="inc" data-amount="5">+5</button>
+            <button class="stat-btn" data-stat="int" data-action="max">Max</button>
+            <button class="stat-btn" data-stat="int" data-action="dec" data-amount="1">-1</button>
+            <button class="stat-btn" data-stat="int" data-action="dec" data-amount="5">-5</button>
+            <button class="stat-btn" data-stat="int" data-action="min">Min</button>
+          </div>
+          <input type="number" id="base-int" class="stat-input hidden" value="0" min="0" max="99" />
+          <span class="stat-buff-bonus" id="buff-bonus-int"></span>
+        </div>
+
+        <div class="reset-buttons-row">
+          <button id="reset-status-points" class="reset-btn">Reset Status Points</button>
+          <button id="reset-ability-points" class="reset-btn">Reset Ability Points</button>
+        </div>
+      </div>
+
+      <div class="panel panel-middle">
+        <div class="derived-stats-section">
+          <div class="derived-row">
+            <div class="derived-row-column">
+              <span>LP</span>
+              <span id="total-lp"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>MP</span>
+              <span id="total-mp"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>Red. MP</span>
+              <span id="red-mp"></span>
+            </div>
+          </div>
+          <div class="derived-row">
+            <div class="derived-row-column">
+              <span>POT</span>
+              <span id="pot"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>%LP Heal</span>
+              <span id="lp-heal"></span>
+            </div>
+            <div class="derived-row-column-spacer">
+              <span class="spacer-item"></span>
+              <span class="spacer-item"></span>
+            </div>
+          </div>
+          <div class="derived-row">
+            <div class="derived-row-column">
+              <span>MaxATK</span>
+              <span id="total-atk"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>Front+</span>
+              <span id="front-atk"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>Back+</span>
+              <span id="back-atk"></span>
+            </div>
+          </div>
+
+          <div class="derived-row">
+            <div class="derived-row-column">
+              <span>MATK</span>
+              <span id="total-matk"></span>
+            </div>
+            <div class="derived-row-column-spacer">
+              <span class="spacer-item"></span>
+              <span class="spacer-item"></span>
+            </div>
+            <div class="derived-row-column-spacer">
+              <span class="spacer-item"></span>
+              <span class="spacer-item"></span>
+            </div>
+          </div>
+          <div class="derived-row">
+            <div class="derived-row-column">
+              <span>DEF</span>
+              <span id="total-def"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>R/Front</span>
+              <span id="front-def"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>R/Back</span>
+              <span id="back-def"></span>
+            </div>
+          </div>
+          <div class="derived-row">
+            <div class="derived-row-column">
+              <span>Phy RES</span>
+              <span id="phy-res"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>Phy RES</span>
+              <span id="phy-res"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>Mag RES</span>
+              <span id="mag-res"></span>
+            </div>
+          </div>
+          <div class="derived-row">
+            <div class="derived-row-column">
+              <span>Acc</span>
+              <span id="total-acc"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>Acc/Fr</span>
+              <span id="total-acc-front"></span>
+            </div>
+            <div class="derived-row-column-spacer">
+              <span class="spacer-item"></span>
+              <span class="spacer-item"></span>
+            </div>
+          </div>
+          <div class="derived-row">
+            <div class="derived-row-column-spacer">
+              <span class="spacer-item"></span>
+              <span class="spacer-item"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>Crit</span>
+              <span id="total-crit"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>Crit DAM</span>
+              <span id="cri-d"></span>
+            </div>
+          </div>
+          <div class="derived-row">
+            <div class="derived-row-column">
+              <span>Dodge</span>
+              <span id="total-dodge"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>Crit RES</span>
+              <span id="cri-res"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>CDAM RES</span>
+              <span id="cdam-res"></span>
+            </div>
+          </div>
+          <div class="derived-row">
+            <div class="derived-row-column">
+              <span>Mel EVA</span>
+              <span id="mel-eva"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>Ran EVA</span>
+              <span id="ran-eva"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>Mag EVA</span>
+              <span id="mag-eva"></span>
+            </div>
+          </div>
+          <div class="derived-row">
+            <div class="derived-row-column">
+              <span>Melee</span>
+              <span id="melee"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>Range</span>
+              <span id="range"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>Fire R</span>
+              <span id="fire-r"></span>
+            </div>
+          </div>
+          <div class="derived-row">
+            <div class="derived-row-column">
+              <span>ATK SPD</span>
+              <span id="atk-spd"></span>
+            </div>
+            <div class="derived-row-column-spacer">
+              <span class="spacer-item"></span>
+              <span class="spacer-item"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>Ice R</span>
+              <span id="ice-r"></span>
+            </div>
+          </div>
+          <div class="derived-row">
+            <div class="derived-row-column">
+              <span>Cast SPD</span>
+              <span id="cast-spd"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>CastTime</span>
+              <span id="cast-time"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>Thund R</span>
+              <span id="thund-r"></span>
+            </div>
+          </div>
+          <div class="derived-row">
+            <div class="derived-row-column">
+              <span>CD</span>
+              <span id="cooldown"></span>
+            </div>
+            <div class="derived-row-column-spacer">
+              <span class="spacer-item"></span>
+              <span class="spacer-item"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>Psn R</span>
+              <span id="poison-r"></span>
+            </div>
+          </div>
+          <div class="derived-row">
+            <div class="derived-row-column">
+              <span>MoveSPD</span>
+              <span id="move-spd"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>TownMSP</span>
+              <span id="town-msp"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>Charm R</span>
+              <span id="charm-r"></span>
+            </div>
+          </div>
+          <div class="derived-row">
+            <div class="derived-row-column">
+              <span>Trip R</span>
+              <span id="trip-r"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>Stun R</span>
+              <span id="stun-r"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>Light R</span>
+              <span id="light-r"></span>
+            </div>
+          </div>
+          <div class="derived-row">
+            <div class="derived-row-column">
+              <span>Freeze R</span>
+              <span id="freeze-r"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>Bleed R</span>
+              <span id="bleed-r"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>Dark R</span>
+              <span id="dark-r"></span>
+            </div>
+          </div>
+          <div class="derived-row">
+            <div class="derived-row-column">
+              <span>Burn R</span>
+              <span id="burn-r"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>Sleep R</span>
+              <span id="sleep-r"></span>
+            </div>
+            <div class="derived-row-column-spacer">
+              <span class="spacer-item"></span>
+              <span class="spacer-item"></span>
+            </div>
+          </div>
+          <div class="derived-row">
+            <div class="derived-row-column">
+              <span>PDe-B R</span>
+              <span id="ailment-r"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>MDe-B R</span>
+              <span id="disorder-r"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>K.Back R</span>
+              <span id="knockback-r"></span>
+            </div>
+          </div>
+          <div class="derived-row">
+            <div class="derived-row-column">
+              <span>Horse</span>
+              <span id="total-re-horse"></span>
+            </div>
+            <div class="derived-row-column-spacer">
+              <span class="spacer-item"></span>
+              <span class="spacer-item"></span>
+            </div>
+            <div class="derived-row-column">
+              <span>K.Down R</span>
+              <span id="knockdown-r"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-right">
+        <div id="skills-display">
+        </div>
+      </div>
+      <div class="panel panel-bottom">
+        <div id="set-bonus-display">
+          <h3>Active Bonuses</h3>
+          <ul id="set-bonus-list"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="buffs-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Active Buffs</h2>
+        <span class="close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div id="buffs-display">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="equipment-modal" class="modal">
+    <div class="modal-content modal-content-wide">
+      <div class="modal-header">
+        <h2>Equipment Management</h2>
+        <span class="close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div id="equipment-display">
+          <div class="equipment-grid">
+            <div class="equipment-slot">
+              <label for="equip-weapon">Weapon</label>
+              <select id="equip-weapon" class="equip-selector"></select>
+              <label for="equip-weapon-enhancement">Enhancement</label>
+              <select id="equip-weapon-enhancement" class="equip-selector"></select>
+              <label for="equip-weapon-soul1">Soul</label>
+              <select id="equip-weapon-soul1" class="equip-selector"></select>
+              <select id="equip-weapon-soul2" class="equip-selector"></select>
+              <select id="equip-weapon-soul3" class="equip-selector"></select>
+            </div>
+            <div class="equipment-slot">
+              <label for="equip-shield">Shield</label>
+              <select id="equip-shield" class="equip-selector"></select>
+              <label for="equip-shield-enhancement">Enhancement</label>
+              <select id="equip-shield-enhancement" class="equip-selector"></select>
+              <label for="equip-weapon-soul1">Soul</label>
+              <select id="equip-shield-soul1" class="equip-selector"></select>
+            </div>
+            <div class="equipment-slot">
+              <label for="equip-earring1">Earring 1</label>
+              <select id="equip-earring1" class="equip-selector"></select>
+            </div>
+            <div class="equipment-slot">
+              <label for="equip-earring2">Earring 2</label>
+              <select id="equip-earring2" class="equip-selector"></select>
+            </div>
+            <div class="equipment-slot">
+              <label for="equip-head">Head</label>
+              <select id="equip-head" class="equip-selector"></select>
+              <label for="equip-head-enhancement">Enhancement</label>
+              <select id="equip-head-enhancement" class="equip-selector"></select>
+              <label for="equip-head-soul1">Soul</label>
+              <select id="equip-head-soul1" class="equip-selector"></select>
+            </div>
+            <div class="equipment-slot">
+              <label for="equip-torso">Torso</label>
+              <select id="equip-torso" class="equip-selector"></select>
+              <label for="equip-torso-enhancement">Enhancement</label>
+              <select id="equip-torso-enhancement" class="equip-selector"></select>
+              <label for="equip-torso-soul1">Soul</label>
+              <select id="equip-torso-soul1" class="equip-selector"></select>
+              <select id="equip-torso-soul2" class="equip-selector"></select>
+              <select id="equip-torso-soul3" class="equip-selector"></select>
+            </div>
+            <div class="equipment-slot">
+              <label for="equip-necklace">Necklace</label>
+              <select id="equip-necklace" class="equip-selector"></select>
+            </div>
+            <div class="equipment-slot">
+              <label for="equip-belt">Belt</label>
+              <select id="equip-belt" class="equip-selector"></select>
+              <label for="equip-belt-soul1">Soul</label>
+              <select id="equip-belt-soul1" class="equip-selector"></select>
+              <select id="equip-belt-soul2" class="equip-selector"></select>
+              <select id="equip-belt-soul3" class="equip-selector"></select>
+            </div>
+            <div class="equipment-slot">
+              <label for="equip-gloves">Gloves</label>
+              <select id="equip-gloves" class="equip-selector"></select>
+              <label for="equip-gloves-enhancement">Enhancement</label>
+              <select id="equip-gloves-enhancement" class="equip-selector"></select>
+              <label for="equip-gloves-soul1">Soul</label>
+              <select id="equip-gloves-soul1" class="equip-selector"></select>
+            </div>
+            <div class="equipment-slot">
+              <label for="equip-pants">Pants</label>
+              <select id="equip-pants" class="equip-selector"></select>
+              <label for="equip-pants-enhancement">Enhancement</label>
+              <select id="equip-pants-enhancement" class="equip-selector"></select>
+              <label for="equip-pants-soul1">Soul</label>
+              <select id="equip-pants-soul1" class="equip-selector"></select>
+              <select id="equip-pants-soul2" class="equip-selector"></select>
+              <select id="equip-pants-soul3" class="equip-selector"></select>
+            </div>
+            <div class="equipment-slot">
+              <label for="equip-ring1">Ring 1</label>
+              <select id="equip-ring1" class="equip-selector"></select>
+            </div>
+            <div class="equipment-slot">
+              <label for="equip-ring2">Ring 2</label>
+              <select id="equip-ring2" class="equip-selector"></select>
+            </div>
+
+            <div class="equipment-slot">
+              <label for="equip-boots">Boots</label>
+              <select id="equip-boots" class="equip-selector"></select>
+              <label for="equip-boots-enhancement">Enhancement</label>
+              <select id="equip-boots-enhancement" class="equip-selector"></select>
+              <label for="equip-boots-soul1">Soul</label>
+              <select id="equip-boots-soul1" class="equip-selector"></select>
+            </div>
+            <div class="equipment-slot">
+              <label for="equip-cape">Cape</label>
+              <select id="equip-cape" class="equip-selector"></select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="skill-preview-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Unlocked Skills Preview</h2>
+        <span class="close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div id="unlocked-skills-display">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./js/script.js"></script>
+</body>
+
 </html>
