@@ -781,7 +781,7 @@ async function populateDropdowns() {
             return a.name.localeCompare(b.name);
           });
           weaponSelector.innerHTML = sortedItems
-            .map((item) => `<option value="${item.id}">${item.name}</option>`) 
+            .map((item) => `<option value="${item.id}">${item.name}</option>`)
             .join('');
           weaponSelector.disabled = false;
 
@@ -1685,11 +1685,6 @@ function calculateDerivedStats(bonuses = {}) {
   // Magical Resistance - base 0%
   stats.magRes = 0;
 
-  // Apply racial skill bonus for magic resistance
-  if (bonuses.magicres) {
-    stats.magRes += bonuses.magicres;
-  }
-
   // Accuracy
   stats.acc = level + stats.dex;
   stats.accFront = stats.acc; // Same as acc, only changes with gear
@@ -1786,6 +1781,7 @@ function calculateDerivedStats(bonuses = {}) {
 
   // Apply resistance bonuses directly to stats
   const resistanceKeyMap = {
+    magicres: 'magRes',
     fireres: 'fireR',
     iceres: 'iceR',
     thundres: 'thundR',
