@@ -45,7 +45,6 @@ const character = {
     ring2: "ring2-none",
   },
   equipmentEnhancements: {}, // { [itemId]: enhancementLevel }
-<<<<<<< HEAD
   souls: {
     weapon: ["none", "none", "none"],
     shield: ["none"],
@@ -56,9 +55,7 @@ const character = {
     pants: ["none", "none", "none"],
     boots: ["none"],
   },
-=======
   equippedSouls: {}, // { [slot]: string[] }
->>>>>>> 34ea46cc56afe261e671f92482f9cea10fab6eec
   buffs: {},
   enchanterSpi: {},
   skills: {}, // { [skillId]: { adeptness: 0, potential: 0 } }
@@ -1051,11 +1048,8 @@ function updateSoulSelectorsForSlot(slot) {
 async function populateEquipmentSelectors() {
   try {
     const equipmentData = await fetchEquipmentData();
-<<<<<<< HEAD
     await fetchSoulsData();
-=======
     await ensureSoulsLoaded();
->>>>>>> 34ea46cc56afe261e671f92482f9cea10fab6eec
 
     // Build weapon type options dynamically from available weapon keys
     const weaponTypeSelector = elements.weaponTypeSelector;
@@ -1119,15 +1113,12 @@ async function populateEquipmentSelectors() {
 
     // Populate enhancement dropdowns
     populateEnhancementSelectors();
-<<<<<<< HEAD
     // Populate soul dropdowns
     populateSoulSelectors();
-=======
     // Initialize souls UI per slot for current selections
     for (const slot of GEAR_SLOTS_WITH_SOULS) {
       updateSoulSelectorsForSlot(slot);
     }
->>>>>>> 34ea46cc56afe261e671f92482f9cea10fab6eec
   } catch (error) {
     console.error('Error populating equipment selectors:', error);
   }
