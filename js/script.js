@@ -9,6 +9,7 @@ const PRIMARY_STATS = ["sta", "str", "agi", "dex", "spi", "int"];
 
 // --- GLOBAL EQUIPMENT DATA ---
 let globalEquipmentData = {};
+let globalSoulsData = [];
 
 // --- CHARACTER STATE ---
 const character = {
@@ -34,6 +35,16 @@ const character = {
     ring2: "ring2-none",
   },
   equipmentEnhancements: {}, // { [itemId]: enhancementLevel }
+  souls: {
+    weapon: ["none", "none", "none"],
+    shield: ["none"],
+    head: ["none"],
+    torso: ["none", "none", "none"],
+    belt: ["none", "none", "none"],
+    gloves: ["none"],
+    pants: ["none", "none", "none"],
+    boots: ["none"],
+  },
   buffs: {},
   enchanterSpi: {},
   skills: {}, // { [skillId]: { adeptness: 0, potential: 0 } }
@@ -107,6 +118,32 @@ const elements = {
     gloves: document.getElementById("equip-gloves-enhancement"),
     pants: document.getElementById("equip-pants-enhancement"),
     boots: document.getElementById("equip-boots-enhancement"),
+  },
+  soulSelectors: {
+    weapon: [
+      document.getElementById("equip-weapon-soul1"),
+      document.getElementById("equip-weapon-soul2"),
+      document.getElementById("equip-weapon-soul3"),
+    ],
+    shield: [document.getElementById("equip-shield-soul1")],
+    head: [document.getElementById("equip-head-soul1")],
+    torso: [
+      document.getElementById("equip-torso-soul1"),
+      document.getElementById("equip-torso-soul2"),
+      document.getElementById("equip-torso-soul3"),
+    ],
+    belt: [
+      document.getElementById("equip-belt-soul1"),
+      document.getElementById("equip-belt-soul2"),
+      document.getElementById("equip-belt-soul3"),
+    ],
+    gloves: [document.getElementById("equip-gloves-soul1")],
+    pants: [
+      document.getElementById("equip-pants-soul1"),
+      document.getElementById("equip-pants-soul2"),
+      document.getElementById("equip-pants-soul3"),
+    ],
+    boots: [document.getElementById("equip-boots-soul1")],
   },
   outputs: {
     sta: document.getElementById("total-sta"),
@@ -528,6 +565,69 @@ async function fetchEquipmentData() {
   return equipmentData;
 }
 
+async function fetchSoulsData() {
+  try {
+    const response = await fetch(`js/items/souls.csv`);
+    if (!response.ok) {
+      console.warn(`Failed to load souls.csv: ${response.status} ${response.statusText}`);
+      globalSoulsData = [];
+      return [];
+    }
+    const csvText = await response.text();
+    const souls = parseSoulsCSV(csvText);
+    globalSoulsData = souls;
+    return souls;
+  } catch (error) {
+    console.error('Error loading souls.csv:', error);
+    globalSoulsData = [];
+    return [];
+  }
+}
+
+function parseSoulsCSV(csvText) {
+  const lines = csvText.trim().split('\n');
+  const headers = lines[0].split(','); // name,type,stats,enhancement,description
+  const souls = [];
+
+  for (let i = 1; i < lines.length; i++) {
+    const rawLine = lines[i];
+    const line = rawLine.trim();
+    if (!line) continue;
+
+    let values = line.split(',');
+    if (values.length < headers.length) {
+      while (values.length < headers.length) values.push('');
+    } else if (values.length > headers.length) {
+      const base = values.slice(0, headers.length - 1);
+      const tail = values.slice(headers.length - 1).join(',');
+      values = [...base, tail];
+    }
+
+    const name = values[0]?.trim() || '';
+    const typeCell = values[1]?.trim() || '';
+    const statsCell = values[2]?.trim() || '';
+    const effectsCell = values[3]?.trim() || '';
+    const description = (values[4] || '').trim();
+
+    // Build types array; support semicolon-separated list; allow 'all'
+    const types = typeCell ? typeCell.split(';').map(t => t.trim().toLowerCase()) : [];
+
+    // Create a stable id
+    const id = `soul-${name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '')}`;
+
+    souls.push({
+      id,
+      name,
+      types,
+      stats: parseEffects(statsCell),
+      effects: parseEffects(effectsCell),
+      description,
+    });
+  }
+
+  return souls;
+}
+
 function parseCSV(csvText, slot, filename) {
   const lines = csvText.trim().split('\n');
   const headers = lines[0].split(',');
@@ -746,6 +846,7 @@ async function populateDropdowns() {
 
   // Equipment - will be populated asynchronously
   await populateEquipmentSelectors();
+  await populateSoulSelectors();
 
   // Wire up weapon type selection handling once selectors are populated
   if (elements.weaponTypeSelector) {
@@ -816,6 +917,7 @@ async function populateDropdowns() {
 async function populateEquipmentSelectors() {
   try {
     const equipmentData = await fetchEquipmentData();
+    await fetchSoulsData();
 
     // Build weapon type options dynamically from available weapon keys
     const weaponTypeSelector = elements.weaponTypeSelector;
@@ -880,6 +982,8 @@ async function populateEquipmentSelectors() {
 
     // Populate enhancement dropdowns
     populateEnhancementSelectors();
+    // Populate soul dropdowns
+    populateSoulSelectors();
   } catch (error) {
     console.error('Error populating equipment selectors:', error);
   }
@@ -905,6 +1009,50 @@ function populateEnhancementSelectors() {
     const currentItemId = character.equipment[slot];
     const currentEnhancement = character.equipmentEnhancements[currentItemId] || 0;
     selector.value = currentEnhancement;
+  }
+}
+
+function populateSoulSelectors() {
+  if (!globalSoulsData || globalSoulsData.length === 0) return;
+
+  const slotsWithSouls = Object.keys(elements.soulSelectors);
+
+  for (const slot of slotsWithSouls) {
+    const selectors = elements.soulSelectors[slot] || [];
+    // Filter souls allowed for this slot
+    const allowedSouls = globalSoulsData.filter(soul => {
+      if (!soul || !soul.name) return false;
+      if (soul.name.toLowerCase() === 'none') return true;
+      if (!soul.types || soul.types.length === 0) return false;
+      return soul.types.includes('all') || soul.types.includes(slot.toLowerCase());
+    });
+
+    // Sort: 'none' first, then alphabetical
+    const sorted = allowedSouls.slice().sort((a, b) => {
+      const aIsNone = a.name.toLowerCase() === 'none';
+      const bIsNone = b.name.toLowerCase() === 'none';
+      if (aIsNone && !bIsNone) return -1;
+      if (!aIsNone && bIsNone) return 1;
+      return a.name.localeCompare(b.name);
+    });
+
+    const optionsHTML = sorted.map((soul) => {
+      const value = soul.name.toLowerCase() === 'none' ? 'none' : soul.id;
+      const label = soul.name.toLowerCase() === 'none' ? 'None' : soul.name;
+      return `<option value="${value}">${label}</option>`;
+    }).join('');
+
+    selectors.forEach((selector, idx) => {
+      if (!selector) return;
+      selector.innerHTML = optionsHTML;
+      const current = character.souls?.[slot]?.[idx] ?? 'none';
+      selector.value = current;
+      selector.addEventListener('change', () => {
+        if (!character.souls[slot]) character.souls[slot] = [];
+        character.souls[slot][idx] = selector.value;
+        runCalculations();
+      });
+    });
   }
 }
 
@@ -982,6 +1130,14 @@ function readInputs() {
   for (const slot in elements.equipmentSelectors) {
     character.equipment[slot] = elements.equipmentSelectors[slot].value;
   }
+
+  // Read souls selections
+  if (!character.souls) character.souls = {};
+  for (const slot in elements.soulSelectors) {
+    const selectors = elements.soulSelectors[slot];
+    if (!selectors) continue;
+    character.souls[slot] = selectors.map(sel => (sel ? sel.value : 'none'));
+  }
 }
 
 function runCalculations() {
@@ -994,6 +1150,7 @@ function runCalculations() {
 
   const bonuses = { description: [], stats: {} };
   applyEquipmentBonuses(bonuses);
+  applySoulsBonuses(bonuses);
   applySetBonuses(bonuses);
   applyRacialSkillEffects(bonuses);
   applySkillBuffEffects(bonuses);
@@ -1142,6 +1299,112 @@ function applyEquipmentBonuses(bonuses) {
             }
           }
         }
+      }
+    }
+  }
+}
+
+// Applies bonuses from selected souls to the bonuses object
+function applySoulsBonuses(bonuses) {
+  if (!character.souls || !globalSoulsData) return;
+
+  const slots = Object.keys(character.souls);
+  for (const slot of slots) {
+    const selectedSoulIds = character.souls[slot] || [];
+    const equippedItemIdForSlot = character.equipment?.[slot];
+    const currentEnhancementLevel = equippedItemIdForSlot ? (character.equipmentEnhancements?.[equippedItemIdForSlot] || 0) : 0;
+
+    for (const soulId of selectedSoulIds) {
+      if (!soulId || soulId === 'none') continue;
+      const soul = globalSoulsData.find(s => s.id === soulId);
+      if (!soul) continue;
+
+      // Apply stats
+      if (soul.stats) {
+        for (const stat in soul.stats) {
+          const statValue = soul.stats[stat];
+          if (statValue && statValue.value !== undefined) {
+            if (PRIMARY_STATS.includes(stat)) {
+              if (statValue.operator === '+') {
+                bonuses.stats[stat] = (bonuses.stats[stat] || 0) + statValue.value;
+              } else if (statValue.operator === '-') {
+                bonuses.stats[stat] = (bonuses.stats[stat] || 0) - statValue.value;
+              }
+            } else {
+              if (statValue.operator === '+') {
+                bonuses[stat] = (bonuses[stat] || 0) + statValue.value;
+              } else if (statValue.operator === '-') {
+                bonuses[stat] = (bonuses[stat] || 0) - statValue.value;
+              }
+            }
+          }
+        }
+      }
+
+      // Apply effects, including enhancement-gated ones
+      if (soul.effects) {
+        for (const effect in soul.effects) {
+          const effectValue = soul.effects[effect];
+
+          if (effect === 'enhancement' && effectValue && effectValue.level) {
+            let shouldApply = false;
+            let enhancementMultiplier = 1;
+
+            if (effectValue.exact) {
+              shouldApply = currentEnhancementLevel === effectValue.level;
+            } else if (effectValue.progressive) {
+              shouldApply = currentEnhancementLevel >= effectValue.level && currentEnhancementLevel <= effectValue.maxLevel;
+              if (shouldApply) {
+                enhancementMultiplier = 1 + (currentEnhancementLevel - effectValue.level);
+              }
+            } else {
+              enhancementMultiplier = Math.floor(currentEnhancementLevel / effectValue.level);
+              shouldApply = enhancementMultiplier > 0;
+            }
+
+            if (shouldApply && effectValue.effects) {
+              for (const [enhEffect, enhEffectValue] of Object.entries(effectValue.effects)) {
+                const totalValue = enhEffectValue.value * enhancementMultiplier;
+                if (PRIMARY_STATS.includes(enhEffect)) {
+                  if (enhEffectValue.operator === '+') {
+                    bonuses.stats[enhEffect] = (bonuses.stats[enhEffect] || 0) + totalValue;
+                  } else if (enhEffectValue.operator === '-') {
+                    bonuses.stats[enhEffect] = (bonuses.stats[enhEffect] || 0) - totalValue;
+                  }
+                } else {
+                  if (enhEffectValue.operator === '+') {
+                    bonuses[enhEffect] = (bonuses[enhEffect] || 0) + totalValue;
+                  } else if (enhEffectValue.operator === '-') {
+                    bonuses[enhEffect] = (bonuses[enhEffect] || 0) - totalValue;
+                  }
+                }
+              }
+            }
+            continue;
+          }
+
+          if (effectValue && effectValue.value !== undefined) {
+            if (PRIMARY_STATS.includes(effect)) {
+              if (effectValue.operator === '+') {
+                bonuses.stats[effect] = (bonuses.stats[effect] || 0) + effectValue.value;
+              } else if (effectValue.operator === '-') {
+                bonuses.stats[effect] = (bonuses.stats[effect] || 0) - effectValue.value;
+              }
+            } else {
+              if (effectValue.operator === '+') {
+                bonuses[effect] = (bonuses[effect] || 0) + effectValue.value;
+              } else if (effectValue.operator === '-') {
+                bonuses[effect] = (bonuses[effect] || 0) - effectValue.value;
+              }
+            }
+          } else if (typeof effectValue === 'boolean' && effectValue) {
+            bonuses.description.push(`${soul.name}: ${effect}`);
+          }
+        }
+      }
+
+      if (soul.description) {
+        bonuses.description.push(soul.description);
       }
     }
   }
