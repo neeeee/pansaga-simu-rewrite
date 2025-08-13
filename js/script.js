@@ -2039,6 +2039,7 @@ function calculateDerivedStats(bonuses = {}) {
   stats.sleepR = 0;
   stats.curseR = 0;
   stats.weakR = 0;
+  stats.silenceR = 0;
   stats.ailmentR = Math.floor(stats.sta / 28) * 7;
   stats.disorderR = Math.floor(stats.spi / 28) * 7;
 
@@ -2060,7 +2061,12 @@ function calculateDerivedStats(bonuses = {}) {
     sleepres: 'sleepR',
     curseres: 'curseR',
     weakres: 'weakR',
-    physicalDamageReduction: 'phyRes'
+    physicalDamageReduction: 'phyRes',
+    knockbackres: 'knockbackR',
+    knockdownres: 'knockdownR',
+    silenceres: 'silenceR',
+    ailmentres: 'ailmentR',
+    disorderres: 'disorderR',
   };
 
   for (const [bonusKey, bonusValue] of Object.entries(bonuses)) {
