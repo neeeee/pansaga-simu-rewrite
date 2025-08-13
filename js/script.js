@@ -6,9 +6,20 @@ import { classSpecificSkillData } from "./skills/classSpecificSkillData.js";
 
 // --- CONSTANTS ---
 const PRIMARY_STATS = ["sta", "str", "agi", "dex", "spi", "int"];
+const GEAR_SLOTS_WITH_SOULS = [
+  "weapon",
+  "shield",
+  "head",
+  "torso",
+  "belt",
+  "gloves",
+  "pants",
+  "boots",
+];
 
 // --- GLOBAL EQUIPMENT DATA ---
 let globalEquipmentData = {};
+let globalSoulsData = [];
 
 // --- CHARACTER STATE ---
 const character = {
@@ -34,6 +45,7 @@ const character = {
     ring2: "ring2-none",
   },
   equipmentEnhancements: {}, // { [itemId]: enhancementLevel }
+  equippedSouls: {}, // { [slot]: string[] }
   buffs: {},
   enchanterSpi: {},
   skills: {}, // { [skillId]: { adeptness: 0, potential: 0 } }
@@ -205,6 +217,7 @@ const elements = {
   buffsModal: document.getElementById("buffs-modal"),
   equipmentModalButton: document.getElementById("equipment-modal-btn"),
   equipmentModal: document.getElementById("equipment-modal"),
+  // Soul containers resolved dynamically from DOM when needed
 };
 
 /**
@@ -781,7 +794,7 @@ async function populateDropdowns() {
             return a.name.localeCompare(b.name);
           });
           weaponSelector.innerHTML = sortedItems
-            .map((item) => `<option value="${item.id}">${item.name}</option>`)
+            .map((item) => `<option value="${item.id}">${item.name} (${item.slots ?? 0} slots)</option>`)
             .join('');
           weaponSelector.disabled = false;
 
@@ -806,16 +819,136 @@ async function populateDropdowns() {
         character.equipment.weapon = weaponSelector.value;
       }
       runCalculations();
+
+      // Update souls UI for weapon slot after type change selection applied
+      if (GEAR_SLOTS_WITH_SOULS.includes('weapon')) {
+        updateSoulSelectorsForSlot('weapon');
+      }
     });
   }
 }
 
+async function ensureSoulsLoaded() {
+  if (globalSoulsData.length > 0) return;
+  try {
+    const response = await fetch('js/items/souls.csv');
+    if (!response.ok) return;
+    const csvText = await response.text();
+    // Reuse parseCSV with a neutral slot key 'souls'
+    globalSoulsData = parseCSV(csvText, 'souls', 'souls');
+  } catch (e) {
+    console.warn('Failed to load souls.csv', e);
+  }
+}
+
+function getSoulOptionsHTML() {
+  const options = ['<option value="">None</option>'];
+  for (const soul of globalSoulsData) {
+    if (!soul || !soul.id || !soul.name) continue;
+    options.push(`<option value="${soul.id}">${soul.name}</option>`);
+  }
+  return options.join('');
+}
+
+function findEquipmentItemById(slot, itemId) {
+  const list = globalEquipmentData[slot] || [];
+  return list.find(it => it.id === itemId) || null;
+}
+
+function queryEquipmentSlotContainer(slot) {
+  // Map from slot to container element that holds its controls
+  // We use known label/select structure from index.html
+  // Find the select for the slot and return its closest '.equipment-slot'
+  const select = elements.equipmentSelectors[slot];
+  if (!select) return null;
+  return select.closest('.equipment-slot');
+}
+
+function clearExistingSoulControls(container, slot) {
+  if (!container) return;
+  // Remove any existing soul label/selects for this slot
+  const selects = container.querySelectorAll(`[id^="equip-${slot}-soul"]`);
+  selects.forEach(el => el.remove());
+  // Remove the leading Soul label if it is now orphaned (only if followed by no soul selects)
+  const labels = Array.from(container.querySelectorAll('label'));
+  for (const label of labels) {
+    const forAttr = label.getAttribute('for') || '';
+    const isSoulForAttr = forAttr.startsWith(`equip-${slot}-soul`);
+    const isSoulText = (label.textContent || '').trim().toLowerCase() === 'soul';
+    if (isSoulForAttr || isSoulText) {
+      label.remove();
+    }
+  }
+}
+
+function ensureSoulLabel(container, slot) {
+  // Insert a single label before the first soul select for consistency
+  const label = document.createElement('label');
+  label.setAttribute('for', `equip-${slot}-soul1`);
+  label.textContent = 'Soul';
+  container.appendChild(label);
+}
+
+function createSoulSelect(slot, index) {
+  const select = document.createElement('select');
+  select.id = `equip-${slot}-soul${index}`;
+  select.className = 'equip-selector';
+  select.innerHTML = getSoulOptionsHTML();
+
+  // Restore selection from state if present
+  const saved = (character.equippedSouls[slot] || [])[index - 1] || '';
+  select.value = saved;
+
+  // Save changes to state on change
+  select.addEventListener('change', (e) => {
+    const value = e.target.value;
+    const arr = character.equippedSouls[slot] || [];
+    arr[index - 1] = value;
+    character.equippedSouls[slot] = arr;
+    runCalculations();
+    updateSkillPreviewModal();
+  });
+
+  return select;
+}
+
+function updateSoulSelectorsForSlot(slot) {
+  // If souls not yet loaded, load and retry once
+  if (!globalSoulsData || globalSoulsData.length === 0) {
+    ensureSoulsLoaded().then(() => updateSoulSelectorsForSlot(slot));
+    return;
+  }
+  const container = queryEquipmentSlotContainer(slot);
+  if (!container) return;
+
+  const currentItemId = elements.equipmentSelectors[slot]?.value || '';
+  const item = findEquipmentItemById(slot, currentItemId);
+  const numSlots = item?.slots || 0;
+
+  // Normalize saved souls array to current capacity
+  const savedArr = character.equippedSouls[slot] || [];
+  if (savedArr.length !== numSlots) {
+    character.equippedSouls[slot] = savedArr.slice(0, Math.max(0, numSlots));
+  }
+
+  // Clear existing soul controls
+  clearExistingSoulControls(container, slot);
+
+  if (numSlots <= 0) return;
+
+  ensureSoulLabel(container, slot);
+  for (let i = 1; i <= numSlots; i++) {
+    const select = createSoulSelect(slot, i);
+    container.appendChild(select);
+  }
+}
 /**
  * Populates equipment selectors in the equipment modal.
  */
 async function populateEquipmentSelectors() {
   try {
     const equipmentData = await fetchEquipmentData();
+    await ensureSoulsLoaded();
 
     // Build weapon type options dynamically from available weapon keys
     const weaponTypeSelector = elements.weaponTypeSelector;
@@ -828,7 +961,7 @@ async function populateEquipmentSelectors() {
         `<option value="">-- Select weapon type --</option>`
       ];
       for (const [slotKey, items] of weaponTypeEntries) {
-        // Derive a human-friendly label from the filename mapping in fetchEquipmentData
+        // human-friendly label from the filename mapping in fetchEquipmentData
         // slotKey looks like weapon_1h_sword → label "1h sword"
         const label = slotKey.replace(/^weapon_/, '').replace(/_/g, ' ');
         weaponTypeOptions.push(`<option value="${slotKey}">${label}</option>`);
@@ -850,10 +983,9 @@ async function populateEquipmentSelectors() {
       const selector = elements.equipmentSelectors[slot];
       if (!selector) {
         console.warn(`Selector not found for slot: ${slot}`);
-        continue; // Skip if element doesn't exist
+        continue;
       }
 
-      // Skip weapon here; it's populated via weapon type selection logic
       if (slot === 'weapon') {
         continue;
       }
@@ -867,7 +999,7 @@ async function populateEquipmentSelectors() {
         });
 
         selector.innerHTML = sortedItems
-          .map((item) => `<option value="${item.id}">${item.name}</option>`)
+          .map((item) => `<option value="${item.id}">${item.name} (${item.slots ?? 0} slots)</option>`)
           .join("");
         selector.value = character.equipment[slot] || `${slot}-none`; // Set initial value
       } else {
@@ -880,6 +1012,10 @@ async function populateEquipmentSelectors() {
 
     // Populate enhancement dropdowns
     populateEnhancementSelectors();
+    // Initialize souls UI per slot for current selections
+    for (const slot of GEAR_SLOTS_WITH_SOULS) {
+      updateSoulSelectorsForSlot(slot);
+    }
   } catch (error) {
     console.error('Error populating equipment selectors:', error);
   }
@@ -901,7 +1037,6 @@ function populateEnhancementSelectors() {
 
     selector.innerHTML = options.join("");
 
-    // Set current enhancement level
     const currentItemId = character.equipment[slot];
     const currentEnhancement = character.equipmentEnhancements[currentItemId] || 0;
     selector.value = currentEnhancement;
@@ -916,7 +1051,6 @@ function populateRacialSkillDropdown() {
   const currentRaceId = parseInt(elements.race.value, 10);
   const currentJobId = parseInt(elements.job.value, 10);
 
-  // Get racial skills from gameData
   const racialSkillsData = gameData.racialSkills[currentRaceId];
   let racialSkillsForRace = [];
   let defaultRacialSkillId = 0; // Default to the first racial skill for the race
@@ -932,7 +1066,6 @@ function populateRacialSkillDropdown() {
   elements.racialSkill.value = defaultRacialSkillId; // Set the default based on job
   character.racialSkillId = defaultRacialSkillId; // Update character state
 
-  // Update display text
   elements.displayRace.textContent = gameData.races[currentRaceId].name;
   elements.displayRacialSkill.textContent =
     racialSkillsForRace[character.racialSkillId] || "";
@@ -3003,6 +3136,11 @@ for (const equipSelector of Object.values(elements.equipmentSelectors)) {
       elements.enhancementSelectors[slot].value = currentEnhancement;
     }
 
+    // Rebuild souls UI for this slot based on selected item's slots
+    if (slot && GEAR_SLOTS_WITH_SOULS.includes(slot)) {
+      updateSoulSelectorsForSlot(slot);
+    }
+
     runCalculations();
     updateSkillPreviewModal(); // Update skill stats in modal
   });
@@ -3101,5 +3239,7 @@ document.addEventListener("DOMContentLoaded", () => {
   populateDropdowns().then(() => {
     initializeSkills();
     runCalculations();
+    // Ensure souls data available early
+    ensureSoulsLoaded();
   });
 });
