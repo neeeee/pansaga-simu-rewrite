@@ -354,7 +354,218 @@ export const gameData = {
     4: { sta: 8, str: 6, agi: 4, dex: 4, spi: 6, int: 2 }, // Enkidu
     5: { sta: 3, str: 1, agi: 6, dex: 5, spi: 9, int: 6 }, // Lapin
   },
-
+  horsemanShipStatRetentionPercents: {
+    nonRiding: { profValues: [
+      { 0: {
+        matk: 0.30,
+        atk: 0.30,
+        castspeed: 0.30,
+      },
+        10: {
+          matk: 0.40,
+          atk: 0.40,
+          castspeed: 0.40,
+        },
+        20: {
+          matk: 0.50,
+          atk: 0.50,
+          castspeed: 0.50,
+        },
+        30: {
+          matk: 0.50,
+          atk: 0.50,
+          castspeed: 0.50,
+        },
+        40: {
+          matk: 0.50,
+          atk: 0.50,
+          castspeed: 0.50,
+        },
+        50: {
+          matk: 0.50,
+          atk: 0.50,
+          castspeed: 0.50,
+        },
+        60: {
+          matk: 0.50,
+          atk: 0.50,
+          castspeed: 0.50,
+        },
+        70: {
+          matk: 0.50,
+          atk: 0.50,
+          castspeed: 0.50,
+        },
+    }] }, // non-riding class` 
+    1: { profValues: [
+      { 0: {
+        matk: 0.30,
+        atk: 0.30,
+        castspeed: 0.30,
+      },
+      10: {
+        matk: 0.40,
+        atk: 0.40,
+        castspeed: 0.40,
+      },
+      20: { 
+        matk: 0.50,
+        atk: 0.50,
+        castspeed: 0.50,
+      },
+      30: {
+        matk: 0.60, 
+        atk: 0.60,
+        castspeed: 0.60,
+      },
+      40: {
+        matk: 0.70,
+        atk: 0.70,
+        castspeed: 0.70,
+      },
+      50: {
+        matk: 0.80,
+        atk: 0.80,
+        castspeed: 0.80,
+      },
+      60: { 
+        matk: 0.80,
+        atk: 0.80,
+        castspeed: 0.80,
+      },
+      70: {
+        matk: 0.80,
+        atk: 0.80,
+        castspeed: 0.80,
+      },  
+    }] }, // hunter 
+    2: { profValues: [
+      { 0: {
+        matk: 0.40,
+        atk: 0.40,
+        castspeed: 0.40,
+      },
+      10: {
+        matk: 0.50,
+        atk: 0.50,
+        castspeed: 0.50,
+      },
+      20: {
+        matk: 0.60,
+        atk: 0.60,
+        castspeed: 0.60,
+      },
+      30: {
+        matk: 0.70,
+        atk: 0.70,
+        castspeed: 0.70,
+      },
+      40: {
+        matk: 0.70,
+        atk: 0.70,
+        castspeed: 0.70,
+      },
+      50: {
+        matk: 0.90,
+        atk: 0.90,
+        castspeed: 0.90,
+      },
+      60: {
+        matk: 0.90,
+        atk: 0.90,
+        castspeed: 0.90,
+      },
+      70: {
+        matk: 0.90,
+        atk: 0.90,
+        castspeed: 0.90,
+      },
+    }] }, // shadowblade 
+    3: { profValues: [
+      { 0: {
+        matk: 0.50,
+        atk: 0.50,
+        castspeed: 0.50,
+      },
+      10: {
+        matk: 0.60,
+        atk: 0.60,
+        castspeed: 0.60,
+      },
+      20: {
+        matk: 0.70,
+        atk: 0.70,
+        castspeed: 0.70,
+      },
+      30: {
+        matk: 0.80,
+        atk: 0.80,
+        castspeed: 0.80,
+      },
+      40: {
+        matk: 0.90,
+        atk: 0.90,
+        castspeed: 0.90,
+      },
+      50: {
+        matk: 0.90,
+        atk: 0.90,
+        castspeed: 0.90,
+      },
+      60: {
+        matk: 0.90,
+        atk: 0.90,
+        castspeed: 0.90,
+      },
+      70: {
+        matk: 0.90,
+        atk: 0.90,
+        castspeed: 0.90,
+      },
+    }] }, // paladin 
+    4: { profValues: [
+      { 0: {
+        matk: 0.50,
+        atk: 0.50,
+        castspeed: 0.50,
+      },
+      10: {
+        matk: 0.60,
+        atk: 0.60,
+        castspeed: 0.60,
+      },
+      20: {
+        matk: 0.70,
+        atk: 0.70,
+        castspeed: 0.70,
+      },
+      30: {
+        matk: 0.80,
+        atk: 0.80,
+        castspeed: 0.80,
+      },
+      40: {
+        matk: 0.90,
+        atk: 0.90,
+        castspeed: 0.90,
+      },
+      50: {
+        matk: 1.00,
+        atk: 1.00,
+        castspeed: 1.00,
+      },
+      60: {
+        matk: 1.00,
+        atk: 1.00,
+        castspeed: 1.00,
+      },
+      70: {
+        matk: 1.00,
+        atk: 1.00,
+        castspeed: 1.00,
+      },
+    }] }, // dragoon 
+  },
   skills: {
     0: {
       name: "Melee",

@@ -56,6 +56,7 @@ const character = {
     boots: ["none"],
   },
   equippedSouls: {}, // { [slot]: string[] }
+  isMounted: false, // Horsemanship toggle state
   buffs: {},
   enchanterSpi: {},
   skills: {}, // { [skillId]: { adeptness: 0, potential: 0 } }
@@ -253,6 +254,7 @@ const elements = {
   buffsModal: document.getElementById("buffs-modal"),
   equipmentModalButton: document.getElementById("equipment-modal-btn"),
   equipmentModal: document.getElementById("equipment-modal"),
+  horsmanshipToggle: document.getElementById("horsemanship-toggle"),
   // Soul containers resolved dynamically from DOM when needed
 };
 
@@ -2208,8 +2210,74 @@ function calculateDerivedStats(bonuses = {}) {
     }
   }
 
-  // Re Horse (stats after mount) i.e dragoon 100% all stats mounted
-  stats.reHorse = 10;
+  // Apply horsemanship stat modifications if mounted
+  if (character.isMounted) {
+    applyHorsemanshipModifications(stats);
+  }
+}
+
+/**
+ * Applies horsemanship stat modifications when mounted.
+ * Modifies atk, matk, and castSpd based on horsemanship proficiency and job class.
+ */
+function applyHorsemanshipModifications(stats) {
+  // Get horsemanship skill proficiency (skill ID 24 is Horsemanship)
+  const horsemanshipSkill = character.skills[24];
+  const horsemanshipProficiency = horsemanshipSkill ? horsemanshipSkill.adeptness : 0;
+
+  // Map job IDs to horsemanship retention data indices
+  let retentionDataKey;
+  switch (character.jobId) {
+    case 10: // Hunter
+      retentionDataKey = 1;
+      break;
+    case 27: // Shadowblade
+      retentionDataKey = 2;
+      break;
+    case 6: // Paladin
+      retentionDataKey = 3;
+      break;
+    case 3: // Dragoon
+      retentionDataKey = 4;
+      break;
+    default:
+      retentionDataKey = 'nonRiding';
+      break;
+  }
+
+  // Get the retention percentages for this class
+  const retentionData = gameData.horsemanShipStatRetentionPercents[retentionDataKey];
+  if (!retentionData || !retentionData.profValues || !retentionData.profValues[0]) {
+    return; // No data available
+  }
+
+  // Find the appropriate proficiency tier
+  const profTiers = retentionData.profValues[0];
+  let retentionPercentages = null;
+
+  // Find the highest tier that the character qualifies for
+  const availableTiers = Object.keys(profTiers).map(Number).sort((a, b) => b - a);
+  for (const tier of availableTiers) {
+    if (horsemanshipProficiency >= tier) {
+      retentionPercentages = profTiers[tier];
+      break;
+    }
+  }
+
+  if (!retentionPercentages) {
+    return; // No applicable tier found
+  }
+
+  // Apply the stat reductions (these are retention percentages, so we multiply by them)
+  if (retentionPercentages.atk !== undefined) {
+    stats.atk = Math.floor(stats.atk * retentionPercentages.atk);
+  }
+  if (retentionPercentages.matk !== undefined) {
+    stats.matk = stats.matk * retentionPercentages.matk;
+  }
+  if (retentionPercentages.castspeed !== undefined) {
+    stats.castSpd = Math.floor(stats.castSpd * retentionPercentages.castspeed);
+  }
 }
 
 function calculateTotalPoints() {
@@ -2349,8 +2417,6 @@ function updateUI(bonuses) {
   );
   elements.outputs.crit.textContent =
     Math.floor(character.finalStats.crit) + "%";
-  elements.outputs.reHorse.textContent =
-    Math.floor(character.finalStats.reHorse) + "%";
 
   // Update additional derived stats
   elements.outputs.pot.textContent = Math.floor(character.finalStats.pot);
@@ -3076,6 +3142,27 @@ function closeEquipmentModal() {
 }
 
 /**
+ * Toggles horsemanship (mounted) state and updates button appearance.
+ */
+function toggleHorsemanship() {
+  character.isMounted = !character.isMounted;
+  
+  // Update button appearance
+  const button = elements.horsmanshipToggle;
+  if (character.isMounted) {
+    button.classList.add('active');
+    button.innerHTML = '<span>🐎 Dismount</span>';
+  } else {
+    button.classList.remove('active');
+    button.innerHTML = '<span>🐎 Mount</span>';
+  }
+  
+  // Recalculate stats with new horsemanship state
+  runCalculations();
+  updateSkillPreviewModal();
+}
+
+/**
  * Exports character data to JSON format and downloads it as a file.
  */
 function exportCharacter() {
@@ -3443,6 +3530,9 @@ elements.skillPreviewButton.addEventListener("click", openSkillPreviewModal);
 elements.modalClose.addEventListener("click", closeSkillPreviewModal);
 elements.buffsModalButton.addEventListener("click", openBuffsModal);
 elements.equipmentModalButton.addEventListener("click", openEquipmentModal);
+
+// Add event listener for horsemanship toggle
+elements.horsmanshipToggle.addEventListener("click", toggleHorsemanship);
 
 // Add event listener for export button
 document.getElementById("export-character").addEventListener("click", exportCharacter);
