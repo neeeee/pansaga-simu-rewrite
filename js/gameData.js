@@ -61,7 +61,7 @@ export const gameData = {
     57: [2, 2, 0],
     58: [2, 2, 0],
     59: [2, 2, 0],
-    60: [2, 2, 0]
+    60: [2, 2, 0],
   },
   statPointCosts: {
     1: [2, 1],
@@ -176,172 +176,194 @@ export const gameData = {
     0: {
       name: "Human",
       skills: [
-        { 
-          id: 0, 
-          name: "Fighting Spirit", 
+        {
+          id: 0,
+          name: "Fighting Spirit",
           description: "+10 to melee skill with one-handed weapons",
           effect: {
             type: "meleeSkillBonus",
             value: 10,
-            condition: "oneHandedWeapon"
-          }
+            condition: "oneHandedWeapon",
+          },
         },
-        { 
-          id: 1, 
-          name: "Adaptibility", 
+        {
+          id: 1,
+          name: "Adaptibility",
           description: "Reduce duration of ailments by 50%",
           effect: {
             type: "ailmentDurationReduction",
-            value: 50
-          }
+            value: 50,
+          },
         },
-        { 
-          id: 2, 
-          name: "Alchemy", 
+        {
+          id: 2,
+          name: "Alchemy",
           description: "Increase potion effectiveness by 15%",
           effect: {
             type: "potionEffectiveness",
-            value: 15
-          }
+            value: 15,
+          },
         },
       ],
     },
     1: {
       name: "Elf",
       skills: [
-        { 
-          id: 0, 
-          name: "Eagle Eye", 
+        {
+          id: 0,
+          name: "Eagle Eye",
           description: "Increase ranged range by 3",
           effect: {
-          type: "rangedRangeBonus",
-          value: 3
-          } 
+            type: "rangedRangeBonus",
+            value: 3,
+          },
         },
-        { 
-          id: 1, 
-          name: "Nature's Harmony", 
+        {
+          id: 1,
+          name: "Nature's Harmony",
           description: "Reduce MP cost of spells by 15%",
           effect: {
-          type: "mpCostReduction",
-          value: 15
-          } 
+            type: "mpCostReduction",
+            value: 15,
+          },
         },
-        { 
-          id: 2, 
-          name: "Steadfastness", 
+        {
+          id: 2,
+          name: "Steadfastness",
           description: "Increase charm resistance by 20%",
           effect: {
-          type: "charmResistance",
-          value: 20
-          } 
+            type: "charmResistance",
+            value: 20,
+          },
         },
       ],
     },
     2: {
       name: "Dwarf",
       skills: [
-        { 
-          id: 0, 
-          name: "StrongHearted", 
+        {
+          id: 0,
+          name: "StrongHearted",
           description: "Very small chance to live deadly damage",
-          effect: "none"
+          effect: "none",
         },
-        { 
-          id: 1, 
-          name: "Filial Piety", 
-          description: "Chance to take damage for a party member with low HP. May only work with other Dwarfs",
-          effect: "none" 
+        {
+          id: 1,
+          name: "Filial Piety",
+          description:
+            "Chance to take damage for a party member with low HP. May only work with other Dwarfs",
+          effect: "none",
         },
-        { id: 2, 
-          name: "Dwarf Spirit", 
+        {
+          id: 2,
+          name: "Dwarf Spirit",
           description: "Increase axe and blunt damage by 10%",
           effect: {
             type: "damageBonus",
             value: 10,
-            condition: "axeOrBlunt"
-          } 
+            condition: "axeOrBlunt",
+          },
         },
       ],
     },
     3: {
       name: "Myrine",
       skills: [
-        { id: 0, name: "Acute Senses", 
+        {
+          id: 0,
+          name: "Acute Senses",
           description: "Increased critical hit chance by 5%",
           effect: {
             type: "criticalHitChance",
-            value: 5
-          } 
+            value: 5,
+          },
         },
-        { id: 1, name: "Calmness", 
+        {
+          id: 1,
+          name: "Calmness",
           description: "Chance to convert 10% damage taken into MP",
           effect: {
             type: "damageToMPConversion",
-            value: 10
-          } 
+            value: 10,
+          },
         },
-        { id: 2, name: "Sharpness", 
+        {
+          id: 2,
+          name: "Sharpness",
           description: "5% chance to dodge damage",
           effect: {
             type: "dodgeChance",
-            value: 5
-          } 
+            value: 5,
+          },
         },
       ],
     },
     4: {
       name: "Enkidu",
       skills: [
-        { id: 0, name: "Stone Skin", 
+        {
+          id: 0,
+          name: "Stone Skin",
           description: "Reduce physical damage taken by 10%",
           effect: {
             type: "physicalDamageReduction",
-            value: 10
-          } 
+            value: 10,
+          },
         },
-        { id: 1, 
-          name: "Strong Arm", 
+        {
+          id: 1,
+          name: "Strong Arm",
           description: "Increase damage of 2-handed weapons by 10%",
           effect: {
-          type: "damageBonus",
-          value: 10,
-          condition: "2HandedWeapon"
-        } },
-        { id: 2, 
-          name: "Lapin Support", 
-          description: "Boosts physical defense of Lapins in party. Effect increases as the number of Lapins increases",
+            type: "damageBonus",
+            value: 10,
+            condition: "2HandedWeapon",
+          },
+        },
+        {
+          id: 2,
+          name: "Lapin Support",
+          description:
+            "Boosts physical defense of Lapins in party. Effect increases as the number of Lapins increases",
           effect: {
             type: "physicalDefenseBonus",
             value: 10,
-            condition: "lapinInParty"
-          } },
+            condition: "lapinInParty",
+          },
+        },
       ],
     },
     5: {
       name: "Lapin",
       skills: [
-        { id: 0, name: "Magic Resistance", 
+        {
+          id: 0,
+          name: "Magic Resistance",
           description: "Increase magic resistance by 10%",
           effect: {
             type: "magicResistance",
             value: 10,
-          } 
+          },
         },
-        { id: 1, name: "Inner Light", 
+        {
+          id: 1,
+          name: "Inner Light",
           description: "MP regeneration increases by 15%",
           effect: {
             type: "mpRegeneration",
-            value: 15
-          } 
+            value: 15,
+          },
         },
-        { id: 2, name: "Enkidu Support", 
-          description: "Boosts magical defense of Enkidu in party. Effect increases as the number of Enkidu increases",
+        {
+          id: 2,
+          name: "Enkidu Support",
+          description:
+            "Boosts magical defense of Enkidu in party. Effect increases as the number of Enkidu increases",
           effect: {
             type: "magicalDefenseBonus",
             value: 10,
-            condition: "enkiduInParty"
-          }
+            condition: "enkiduInParty",
+          },
         },
       ],
     },
@@ -355,216 +377,236 @@ export const gameData = {
     5: { sta: 3, str: 1, agi: 6, dex: 5, spi: 9, int: 6 }, // Lapin
   },
   horsemanShipStatRetentionPercents: {
-    nonRiding: { profValues: [
-      { 0: {
-        matk: 0.30,
-        atk: 0.30,
-        castspeed: 0.30,
-      },
-        10: {
-          matk: 0.40,
-          atk: 0.40,
-          castspeed: 0.40,
+    nonRiding: {
+      profValues: [
+        {
+          0: {
+            matk: 0.3,
+            atk: 0.3,
+            castspeed: 0.3,
+          },
+          10: {
+            matk: 0.4,
+            atk: 0.4,
+            castspeed: 0.4,
+          },
+          20: {
+            matk: 0.5,
+            atk: 0.5,
+            castspeed: 0.5,
+          },
+          30: {
+            matk: 0.5,
+            atk: 0.5,
+            castspeed: 0.5,
+          },
+          40: {
+            matk: 0.5,
+            atk: 0.5,
+            castspeed: 0.5,
+          },
+          50: {
+            matk: 0.5,
+            atk: 0.5,
+            castspeed: 0.5,
+          },
+          60: {
+            matk: 0.5,
+            atk: 0.5,
+            castspeed: 0.5,
+          },
+          70: {
+            matk: 0.5,
+            atk: 0.5,
+            castspeed: 0.5,
+          },
         },
-        20: {
-          matk: 0.50,
-          atk: 0.50,
-          castspeed: 0.50,
+      ],
+    }, // non-riding class`
+    1: {
+      profValues: [
+        {
+          0: {
+            matk: 0.3,
+            atk: 0.3,
+            castspeed: 0.3,
+          },
+          10: {
+            matk: 0.4,
+            atk: 0.4,
+            castspeed: 0.4,
+          },
+          20: {
+            matk: 0.5,
+            atk: 0.5,
+            castspeed: 0.5,
+          },
+          30: {
+            matk: 0.6,
+            atk: 0.6,
+            castspeed: 0.6,
+          },
+          40: {
+            matk: 0.7,
+            atk: 0.7,
+            castspeed: 0.7,
+          },
+          50: {
+            matk: 0.8,
+            atk: 0.8,
+            castspeed: 0.8,
+          },
+          60: {
+            matk: 0.8,
+            atk: 0.8,
+            castspeed: 0.8,
+          },
+          70: {
+            matk: 0.8,
+            atk: 0.8,
+            castspeed: 0.8,
+          },
         },
-        30: {
-          matk: 0.50,
-          atk: 0.50,
-          castspeed: 0.50,
+      ],
+    }, // hunter
+    2: {
+      profValues: [
+        {
+          0: {
+            matk: 0.4,
+            atk: 0.4,
+            castspeed: 0.4,
+          },
+          10: {
+            matk: 0.5,
+            atk: 0.5,
+            castspeed: 0.5,
+          },
+          20: {
+            matk: 0.6,
+            atk: 0.6,
+            castspeed: 0.6,
+          },
+          30: {
+            matk: 0.7,
+            atk: 0.7,
+            castspeed: 0.7,
+          },
+          40: {
+            matk: 0.7,
+            atk: 0.7,
+            castspeed: 0.7,
+          },
+          50: {
+            matk: 0.9,
+            atk: 0.9,
+            castspeed: 0.9,
+          },
+          60: {
+            matk: 0.9,
+            atk: 0.9,
+            castspeed: 0.9,
+          },
+          70: {
+            matk: 0.9,
+            atk: 0.9,
+            castspeed: 0.9,
+          },
         },
-        40: {
-          matk: 0.50,
-          atk: 0.50,
-          castspeed: 0.50,
+      ],
+    }, // shadowblade
+    3: {
+      profValues: [
+        {
+          0: {
+            matk: 0.5,
+            atk: 0.5,
+            castspeed: 0.5,
+          },
+          10: {
+            matk: 0.6,
+            atk: 0.6,
+            castspeed: 0.6,
+          },
+          20: {
+            matk: 0.7,
+            atk: 0.7,
+            castspeed: 0.7,
+          },
+          30: {
+            matk: 0.8,
+            atk: 0.8,
+            castspeed: 0.8,
+          },
+          40: {
+            matk: 0.9,
+            atk: 0.9,
+            castspeed: 0.9,
+          },
+          50: {
+            matk: 0.9,
+            atk: 0.9,
+            castspeed: 0.9,
+          },
+          60: {
+            matk: 0.9,
+            atk: 0.9,
+            castspeed: 0.9,
+          },
+          70: {
+            matk: 0.9,
+            atk: 0.9,
+            castspeed: 0.9,
+          },
         },
-        50: {
-          matk: 0.50,
-          atk: 0.50,
-          castspeed: 0.50,
+      ],
+    }, // paladin
+    4: {
+      profValues: [
+        {
+          0: {
+            matk: 0.5,
+            atk: 0.5,
+            castspeed: 0.5,
+          },
+          10: {
+            matk: 0.6,
+            atk: 0.6,
+            castspeed: 0.6,
+          },
+          20: {
+            matk: 0.7,
+            atk: 0.7,
+            castspeed: 0.7,
+          },
+          30: {
+            matk: 0.8,
+            atk: 0.8,
+            castspeed: 0.8,
+          },
+          40: {
+            matk: 0.9,
+            atk: 0.9,
+            castspeed: 0.9,
+          },
+          50: {
+            matk: 1.0,
+            atk: 1.0,
+            castspeed: 1.0,
+          },
+          60: {
+            matk: 1.0,
+            atk: 1.0,
+            castspeed: 1.0,
+          },
+          70: {
+            matk: 1.0,
+            atk: 1.0,
+            castspeed: 1.0,
+          },
         },
-        60: {
-          matk: 0.50,
-          atk: 0.50,
-          castspeed: 0.50,
-        },
-        70: {
-          matk: 0.50,
-          atk: 0.50,
-          castspeed: 0.50,
-        },
-    }] }, // non-riding class` 
-    1: { profValues: [
-      { 0: {
-        matk: 0.30,
-        atk: 0.30,
-        castspeed: 0.30,
-      },
-      10: {
-        matk: 0.40,
-        atk: 0.40,
-        castspeed: 0.40,
-      },
-      20: { 
-        matk: 0.50,
-        atk: 0.50,
-        castspeed: 0.50,
-      },
-      30: {
-        matk: 0.60, 
-        atk: 0.60,
-        castspeed: 0.60,
-      },
-      40: {
-        matk: 0.70,
-        atk: 0.70,
-        castspeed: 0.70,
-      },
-      50: {
-        matk: 0.80,
-        atk: 0.80,
-        castspeed: 0.80,
-      },
-      60: { 
-        matk: 0.80,
-        atk: 0.80,
-        castspeed: 0.80,
-      },
-      70: {
-        matk: 0.80,
-        atk: 0.80,
-        castspeed: 0.80,
-      },  
-    }] }, // hunter 
-    2: { profValues: [
-      { 0: {
-        matk: 0.40,
-        atk: 0.40,
-        castspeed: 0.40,
-      },
-      10: {
-        matk: 0.50,
-        atk: 0.50,
-        castspeed: 0.50,
-      },
-      20: {
-        matk: 0.60,
-        atk: 0.60,
-        castspeed: 0.60,
-      },
-      30: {
-        matk: 0.70,
-        atk: 0.70,
-        castspeed: 0.70,
-      },
-      40: {
-        matk: 0.70,
-        atk: 0.70,
-        castspeed: 0.70,
-      },
-      50: {
-        matk: 0.90,
-        atk: 0.90,
-        castspeed: 0.90,
-      },
-      60: {
-        matk: 0.90,
-        atk: 0.90,
-        castspeed: 0.90,
-      },
-      70: {
-        matk: 0.90,
-        atk: 0.90,
-        castspeed: 0.90,
-      },
-    }] }, // shadowblade 
-    3: { profValues: [
-      { 0: {
-        matk: 0.50,
-        atk: 0.50,
-        castspeed: 0.50,
-      },
-      10: {
-        matk: 0.60,
-        atk: 0.60,
-        castspeed: 0.60,
-      },
-      20: {
-        matk: 0.70,
-        atk: 0.70,
-        castspeed: 0.70,
-      },
-      30: {
-        matk: 0.80,
-        atk: 0.80,
-        castspeed: 0.80,
-      },
-      40: {
-        matk: 0.90,
-        atk: 0.90,
-        castspeed: 0.90,
-      },
-      50: {
-        matk: 0.90,
-        atk: 0.90,
-        castspeed: 0.90,
-      },
-      60: {
-        matk: 0.90,
-        atk: 0.90,
-        castspeed: 0.90,
-      },
-      70: {
-        matk: 0.90,
-        atk: 0.90,
-        castspeed: 0.90,
-      },
-    }] }, // paladin 
-    4: { profValues: [
-      { 0: {
-        matk: 0.50,
-        atk: 0.50,
-        castspeed: 0.50,
-      },
-      10: {
-        matk: 0.60,
-        atk: 0.60,
-        castspeed: 0.60,
-      },
-      20: {
-        matk: 0.70,
-        atk: 0.70,
-        castspeed: 0.70,
-      },
-      30: {
-        matk: 0.80,
-        atk: 0.80,
-        castspeed: 0.80,
-      },
-      40: {
-        matk: 0.90,
-        atk: 0.90,
-        castspeed: 0.90,
-      },
-      50: {
-        matk: 1.00,
-        atk: 1.00,
-        castspeed: 1.00,
-      },
-      60: {
-        matk: 1.00,
-        atk: 1.00,
-        castspeed: 1.00,
-      },
-      70: {
-        matk: 1.00,
-        atk: 1.00,
-        castspeed: 1.00,
-      },
-    }] }, // dragoon 
+      ],
+    }, // dragoon
   },
   skills: {
     0: {

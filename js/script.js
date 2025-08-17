@@ -192,6 +192,9 @@ const elements = {
     backDef: document.getElementById("back-def"),
     phyRes: document.getElementById("phy-res"),
     magRes: document.getElementById("mag-res"),
+    magDamageReduction: document.getElementById("mag-damage-red"),
+    phyResFront: document.getElementById("phy-res-front"),
+    phyResBack: document.getElementById("phy-res-back"),
 
     criD: document.getElementById("cri-d"),
     criRes: document.getElementById("cri-res"),
@@ -274,7 +277,7 @@ function initializeSkills() {
 
   // Initialize all skills with their base values from jobSkillValues.js
   for (const categoryId in jobSkillData) {
-    if (categoryId === 'name') continue; // Skip the job name
+    if (categoryId === "name") continue; // Skip the job name
 
     const category = jobSkillData[categoryId];
     for (const skillData of category.skills) {
@@ -300,16 +303,16 @@ function calculateCategoryProficiencies() {
     technique: 0,
     prayer: 0,
     magic: 0,
-    special: 0
+    special: 0,
   };
 
   // Map category IDs to proficiency names
   const categoryMapping = {
-    0: 'melee',      // Melee category
-    6: 'technique',  // Technique category
-    12: 'prayer',    // Prayer category
-    17: 'magic',     // Magic category
-    22: 'special'    // Special category
+    0: "melee", // Melee category
+    6: "technique", // Technique category
+    12: "prayer", // Prayer category
+    17: "magic", // Magic category
+    22: "special", // Special category
   };
 
   for (const categoryId in gameData.skills) {
@@ -348,9 +351,9 @@ function renderSkillsPanel() {
         let maxPotential = 0;
         if (jobSkillData) {
           for (const catId in jobSkillData) {
-            if (catId === 'name') continue;
+            if (catId === "name") continue;
             const cat = jobSkillData[catId];
-            const skill = cat.skills.find(s => s.id === skillData.id);
+            const skill = cat.skills.find((s) => s.id === skillData.id);
             if (skill) {
               maxPotential = skill.maxPotential;
               break;
@@ -379,9 +382,9 @@ function renderSkillsPanel() {
       let baseAdeptness = 0;
       if (jobSkillData) {
         for (const catId in jobSkillData) {
-          if (catId === 'name') continue;
+          if (catId === "name") continue;
           const cat = jobSkillData[catId];
-          const skill = cat.skills.find(s => s.id === skillData.id);
+          const skill = cat.skills.find((s) => s.id === skillData.id);
           if (skill) {
             maxPotential = skill.maxPotential;
             baseAdeptness = skill.minAdeptness;
@@ -391,7 +394,8 @@ function renderSkillsPanel() {
       }
 
       // Calculate bar width as percentage of max potential
-      const barWidth = maxPotential > 0 ? (currentAdeptness / maxPotential) * 100 : 0;
+      const barWidth =
+        maxPotential > 0 ? (currentAdeptness / maxPotential) * 100 : 0;
 
       // Determine bar color based on skill level
       let barClass = "skill-level-line";
@@ -452,9 +456,9 @@ function handleSkillButtonClick(event) {
   if (jobSkillData) {
     // Find the skill in the job data
     for (const categoryId in jobSkillData) {
-      if (categoryId === 'name') continue;
+      if (categoryId === "name") continue;
       const category = jobSkillData[categoryId];
-      const skillData = category.skills.find(s => s.id === skillId);
+      const skillData = category.skills.find((s) => s.id === skillId);
       if (skillData) {
         baseAdeptnessForJob = skillData.minAdeptness;
         maxPotentialForJob = skillData.maxPotential;
@@ -503,12 +507,16 @@ function handleSkillButtonClick(event) {
   if (type === "adeptness") {
     if (pointsToAllocate > 0) {
       // Adding points - check if we have enough skill points
-      if (character.points.spentSkill + pointsToAllocate <= character.points.totalSkill) {
+      if (
+        character.points.spentSkill + pointsToAllocate <=
+        character.points.totalSkill
+      ) {
         character.points.spentSkill += pointsToAllocate;
         skill[type] = newValue;
       } else {
         // Not enough skill points - allocate as many as possible
-        const availablePoints = character.points.totalSkill - character.points.spentSkill;
+        const availablePoints =
+          character.points.totalSkill - character.points.spentSkill;
         if (availablePoints > 0) {
           character.points.spentSkill += availablePoints;
           skill[type] = currentValue + availablePoints;
@@ -528,43 +536,44 @@ function handleSkillButtonClick(event) {
 
 async function fetchEquipmentData() {
   const equipmentFiles = {
-    head: 'helmets',
-    torso: 'chest',
-    gloves: 'gloves',
-    pants: 'pants',
-    boots: 'boots',
-    weapon_1h_sword: 'weapons-1h-sword',
-    weapon_2h_sword: 'weapons-2h-sword',
-    weapon_1h_wand: 'weapons-1h-wand',
-    weapon_2h_wand: 'weapons-2h-wand',
-    weapon_1h_blunt: 'weapons-1h-blunt',
-    weapon_2h_blunt: 'weapons-2h-blunt',
-    weapon_1h_axe: 'weapons-1h-axe',
-    weapon_2h_axe: 'weapons-2h-axe',
-    weapon_1h_spear: 'weapons-1h-spear',
-    weapon_2h_spear: 'weapons-2h-spear',
-    weapon_bow: 'weapons-bow',
-    weapon_crossbow: 'weapons-crossbow',
-    weapon_dagger: 'weapons-dagger',
-    weapon_claw: 'weapons-claw',
-    shield: 'shields',
-    earring1: 'earrings',
-    earring2: 'earrings',
-    necklace: 'necklaces',
-    belt: 'belts',
-    ring1: 'rings',
-    ring2: 'rings',
-    cape: 'capes'
+    head: "helmets",
+    torso: "chest",
+    gloves: "gloves",
+    pants: "pants",
+    boots: "boots",
+    weapon_1h_sword: "weapons-1h-sword",
+    weapon_2h_sword: "weapons-2h-sword",
+    weapon_1h_wand: "weapons-1h-wand",
+    weapon_2h_wand: "weapons-2h-wand",
+    weapon_1h_blunt: "weapons-1h-blunt",
+    weapon_2h_blunt: "weapons-2h-blunt",
+    weapon_1h_axe: "weapons-1h-axe",
+    weapon_2h_axe: "weapons-2h-axe",
+    weapon_1h_spear: "weapons-1h-spear",
+    weapon_2h_spear: "weapons-2h-spear",
+    weapon_bow: "weapons-bow",
+    weapon_crossbow: "weapons-crossbow",
+    weapon_dagger: "weapons-dagger",
+    weapon_claw: "weapons-claw",
+    shield: "shields",
+    earring1: "earrings",
+    earring2: "earrings",
+    necklace: "necklaces",
+    belt: "belts",
+    ring1: "rings",
+    ring2: "rings",
+    cape: "capes",
   };
 
   const equipmentData = {};
-
 
   for (const [slot, filename] of Object.entries(equipmentFiles)) {
     try {
       const response = await fetch(`js/items/${filename}.csv`);
       if (!response.ok) {
-        console.warn(`Failed to load ${filename}.csv: ${response.status} ${response.statusText}`);
+        console.warn(
+          `Failed to load ${filename}.csv: ${response.status} ${response.statusText}`,
+        );
         continue;
       }
       const csvText = await response.text();
@@ -583,7 +592,9 @@ async function fetchSoulsData() {
   try {
     const response = await fetch(`js/items/souls.csv`);
     if (!response.ok) {
-      console.warn(`Failed to load souls.csv: ${response.status} ${response.statusText}`);
+      console.warn(
+        `Failed to load souls.csv: ${response.status} ${response.statusText}`,
+      );
       globalSoulsData = [];
       return [];
     }
@@ -592,15 +603,15 @@ async function fetchSoulsData() {
     globalSoulsData = souls;
     return souls;
   } catch (error) {
-    console.error('Error loading souls.csv:', error);
+    console.error("Error loading souls.csv:", error);
     globalSoulsData = [];
     return [];
   }
 }
 
 function parseSoulsCSV(csvText) {
-  const lines = csvText.trim().split('\n');
-  const headers = lines[0].split(','); // name,type,stats,enhancement,description
+  const lines = csvText.trim().split("\n");
+  const headers = lines[0].split(","); // name,type,stats,enhancement,description
   const souls = [];
 
   for (let i = 1; i < lines.length; i++) {
@@ -608,26 +619,31 @@ function parseSoulsCSV(csvText) {
     const line = rawLine.trim();
     if (!line) continue;
 
-    let values = line.split(',');
+    let values = line.split(",");
     if (values.length < headers.length) {
-      while (values.length < headers.length) values.push('');
+      while (values.length < headers.length) values.push("");
     } else if (values.length > headers.length) {
       const base = values.slice(0, headers.length - 1);
-      const tail = values.slice(headers.length - 1).join(',');
+      const tail = values.slice(headers.length - 1).join(",");
       values = [...base, tail];
     }
 
-    const name = values[0]?.trim() || '';
-    const typeCell = values[1]?.trim() || '';
-    const statsCell = values[2]?.trim() || '';
-    const effectsCell = values[3]?.trim() || '';
-    const description = (values[4] || '').trim();
+    const name = values[0]?.trim() || "";
+    const typeCell = values[1]?.trim() || "";
+    const statsCell = values[2]?.trim() || "";
+    const effectsCell = values[3]?.trim() || "";
+    const description = (values[4] || "").trim();
 
     // Build types array; support semicolon-separated list; allow 'all'
-    const types = typeCell ? typeCell.split(';').map(t => t.trim().toLowerCase()) : [];
+    const types = typeCell
+      ? typeCell.split(";").map((t) => t.trim().toLowerCase())
+      : [];
 
     // Create a stable id
-    const id = `soul-${name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '')}`;
+    const id = `soul-${name
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9\-]/g, "")}`;
 
     souls.push({
       id,
@@ -643,49 +659,48 @@ function parseSoulsCSV(csvText) {
 }
 
 function parseCSV(csvText, slot, filename) {
-  const lines = csvText.trim().split('\n');
-  const headers = lines[0].split(',');
+  const lines = csvText.trim().split("\n");
+  const headers = lines[0].split(",");
   const items = [];
-
 
   for (let i = 1; i < lines.length; i++) {
     const line = lines[i].trim();
     if (!line) continue;
 
-    let values = line.split(',');
+    let values = line.split(",");
     if (values.length < headers.length) {
       while (values.length < headers.length) {
-        values.push('');
+        values.push("");
       }
     } else if (values.length > headers.length) {
       const base = values.slice(0, headers.length - 1);
-      const tail = values.slice(headers.length - 1).join(',');
+      const tail = values.slice(headers.length - 1).join(",");
       values = [...base, tail];
     }
 
     const item = {
-      id: `${slot}-${values[0].toLowerCase().replace(/\s+/g, '-')}`,
+      id: `${slot}-${values[0].toLowerCase().replace(/\s+/g, "-")}`,
       name: values[0],
       lvlreq: parseInt(values[1]) || 0,
       // atk/def parsed conditionally below based on filename
       slots: parseInt(values[3]) || 0,
       stats: parseEffects(values[4]),
       effects: parseEffects(values[5]),
-      equipclass: parseEffects(values[6]),
+      equipclass: (values[6] || "").trim(), // Keep equipclass as raw string for job filtering
       setBonus: parseEffects(values[7]),
-      slot: slot
+      description: (values[8] || "").trim(), // Add description column support
+      slot: slot,
     };
 
     // Determine whether this CSV represents weapons to decide whether column[2] is ATK or DEF
-    const isWeaponFile = typeof filename === 'string' && filename.startsWith('weapons');
+    const isWeaponFile =
+      typeof filename === "string" && filename.startsWith("weapons");
     const atkOrDefValue = parseInt(values[2]) || 0;
     if (isWeaponFile) {
       item.atk = atkOrDefValue;
     } else {
       item.def = atkOrDefValue;
     }
-
-
 
     items.push(item);
   }
@@ -701,25 +716,41 @@ function parseEffects(effectsString) {
   }
 
   // Split by semicolon first to handle multiple enhancement blocks
-  const effectPhrases = effectsString.split(';');
+  const effectPhrases = effectsString.split(";");
   let hasEnhancement = false;
 
   effectPhrases.forEach((phrase) => {
     const trimmedPhrase = phrase.trim();
 
-    if (trimmedPhrase === '') {
+    if (trimmedPhrase === "") {
       return;
     }
 
     // Check if this phrase is an enhancement effect
     const enhancementMatch = trimmedPhrase.match(/^enhancement:(\d+):(.+)$/);
-    const exactEnhancementMatchA = trimmedPhrase.match(/^enhancement:(\d+):exact:(.+)$/);
+    const exactEnhancementMatchA = trimmedPhrase.match(
+      /^enhancement:(\d+):exact:(.+)$/,
+    );
     // Support alternate ordering: enhancement:exact:<level>:<effects>
-    const exactEnhancementMatchB = trimmedPhrase.match(/^enhancement:exact:(\d+):(.+)$/);
-    const progressiveEnhancementMatch = trimmedPhrase.match(/^enhancement:(\d+)-(\d+):(.+)$/);
+    const exactEnhancementMatchB = trimmedPhrase.match(
+      /^enhancement:exact:(\d+):(.+)$/,
+    );
+    const progressiveEnhancementMatch = trimmedPhrase.match(
+      /^enhancement:(\d+)-(\d+):(.+)$/,
+    );
 
-    if (enhancementMatch || exactEnhancementMatchA || exactEnhancementMatchB || progressiveEnhancementMatch) {
-      let match, enhancementLevel, enhancementEffects, isExact, isProgressive, maxLevel;
+    if (
+      enhancementMatch ||
+      exactEnhancementMatchA ||
+      exactEnhancementMatchB ||
+      progressiveEnhancementMatch
+    ) {
+      let match,
+        enhancementLevel,
+        enhancementEffects,
+        isExact,
+        isProgressive,
+        maxLevel;
 
       if (progressiveEnhancementMatch) {
         match = progressiveEnhancementMatch;
@@ -729,7 +760,8 @@ function parseEffects(effectsString) {
         isExact = false;
         isProgressive = true;
       } else {
-        match = enhancementMatch || exactEnhancementMatchA || exactEnhancementMatchB;
+        match =
+          enhancementMatch || exactEnhancementMatchA || exactEnhancementMatchB;
         enhancementLevel = parseInt(match[1]);
         enhancementEffects = match[2];
         isExact = !!(exactEnhancementMatchA || exactEnhancementMatchB);
@@ -744,7 +776,7 @@ function parseEffects(effectsString) {
           exact: isExact,
           progressive: isProgressive,
           maxLevel: maxLevel,
-          effects: parseEnhancementEffects(enhancementEffects)
+          effects: parseEnhancementEffects(enhancementEffects),
         };
         hasEnhancement = true;
       } else {
@@ -777,15 +809,15 @@ function parseEffects(effectsString) {
       const operator = match[2].trim();
       let value = match[3].trim();
 
-      if (value.endsWith('%')) {
+      if (value.endsWith("%")) {
         // Different stats handle percentages differently:
         // - LP and MP: actual percentages (divide by 100)
         // - Cast speed: expects decimal (divide by 100)
         // - All others: whole numbers (don't divide)
-        if (key === 'lp' || key === 'mp' || key === 'castspeed') {
-          value = parseFloat(value.replace('%', '')) / 100;
+        if (key === "lp" || key === "mp" || key === "castspeed") {
+          value = parseFloat(value.replace("%", "")) / 100;
         } else {
-          value = parseFloat(value.replace('%', ''));
+          value = parseFloat(value.replace("%", ""));
         }
       } else {
         value = isNaN(parseFloat(value)) ? value : parseFloat(value);
@@ -805,11 +837,11 @@ function parseEffects(effectsString) {
 
 function parseEnhancementEffects(effectsString) {
   const effects = {};
-  const effectPhrases = effectsString.split(';');
+  const effectPhrases = effectsString.split(";");
 
   effectPhrases.forEach((phrase) => {
     const trimmedPhrase = phrase.trim();
-    if (trimmedPhrase === '') return;
+    if (trimmedPhrase === "") return;
 
     const match = trimmedPhrase.match(/^(.*?)([+\-*/])(.*)$/);
     if (match) {
@@ -817,13 +849,13 @@ function parseEnhancementEffects(effectsString) {
       const operator = match[2].trim();
       let value = match[3].trim();
 
-      if (value.endsWith('%')) {
+      if (value.endsWith("%")) {
         // In enhancements, only cast speed should be treated as percentage
         // LP and MP are flat values, not percentages
-        if (key === 'castspeed') {
-          value = parseFloat(value.replace('%', '')) / 100;
+        if (key === "castspeed") {
+          value = parseFloat(value.replace("%", "")) / 100;
         } else {
-          value = parseFloat(value.replace('%', ''));
+          value = parseFloat(value.replace("%", ""));
         }
       } else {
         value = isNaN(parseFloat(value)) ? value : parseFloat(value);
@@ -864,7 +896,7 @@ async function populateDropdowns() {
 
   // Wire up weapon type selection handling once selectors are populated
   if (elements.weaponTypeSelector) {
-    elements.weaponTypeSelector.addEventListener('change', () => {
+    elements.weaponTypeSelector.addEventListener("change", () => {
       const selectedTypeKey = elements.weaponTypeSelector.value;
       const weaponSelector = elements.equipmentSelectors.weapon;
 
@@ -876,7 +908,7 @@ async function populateDropdowns() {
           weaponSelector.value = `weapon-none`;
         }
         // Clear current equipped weapon in state
-        character.equipment.weapon = 'weapon-none';
+        character.equipment.weapon = "weapon-none";
         runCalculations();
         return;
       }
@@ -889,32 +921,49 @@ async function populateDropdowns() {
           weaponSelector.innerHTML = `<option value="weapon-none">No weapons available</option>`;
           weaponSelector.value = `weapon-none`;
         } else {
-          // Sort so None first if present
-          const sortedItems = items.slice().sort((a, b) => {
-            if (a.name === 'None') return -1;
-            if (b.name === 'None') return 1;
-            return a.name.localeCompare(b.name);
-          });
-          weaponSelector.innerHTML = sortedItems
-            .map((item) => `<option value="${item.id}">${item.name} (${item.slots ?? 0} slots)</option>`)
-            .join('');
-          weaponSelector.disabled = false;
-
-          // Choose current equipped if it belongs to this list; otherwise default to None or first
-          const currentId = character.equipment.weapon;
-          const exists = sortedItems.some(i => i.id === currentId);
-          if (exists) {
-            weaponSelector.value = currentId;
+          // Filter items based on job compatibility
+          const compatibleItems = items.filter(item => isItemEquippableByCurrentJob(item));
+          
+          if (compatibleItems.length === 0) {
+            weaponSelector.disabled = true;
+            weaponSelector.innerHTML = `<option value="weapon-none">No compatible weapons</option>`;
+            weaponSelector.value = `weapon-none`;
           } else {
-            const noneOption = sortedItems.find(i => i.name === 'None');
-            weaponSelector.value = noneOption ? noneOption.id : sortedItems[0].id;
+            // Sort so None first if present
+            const sortedItems = compatibleItems.slice().sort((a, b) => {
+              if (a.name === "None") return -1;
+              if (b.name === "None") return 1;
+              return a.name.localeCompare(b.name);
+            });
+            weaponSelector.innerHTML = sortedItems
+              .map(
+                (item) =>
+                  `<option value="${item.id}">${item.name} (${item.slots ?? 0} slots)</option>`,
+              )
+              .join("");
+            weaponSelector.disabled = false;
+
+            // Choose current equipped if it belongs to this list; otherwise default to None or first
+            const currentId = character.equipment.weapon;
+            const exists = sortedItems.some((i) => i.id === currentId);
+            if (exists) {
+              weaponSelector.value = currentId;
+            } else {
+              const noneOption = sortedItems.find((i) => i.name === "None");
+              weaponSelector.value = noneOption
+                ? noneOption.id
+                : sortedItems[0].id;
+              character.equipment.weapon = weaponSelector.value; // Update character state
+            }
           }
         }
       }
 
-      // Mirror the selectedTypeKey list into a generic weapon slot list so downstream lookups work
+      // Mirror the filtered items into a generic weapon slot list so downstream lookups work
       // Consumers of globalEquipmentData expect weapon items under the 'weapon' slot.
-      globalEquipmentData.weapon = (globalEquipmentData[selectedTypeKey] || []).map(item => ({ ...item }));
+      const allWeaponItems = globalEquipmentData[selectedTypeKey] || [];
+      const compatibleWeaponItems = allWeaponItems.filter(item => isItemEquippableByCurrentJob(item));
+      globalEquipmentData.weapon = compatibleWeaponItems.map((item) => ({ ...item }));
 
       // Update state and recalc
       if (weaponSelector) {
@@ -923,8 +972,8 @@ async function populateDropdowns() {
       runCalculations();
 
       // Update souls UI for weapon slot after type change selection applied
-      if (GEAR_SLOTS_WITH_SOULS.includes('weapon')) {
-        updateSoulSelectorsForSlot('weapon');
+      if (GEAR_SLOTS_WITH_SOULS.includes("weapon")) {
+        updateSoulSelectorsForSlot("weapon");
       }
     });
   }
@@ -933,13 +982,13 @@ async function populateDropdowns() {
 async function ensureSoulsLoaded() {
   if (globalSoulsData.length > 0) return;
   try {
-    const response = await fetch('js/items/souls.csv');
+    const response = await fetch("js/items/souls.csv");
     if (!response.ok) return;
     const csvText = await response.text();
     // Reuse parseCSV with a neutral slot key 'souls'
-    globalSoulsData = parseCSV(csvText, 'souls', 'souls');
+    globalSoulsData = parseCSV(csvText, "souls", "souls");
   } catch (e) {
-    console.warn('Failed to load souls.csv', e);
+    console.warn("Failed to load souls.csv", e);
   }
 }
 
@@ -949,12 +998,38 @@ function getSoulOptionsHTML() {
     if (!soul || !soul.id || !soul.name) continue;
     options.push(`<option value="${soul.id}">${soul.name}</option>`);
   }
-  return options.join('');
+  return options.join("");
 }
 
 function findEquipmentItemById(slot, itemId) {
   const list = globalEquipmentData[slot] || [];
-  return list.find(it => it.id === itemId) || null;
+  return list.find((it) => it.id === itemId) || null;
+}
+
+/**
+ * Checks if an item is equippable by the current job based on the equipclass column.
+ * @param {Object} item - The equipment item to check
+ * @returns {boolean} - True if the item can be equipped by the current job
+ */
+function isItemEquippableByCurrentJob(item) {
+  if (!item || !item.equipclass || item.equipclass.trim() === "") {
+    return true; // If no equipclass restriction, allow all jobs
+  }
+
+  // Get current job name and normalize it
+  const currentJob = gameData.jobs[character.jobId];
+  if (!currentJob) {
+    return false;
+  }
+
+  // Normalize job name by removing whitespace and converting to lowercase
+  const normalizedJobName = currentJob.name.trim().toLowerCase();
+
+  // Parse equipclass - it's a semicolon-separated list
+  const allowedClasses = item.equipclass.split(';').map(cls => cls.trim().toLowerCase());
+
+  // Check if current job is in the allowed classes
+  return allowedClasses.includes(normalizedJobName);
 }
 
 function queryEquipmentSlotContainer(slot) {
@@ -963,20 +1038,21 @@ function queryEquipmentSlotContainer(slot) {
   // Find the select for the slot and return its closest '.equipment-slot'
   const select = elements.equipmentSelectors[slot];
   if (!select) return null;
-  return select.closest('.equipment-slot');
+  return select.closest(".equipment-slot");
 }
 
 function clearExistingSoulControls(container, slot) {
   if (!container) return;
   // Remove any existing soul label/selects for this slot
   const selects = container.querySelectorAll(`[id^="equip-${slot}-soul"]`);
-  selects.forEach(el => el.remove());
+  selects.forEach((el) => el.remove());
   // Remove the leading Soul label if it is now orphaned (only if followed by no soul selects)
-  const labels = Array.from(container.querySelectorAll('label'));
+  const labels = Array.from(container.querySelectorAll("label"));
   for (const label of labels) {
-    const forAttr = label.getAttribute('for') || '';
+    const forAttr = label.getAttribute("for") || "";
     const isSoulForAttr = forAttr.startsWith(`equip-${slot}-soul`);
-    const isSoulText = (label.textContent || '').trim().toLowerCase() === 'soul';
+    const isSoulText =
+      (label.textContent || "").trim().toLowerCase() === "soul";
     if (isSoulForAttr || isSoulText) {
       label.remove();
     }
@@ -985,24 +1061,24 @@ function clearExistingSoulControls(container, slot) {
 
 function ensureSoulLabel(container, slot) {
   // Insert a single label before the first soul select for consistency
-  const label = document.createElement('label');
-  label.setAttribute('for', `equip-${slot}-soul1`);
-  label.textContent = 'Soul';
+  const label = document.createElement("label");
+  label.setAttribute("for", `equip-${slot}-soul1`);
+  label.textContent = "Soul";
   container.appendChild(label);
 }
 
 function createSoulSelect(slot, index) {
-  const select = document.createElement('select');
+  const select = document.createElement("select");
   select.id = `equip-${slot}-soul${index}`;
-  select.className = 'equip-selector';
+  select.className = "equip-selector";
   select.innerHTML = getSoulOptionsHTML();
 
   // Restore selection from state if present
-  const saved = (character.equippedSouls[slot] || [])[index - 1] || '';
+  const saved = (character.equippedSouls[slot] || [])[index - 1] || "";
   select.value = saved;
 
   // Save changes to state on change
-  select.addEventListener('change', (e) => {
+  select.addEventListener("change", (e) => {
     const value = e.target.value;
     const arr = character.equippedSouls[slot] || [];
     arr[index - 1] = value;
@@ -1023,7 +1099,7 @@ function updateSoulSelectorsForSlot(slot) {
   const container = queryEquipmentSlotContainer(slot);
   if (!container) return;
 
-  const currentItemId = elements.equipmentSelectors[slot]?.value || '';
+  const currentItemId = elements.equipmentSelectors[slot]?.value || "";
   const item = findEquipmentItemById(slot, currentItemId);
   const numSlots = item?.slots || 0;
 
@@ -1056,17 +1132,18 @@ async function populateEquipmentSelectors() {
     // Build weapon type options dynamically from available weapon keys
     const weaponTypeSelector = elements.weaponTypeSelector;
     if (weaponTypeSelector) {
-      const weaponTypeEntries = Object.entries(equipmentData)
-        .filter(([slotKey]) => slotKey.startsWith("weapon_"));
+      const weaponTypeEntries = Object.entries(equipmentData).filter(
+        ([slotKey]) => slotKey.startsWith("weapon_"),
+      );
 
       // Create placeholder first option
       const weaponTypeOptions = [
-        `<option value="">-- Select weapon type --</option>`
+        `<option value="">-- Select weapon type --</option>`,
       ];
       for (const [slotKey, items] of weaponTypeEntries) {
         // human-friendly label from the filename mapping in fetchEquipmentData
         // slotKey looks like weapon_1h_sword → label "1h sword"
-        const label = slotKey.replace(/^weapon_/, '').replace(/_/g, ' ');
+        const label = slotKey.replace(/^weapon_/, "").replace(/_/g, " ");
         weaponTypeOptions.push(`<option value="${slotKey}">${label}</option>`);
       }
       weaponTypeSelector.innerHTML = weaponTypeOptions.join("");
@@ -1074,7 +1151,9 @@ async function populateEquipmentSelectors() {
 
     // Ensure weapon select is disabled until a type is chosen
     if (elements.equipmentSelectors.weapon) {
-      const hasSelectedType = !!(elements.weaponTypeSelector && elements.weaponTypeSelector.value);
+      const hasSelectedType = !!(
+        elements.weaponTypeSelector && elements.weaponTypeSelector.value
+      );
       elements.equipmentSelectors.weapon.disabled = !hasSelectedType;
       if (!hasSelectedType) {
         elements.equipmentSelectors.weapon.innerHTML = `<option value="weapon-none">Select a weapon type first</option>`;
@@ -1089,22 +1168,47 @@ async function populateEquipmentSelectors() {
         continue;
       }
 
-      if (slot === 'weapon') {
+      if (slot === "weapon") {
         continue;
       }
 
       if (equipmentData[slot] && equipmentData[slot].length > 0) {
+        // Filter items based on job compatibility
+        const compatibleItems = equipmentData[slot].filter(item => isItemEquippableByCurrentJob(item));
+        
         // Sort items so "None" options appear first
-        const sortedItems = equipmentData[slot].sort((a, b) => {
+        const sortedItems = compatibleItems.sort((a, b) => {
           if (a.name === "None") return -1;
           if (b.name === "None") return 1;
           return a.name.localeCompare(b.name);
         });
 
-        selector.innerHTML = sortedItems
-          .map((item) => `<option value="${item.id}">${item.name} (${item.slots ?? 0} slots)</option>`)
-          .join("");
-        selector.value = character.equipment[slot] || `${slot}-none`; // Set initial value
+        if (sortedItems.length > 0) {
+          selector.innerHTML = sortedItems
+            .map(
+              (item) =>
+                `<option value="${item.id}">${item.name} (${item.slots ?? 0} slots)</option>`,
+            )
+            .join("");
+          
+          // Check if current equipment is still valid for this job
+          const currentItemId = character.equipment[slot] || `${slot}-none`;
+          const isCurrentItemValid = sortedItems.some(item => item.id === currentItemId);
+          
+          if (isCurrentItemValid) {
+            selector.value = currentItemId;
+          } else {
+            // Current item is not compatible with job, default to None or first available
+            const noneOption = sortedItems.find(item => item.name === "None");
+            selector.value = noneOption ? noneOption.id : sortedItems[0].id;
+            character.equipment[slot] = selector.value; // Update character state
+          }
+        } else {
+          // No compatible items for this job
+          selector.innerHTML = `<option value="${slot}-none">No compatible items</option>`;
+          selector.value = `${slot}-none`;
+          character.equipment[slot] = `${slot}-none`;
+        }
       } else {
         // Create a "None" option for empty slots
         selector.innerHTML = `<option value="${slot}-none">None</option>`;
@@ -1122,7 +1226,7 @@ async function populateEquipmentSelectors() {
       updateSoulSelectorsForSlot(slot);
     }
   } catch (error) {
-    console.error('Error populating equipment selectors:', error);
+    console.error("Error populating equipment selectors:", error);
   }
 }
 
@@ -1143,7 +1247,8 @@ function populateEnhancementSelectors() {
     selector.innerHTML = options.join("");
 
     const currentItemId = character.equipment[slot];
-    const currentEnhancement = character.equipmentEnhancements[currentItemId] || 0;
+    const currentEnhancement =
+      character.equipmentEnhancements[currentItemId] || 0;
     selector.value = currentEnhancement;
   }
 }
@@ -1156,34 +1261,38 @@ function populateSoulSelectors() {
   for (const slot of slotsWithSouls) {
     const selectors = elements.soulSelectors[slot] || [];
     // Filter souls allowed for this slot
-    const allowedSouls = globalSoulsData.filter(soul => {
+    const allowedSouls = globalSoulsData.filter((soul) => {
       if (!soul || !soul.name) return false;
-      if (soul.name.toLowerCase() === 'none') return true;
+      if (soul.name.toLowerCase() === "none") return true;
       if (!soul.types || soul.types.length === 0) return false;
-      return soul.types.includes('all') || soul.types.includes(slot.toLowerCase());
+      return (
+        soul.types.includes("all") || soul.types.includes(slot.toLowerCase())
+      );
     });
 
     // Sort: 'none' first, then alphabetical
     const sorted = allowedSouls.slice().sort((a, b) => {
-      const aIsNone = a.name.toLowerCase() === 'none';
-      const bIsNone = b.name.toLowerCase() === 'none';
+      const aIsNone = a.name.toLowerCase() === "none";
+      const bIsNone = b.name.toLowerCase() === "none";
       if (aIsNone && !bIsNone) return -1;
       if (!aIsNone && bIsNone) return 1;
       return a.name.localeCompare(b.name);
     });
 
-    const optionsHTML = sorted.map((soul) => {
-      const value = soul.name.toLowerCase() === 'none' ? 'none' : soul.id;
-      const label = soul.name.toLowerCase() === 'none' ? 'None' : soul.name;
-      return `<option value="${value}">${label}</option>`;
-    }).join('');
+    const optionsHTML = sorted
+      .map((soul) => {
+        const value = soul.name.toLowerCase() === "none" ? "none" : soul.id;
+        const label = soul.name.toLowerCase() === "none" ? "None" : soul.name;
+        return `<option value="${value}">${label}</option>`;
+      })
+      .join("");
 
     selectors.forEach((selector, idx) => {
       if (!selector) return;
       selector.innerHTML = optionsHTML;
-      const current = character.souls?.[slot]?.[idx] ?? 'none';
+      const current = character.souls?.[slot]?.[idx] ?? "none";
       selector.value = current;
-      selector.addEventListener('change', () => {
+      selector.addEventListener("change", () => {
         if (!character.souls[slot]) character.souls[slot] = [];
         character.souls[slot][idx] = selector.value;
         runCalculations();
@@ -1205,7 +1314,7 @@ function populateRacialSkillDropdown() {
   let defaultRacialSkillId = 0; // Default to the first racial skill for the race
 
   if (racialSkillsData && racialSkillsData.skills) {
-    racialSkillsForRace = racialSkillsData.skills.map(skill => skill.name);
+    racialSkillsForRace = racialSkillsData.skills.map((skill) => skill.name);
   }
 
   elements.racialSkill.innerHTML = racialSkillsForRace
@@ -1270,7 +1379,7 @@ function readInputs() {
   for (const slot in elements.soulSelectors) {
     const selectors = elements.soulSelectors[slot];
     if (!selectors) continue;
-    character.souls[slot] = selectors.map(sel => (sel ? sel.value : 'none'));
+    character.souls[slot] = selectors.map((sel) => (sel ? sel.value : "none"));
   }
 }
 
@@ -1300,8 +1409,14 @@ function runCalculations() {
   if (bonuses.spiBasedEffects) {
     for (const effect of bonuses.spiBasedEffects) {
       // Use enchanter SPI instead of current character SPI
-      const enchanterSpi = character.enchanterSpi[effect.buffId] || effect.data[0]?.value || 33;
-      applySpiBasedBuffEffects(effect.skillName, effect.data, bonuses, enchanterSpi);
+      const enchanterSpi =
+        character.enchanterSpi[effect.buffId] || effect.data[0]?.value || 33;
+      applySpiBasedBuffEffects(
+        effect.skillName,
+        effect.data,
+        bonuses,
+        enchanterSpi,
+      );
     }
   }
 
@@ -1352,19 +1467,26 @@ function applyEquipmentBonuses(bonuses) {
     // Find the item in the global equipment data
     let item = null;
     if (globalEquipmentData[slot]) {
-      item = globalEquipmentData[slot].find(item => item.id === itemId);
+      item = globalEquipmentData[slot].find((item) => item.id === itemId);
     }
 
     if (item) {
+      // Add item description to bonuses if it exists and isn't empty
+      if (item.description && item.description.trim() !== "") {
+        bonuses.description.push(`${item.name}: ${item.description}`);
+      }
+
       // Apply stats bonuses
       if (item.stats) {
         for (const stat in item.stats) {
           const statValue = item.stats[stat];
           if (statValue && statValue.value !== undefined) {
-            if (statValue.operator === '+') {
-              bonuses.stats[stat] = (bonuses.stats[stat] || 0) + statValue.value;
-            } else if (statValue.operator === '-') {
-              bonuses.stats[stat] = (bonuses.stats[stat] || 0) - statValue.value;
+            if (statValue.operator === "+") {
+              bonuses.stats[stat] =
+                (bonuses.stats[stat] || 0) + statValue.value;
+            } else if (statValue.operator === "-") {
+              bonuses.stats[stat] =
+                (bonuses.stats[stat] || 0) - statValue.value;
             }
           }
         }
@@ -1376,9 +1498,10 @@ function applyEquipmentBonuses(bonuses) {
           const effectValue = item.effects[effect];
 
           // Handle enhancement effects
-          if (effect === 'enhancement' && effectValue && effectValue.level) {
+          if (effect === "enhancement" && effectValue && effectValue.level) {
             // Get current enhancement level for this item (default to 0)
-            const currentEnhancement = character.equipmentEnhancements?.[itemId] || 0;
+            const currentEnhancement =
+              character.equipmentEnhancements?.[itemId] || 0;
 
             let shouldApply = false;
             let enhancementMultiplier = 1;
@@ -1388,35 +1511,48 @@ function applyEquipmentBonuses(bonuses) {
               shouldApply = currentEnhancement === effectValue.level;
             } else if (effectValue.progressive) {
               // Progressive enhancement: apply if current level is within the range
-              shouldApply = currentEnhancement >= effectValue.level && currentEnhancement <= effectValue.maxLevel;
+              shouldApply =
+                currentEnhancement >= effectValue.level &&
+                currentEnhancement <= effectValue.maxLevel;
               if (shouldApply) {
                 // Calculate progressive value: base value + (current level - start level)
-                enhancementMultiplier = 1 + (currentEnhancement - effectValue.level);
+                enhancementMultiplier =
+                  1 + (currentEnhancement - effectValue.level);
               }
             } else {
               // Regular enhancement: apply if current level is at least the required level
-              enhancementMultiplier = Math.floor(currentEnhancement / effectValue.level);
+              enhancementMultiplier = Math.floor(
+                currentEnhancement / effectValue.level,
+              );
               shouldApply = enhancementMultiplier > 0;
             }
 
             if (shouldApply && effectValue.effects) {
-              for (const [enhancementEffect, enhancementEffectValue] of Object.entries(effectValue.effects)) {
-                const totalValue = enhancementEffectValue.value * enhancementMultiplier;
+              for (const [
+                enhancementEffect,
+                enhancementEffectValue,
+              ] of Object.entries(effectValue.effects)) {
+                const totalValue =
+                  enhancementEffectValue.value * enhancementMultiplier;
 
                 // Check if this is a primary stat
                 if (PRIMARY_STATS.includes(enhancementEffect)) {
                   // Apply to bonuses.stats for UI display
-                  if (enhancementEffectValue.operator === '+') {
-                    bonuses.stats[enhancementEffect] = (bonuses.stats[enhancementEffect] || 0) + totalValue;
-                  } else if (enhancementEffectValue.operator === '-') {
-                    bonuses.stats[enhancementEffect] = (bonuses.stats[enhancementEffect] || 0) - totalValue;
+                  if (enhancementEffectValue.operator === "+") {
+                    bonuses.stats[enhancementEffect] =
+                      (bonuses.stats[enhancementEffect] || 0) + totalValue;
+                  } else if (enhancementEffectValue.operator === "-") {
+                    bonuses.stats[enhancementEffect] =
+                      (bonuses.stats[enhancementEffect] || 0) - totalValue;
                   }
                 } else {
                   // Apply to bonuses directly for other effects
-                  if (enhancementEffectValue.operator === '+') {
-                    bonuses[enhancementEffect] = (bonuses[enhancementEffect] || 0) + totalValue;
-                  } else if (enhancementEffectValue.operator === '-') {
-                    bonuses[enhancementEffect] = (bonuses[enhancementEffect] || 0) - totalValue;
+                  if (enhancementEffectValue.operator === "+") {
+                    bonuses[enhancementEffect] =
+                      (bonuses[enhancementEffect] || 0) + totalValue;
+                  } else if (enhancementEffectValue.operator === "-") {
+                    bonuses[enhancementEffect] =
+                      (bonuses[enhancementEffect] || 0) - totalValue;
                   }
                 }
               }
@@ -1426,9 +1562,9 @@ function applyEquipmentBonuses(bonuses) {
 
           // Handle regular effects
           if (effectValue && effectValue.value !== undefined) {
-            if (effectValue.operator === '+') {
+            if (effectValue.operator === "+") {
               bonuses[effect] = (bonuses[effect] || 0) + effectValue.value;
-            } else if (effectValue.operator === '-') {
+            } else if (effectValue.operator === "-") {
               bonuses[effect] = (bonuses[effect] || 0) - effectValue.value;
             }
           }
@@ -1446,11 +1582,13 @@ function applySoulsBonuses(bonuses) {
   for (const slot of slots) {
     const selectedSoulIds = character.souls[slot] || [];
     const equippedItemIdForSlot = character.equipment?.[slot];
-    const currentEnhancementLevel = equippedItemIdForSlot ? (character.equipmentEnhancements?.[equippedItemIdForSlot] || 0) : 0;
+    const currentEnhancementLevel = equippedItemIdForSlot
+      ? character.equipmentEnhancements?.[equippedItemIdForSlot] || 0
+      : 0;
 
     for (const soulId of selectedSoulIds) {
-      if (!soulId || soulId === 'none') continue;
-      const soul = globalSoulsData.find(s => s.id === soulId);
+      if (!soulId || soulId === "none") continue;
+      const soul = globalSoulsData.find((s) => s.id === soulId);
       if (!soul) continue;
 
       // Apply stats
@@ -1459,15 +1597,17 @@ function applySoulsBonuses(bonuses) {
           const statValue = soul.stats[stat];
           if (statValue && statValue.value !== undefined) {
             if (PRIMARY_STATS.includes(stat)) {
-              if (statValue.operator === '+') {
-                bonuses.stats[stat] = (bonuses.stats[stat] || 0) + statValue.value;
-              } else if (statValue.operator === '-') {
-                bonuses.stats[stat] = (bonuses.stats[stat] || 0) - statValue.value;
+              if (statValue.operator === "+") {
+                bonuses.stats[stat] =
+                  (bonuses.stats[stat] || 0) + statValue.value;
+              } else if (statValue.operator === "-") {
+                bonuses.stats[stat] =
+                  (bonuses.stats[stat] || 0) - statValue.value;
               }
             } else {
-              if (statValue.operator === '+') {
+              if (statValue.operator === "+") {
                 bonuses[stat] = (bonuses[stat] || 0) + statValue.value;
-              } else if (statValue.operator === '-') {
+              } else if (statValue.operator === "-") {
                 bonuses[stat] = (bonuses[stat] || 0) - statValue.value;
               }
             }
@@ -1480,35 +1620,44 @@ function applySoulsBonuses(bonuses) {
         for (const effect in soul.effects) {
           const effectValue = soul.effects[effect];
 
-          if (effect === 'enhancement' && effectValue && effectValue.level) {
+          if (effect === "enhancement" && effectValue && effectValue.level) {
             let shouldApply = false;
             let enhancementMultiplier = 1;
 
             if (effectValue.exact) {
               shouldApply = currentEnhancementLevel === effectValue.level;
             } else if (effectValue.progressive) {
-              shouldApply = currentEnhancementLevel >= effectValue.level && currentEnhancementLevel <= effectValue.maxLevel;
+              shouldApply =
+                currentEnhancementLevel >= effectValue.level &&
+                currentEnhancementLevel <= effectValue.maxLevel;
               if (shouldApply) {
-                enhancementMultiplier = 1 + (currentEnhancementLevel - effectValue.level);
+                enhancementMultiplier =
+                  1 + (currentEnhancementLevel - effectValue.level);
               }
             } else {
-              enhancementMultiplier = Math.floor(currentEnhancementLevel / effectValue.level);
+              enhancementMultiplier = Math.floor(
+                currentEnhancementLevel / effectValue.level,
+              );
               shouldApply = enhancementMultiplier > 0;
             }
 
             if (shouldApply && effectValue.effects) {
-              for (const [enhEffect, enhEffectValue] of Object.entries(effectValue.effects)) {
+              for (const [enhEffect, enhEffectValue] of Object.entries(
+                effectValue.effects,
+              )) {
                 const totalValue = enhEffectValue.value * enhancementMultiplier;
                 if (PRIMARY_STATS.includes(enhEffect)) {
-                  if (enhEffectValue.operator === '+') {
-                    bonuses.stats[enhEffect] = (bonuses.stats[enhEffect] || 0) + totalValue;
-                  } else if (enhEffectValue.operator === '-') {
-                    bonuses.stats[enhEffect] = (bonuses.stats[enhEffect] || 0) - totalValue;
+                  if (enhEffectValue.operator === "+") {
+                    bonuses.stats[enhEffect] =
+                      (bonuses.stats[enhEffect] || 0) + totalValue;
+                  } else if (enhEffectValue.operator === "-") {
+                    bonuses.stats[enhEffect] =
+                      (bonuses.stats[enhEffect] || 0) - totalValue;
                   }
                 } else {
-                  if (enhEffectValue.operator === '+') {
+                  if (enhEffectValue.operator === "+") {
                     bonuses[enhEffect] = (bonuses[enhEffect] || 0) + totalValue;
-                  } else if (enhEffectValue.operator === '-') {
+                  } else if (enhEffectValue.operator === "-") {
                     bonuses[enhEffect] = (bonuses[enhEffect] || 0) - totalValue;
                   }
                 }
@@ -1519,19 +1668,21 @@ function applySoulsBonuses(bonuses) {
 
           if (effectValue && effectValue.value !== undefined) {
             if (PRIMARY_STATS.includes(effect)) {
-              if (effectValue.operator === '+') {
-                bonuses.stats[effect] = (bonuses.stats[effect] || 0) + effectValue.value;
-              } else if (effectValue.operator === '-') {
-                bonuses.stats[effect] = (bonuses.stats[effect] || 0) - effectValue.value;
+              if (effectValue.operator === "+") {
+                bonuses.stats[effect] =
+                  (bonuses.stats[effect] || 0) + effectValue.value;
+              } else if (effectValue.operator === "-") {
+                bonuses.stats[effect] =
+                  (bonuses.stats[effect] || 0) - effectValue.value;
               }
             } else {
-              if (effectValue.operator === '+') {
+              if (effectValue.operator === "+") {
                 bonuses[effect] = (bonuses[effect] || 0) + effectValue.value;
-              } else if (effectValue.operator === '-') {
+              } else if (effectValue.operator === "-") {
                 bonuses[effect] = (bonuses[effect] || 0) - effectValue.value;
               }
             }
-          } else if (typeof effectValue === 'boolean' && effectValue) {
+          } else if (typeof effectValue === "boolean" && effectValue) {
             bonuses.description.push(`${soul.name}: ${effect}`);
           }
         }
@@ -1575,13 +1726,15 @@ function getAllSkillBuffs() {
   function extractBuffsFromCategory(skills, categoryName) {
     for (const [skillName, skillData] of Object.entries(skills)) {
       if (skillData.buffEffectTable) {
-        const buffId = `skill-${categoryName}-${skillName}`.toLowerCase().replace(/\s+/g, '-');
+        const buffId = `skill-${categoryName}-${skillName}`
+          .toLowerCase()
+          .replace(/\s+/g, "-");
         skillBuffs.push({
           name: skillName,
           buffId: buffId,
           buffEffectTable: skillData.buffEffectTable,
           description: skillData.description || `${skillName} buff effect`,
-          category: categoryName
+          category: categoryName,
         });
       }
     }
@@ -1601,8 +1754,9 @@ function getAllSkillBuffs() {
   // Search through classSpecificSkillData
   for (const [classId, skillsData] of Object.entries(classSpecificSkillData)) {
     // classSpecificSkillData has skills directly under job ID, not under a .skills property
-    if (skillsData && typeof skillsData === 'object') {
-      const jobName = gameData.jobs[parseInt(classId)]?.name || `Job ${classId}`;
+    if (skillsData && typeof skillsData === "object") {
+      const jobName =
+        gameData.jobs[parseInt(classId)]?.name || `Job ${classId}`;
       extractBuffsFromCategory(skillsData, `${jobName} Specific`);
     }
   }
@@ -1661,13 +1815,15 @@ function calculateEffectiveMpCost(baseMpCost, bonuses) {
 
   // Apply MP cost reduction from racial skills
   if (bonuses.mpCostReduction) {
-    effectiveCost = Math.ceil(effectiveCost * (100 - bonuses.mpCostReduction) / 100);
+    effectiveCost = Math.ceil(
+      (effectiveCost * (100 - bonuses.mpCostReduction)) / 100,
+    );
   }
 
   // Apply MP cost reduction from set bonuses
   if (bonuses.stats.redMp) {
     const reduction = Math.abs(bonuses.stats.redMp);
-    effectiveCost = Math.ceil(effectiveCost * (100 - reduction) / 100);
+    effectiveCost = Math.ceil((effectiveCost * (100 - reduction)) / 100);
   }
 
   return Math.max(1, effectiveCost); // Minimum 1 MP
@@ -1687,7 +1843,7 @@ function calculateEffectiveCastTime(baseCastTime, bonuses) {
 
   // Apply cast time reduction from skill buffs (like Saltio)
   if (bonuses.castTimeReduction) {
-    effectiveTime = effectiveTime * (100 - bonuses.castTimeReduction) / 100;
+    effectiveTime = (effectiveTime * (100 - bonuses.castTimeReduction)) / 100;
   }
 
   return Math.max(0.1, effectiveTime); // Minimum 0.1 seconds
@@ -1756,32 +1912,34 @@ function applySkillBuffEffects(bonuses) {
         // Direct stat bonus (e.g., str: 9)
         if (!bonuses.stats[stat]) bonuses.stats[stat] = 0;
         bonuses.stats[stat] += value;
-      } else if (stat === 'castTime') {
+      } else if (stat === "castTime") {
         // Cast time reduction (e.g., castTime: -50)
-        bonuses.castTimeReduction = (bonuses.castTimeReduction || 0) + Math.abs(value);
-      } else if (stat === 'lp') {
+        bonuses.castTimeReduction =
+          (bonuses.castTimeReduction || 0) + Math.abs(value);
+      } else if (stat === "lp") {
         // LP bonus handling
-        if (typeof value === 'string' && value.includes('+')) {
+        if (typeof value === "string" && value.includes("+")) {
           // Complex LP formula like "15.00 + 250"
-          const parts = value.split('+').map(p => parseFloat(p.trim()));
+          const parts = value.split("+").map((p) => parseFloat(p.trim()));
           if (parts.length === 2) {
             bonuses.lpBuff = (bonuses.lpBuff || 0) + parts[1]; // Add flat amount
-            bonuses.lpPercentBuff = (bonuses.lpPercentBuff || 0) + (parts[0] / 100); // Add percentage
+            bonuses.lpPercentBuff =
+              (bonuses.lpPercentBuff || 0) + parts[0] / 100; // Add percentage
           }
-        } else if (typeof value === 'number') {
+        } else if (typeof value === "number") {
           // Simple numeric LP bonus
           bonuses.lpBuff = (bonuses.lpBuff || 0) + value;
         } else {
           bonuses.lpBuff = (bonuses.lpBuff || 0) + value;
         }
-      } else if (stat === 'spiValues') {
+      } else if (stat === "spiValues") {
         // Complex SPI-based effects (like Lapis Mediow)
         // Store for later processing after final stats are calculated
         bonuses.spiBasedEffects = bonuses.spiBasedEffects || [];
         bonuses.spiBasedEffects.push({
           skillName: skillBuff.name,
           buffId: skillBuff.buffId,
-          data: value
+          data: value,
         });
       }
     }
@@ -1801,7 +1959,9 @@ function applyRacialSkillEffects(bonuses) {
   const effect = selectedSkill.effect;
 
   // Add description of the racial skill effect
-  bonuses.description.push(`${selectedSkill.name}: ${selectedSkill.description}`);
+  bonuses.description.push(
+    `${selectedSkill.name}: ${selectedSkill.description}`,
+  );
 
   // Apply effects based on type
   switch (effect.type) {
@@ -1949,7 +2109,8 @@ function calculateDerivedStats(bonuses = {}) {
   potValue += staBonus;
 
   // Warrior class bonus: +10% for all warrior classes
-  if (character.jobId >= 0 && character.jobId <= 6) { // Warrior class range
+  if (character.jobId >= 0 && character.jobId <= 6) {
+    // Warrior class range
     potValue += 10;
   }
 
@@ -1976,6 +2137,9 @@ function calculateDerivedStats(bonuses = {}) {
 
   // LP Heal - base 100%
   stats.lpHeal = 100;
+  if (bonuses.lpHeal) {
+    stats.lpHeal += bonuses.lpHeal;
+  }
 
   // Calculate MP cost reduction from both racial skills and set bonuses
   let totalMpReduction = 0;
@@ -1997,7 +2161,6 @@ function calculateDerivedStats(bonuses = {}) {
     stats.incMp += bonuses.incMp;
   }
 
-
   // ATK Calculations
   stats.atk = Math.floor(stats.str / 2); // STR/2 only, gear added separately when equipped
   for (const slot in character.equipment) {
@@ -2006,7 +2169,7 @@ function calculateDerivedStats(bonuses = {}) {
     // Find the item in the global equipment data
     let item = null;
     if (globalEquipmentData[slot]) {
-      item = globalEquipmentData[slot].find(item => item.id === itemId);
+      item = globalEquipmentData[slot].find((item) => item.id === itemId);
     }
 
     if (item?.atk && typeof item.def == "undefined") {
@@ -2057,7 +2220,7 @@ function calculateDerivedStats(bonuses = {}) {
     // Find the item in the global equipment data
     let item = null;
     if (globalEquipmentData[slot]) {
-      item = globalEquipmentData[slot].find(item => item.id === itemId);
+      item = globalEquipmentData[slot].find((item) => item.id === itemId);
     }
 
     if (item?.def && typeof item.atk == "undefined") {
@@ -2078,9 +2241,15 @@ function calculateDerivedStats(bonuses = {}) {
 
   // Physical Resistance - base 0%
   stats.phyRes = 0;
-
+  stats.phyResFront = 0;
+  stats.phyResBack = 0;
   // Magical Resistance - base 0%
   stats.magRes = 0;
+  stats.magDamageReduction = 0;
+
+  if (bonuses.magDamageReduction) {
+    stats.magDamageReduction += bonuses.magDamageReduction;
+  }
 
   // Accuracy
   stats.acc = level + stats.dex;
@@ -2142,7 +2311,9 @@ function calculateDerivedStats(bonuses = {}) {
   // Cast time - base 100%, reduced by skill buffs only (not equipment)
   let baseCastTime = 100;
   if (bonuses.castTimeReduction) {
-    baseCastTime = Math.floor(baseCastTime * (100 - bonuses.castTimeReduction) / 100);
+    baseCastTime = Math.floor(
+      (baseCastTime * (100 - bonuses.castTimeReduction)) / 100,
+    );
   }
   stats.castTime = baseCastTime;
 
@@ -2179,28 +2350,28 @@ function calculateDerivedStats(bonuses = {}) {
 
   // Apply resistance bonuses directly to stats
   const resistanceKeyMap = {
-    magicres: 'magRes',
-    fireres: 'fireR',
-    iceres: 'iceR',
-    thundres: 'thundR',
-    poisonres: 'poisonR',
-    lightres: 'lightR',
-    darkres: 'darkR',
-    charmres: 'charmR',
-    charmResistance: 'charmR',
-    tripres: 'tripR',
-    stunres: 'stunR',
-    bleedres: 'bleedR',
-    freezeres: 'freezeR',
-    sleepres: 'sleepR',
-    curseres: 'curseR',
-    weakres: 'weakR',
-    physicalDamageReduction: 'phyRes',
-    knockbackres: 'knockbackR',
-    knockdownres: 'knockdownR',
-    silenceres: 'silenceR',
-    ailmentres: 'ailmentR',
-    disorderres: 'disorderR',
+    magicres: "magRes",
+    fireres: "fireR",
+    iceres: "iceR",
+    thundres: "thundR",
+    poisonres: "poisonR",
+    lightres: "lightR",
+    darkres: "darkR",
+    charmres: "charmR",
+    charmResistance: "charmR",
+    tripres: "tripR",
+    stunres: "stunR",
+    bleedres: "bleedR",
+    freezeres: "freezeR",
+    sleepres: "sleepR",
+    curseres: "curseR",
+    weakres: "weakR",
+    physicalDamageReduction: "phyRes",
+    knockbackres: "knockbackR",
+    knockdownres: "knockdownR",
+    silenceres: "silenceR",
+    ailmentres: "ailmentR",
+    disorderres: "disorderR",
   };
 
   for (const [bonusKey, bonusValue] of Object.entries(bonuses)) {
@@ -2223,7 +2394,9 @@ function calculateDerivedStats(bonuses = {}) {
 function applyHorsemanshipModifications(stats) {
   // Get horsemanship skill proficiency (skill ID 24 is Horsemanship)
   const horsemanshipSkill = character.skills[24];
-  const horsemanshipProficiency = horsemanshipSkill ? horsemanshipSkill.adeptness : 0;
+  const horsemanshipProficiency = horsemanshipSkill
+    ? horsemanshipSkill.adeptness
+    : 0;
 
   // Map job IDs to horsemanship retention data indices
   let retentionDataKey;
@@ -2241,13 +2414,18 @@ function applyHorsemanshipModifications(stats) {
       retentionDataKey = 4;
       break;
     default:
-      retentionDataKey = 'nonRiding';
+      retentionDataKey = "nonRiding";
       break;
   }
 
   // Get the retention percentages for this class
-  const retentionData = gameData.horsemanShipStatRetentionPercents[retentionDataKey];
-  if (!retentionData || !retentionData.profValues || !retentionData.profValues[0]) {
+  const retentionData =
+    gameData.horsemanShipStatRetentionPercents[retentionDataKey];
+  if (
+    !retentionData ||
+    !retentionData.profValues ||
+    !retentionData.profValues[0]
+  ) {
     return; // No data available
   }
 
@@ -2256,7 +2434,9 @@ function applyHorsemanshipModifications(stats) {
   let retentionPercentages = null;
 
   // Find the highest tier that the character qualifies for
-  const availableTiers = Object.keys(profTiers).map(Number).sort((a, b) => b - a);
+  const availableTiers = Object.keys(profTiers)
+    .map(Number)
+    .sort((a, b) => b - a);
   for (const tier of availableTiers) {
     if (horsemanshipProficiency >= tier) {
       retentionPercentages = profTiers[tier];
@@ -2354,9 +2534,9 @@ function updateUI(bonuses) {
 
   elements.displayRace.textContent = selectedRace ? selectedRace.name : "";
   // Ensure racial skill name is retrieved correctly
-  const racialSkillsForCurrentRace =
-    gameData.racialSkills[character.raceId];
-  const selectedRacialSkill = racialSkillsForCurrentRace?.skills?.[character.racialSkillId];
+  const racialSkillsForCurrentRace = gameData.racialSkills[character.raceId];
+  const selectedRacialSkill =
+    racialSkillsForCurrentRace?.skills?.[character.racialSkillId];
   elements.displayRacialSkill.textContent = selectedRacialSkill?.name || "";
   elements.displayJob.textContent = selectedJob ? selectedJob.name : "";
 
@@ -2383,20 +2563,14 @@ function updateUI(bonuses) {
     if (buffBonusElement) {
       const buffBonus = bonuses.stats[stat] || 0;
       if (buffBonus !== 0) {
-        const sign = buffBonus > 0 ? '+' : '';
-        buffBonusElement.classList.toggle(
-          "stat-bonus-positive",
-          buffBonus > 0,
-        );
-        buffBonusElement.classList.toggle(
-          "stat-bonus-negative",
-          buffBonus < 0,
-        );
+        const sign = buffBonus > 0 ? "+" : "";
+        buffBonusElement.classList.toggle("stat-bonus-positive", buffBonus > 0);
+        buffBonusElement.classList.toggle("stat-bonus-negative", buffBonus < 0);
         buffBonusElement.textContent = `${sign}${buffBonus}`;
-        buffBonusElement.style.display = 'inline';
+        buffBonusElement.style.display = "inline";
       } else {
-        buffBonusElement.textContent = '';
-        buffBonusElement.style.display = 'none';
+        buffBonusElement.textContent = "";
+        buffBonusElement.style.display = "none";
       }
     }
   }
@@ -2420,60 +2594,102 @@ function updateUI(bonuses) {
 
   // Update additional derived stats
   elements.outputs.pot.textContent = Math.floor(character.finalStats.pot);
-  elements.outputs.lpHeal.textContent = Math.floor(character.finalStats.lpHeal) + "%";
+  elements.outputs.lpHeal.textContent =
+    Math.floor(character.finalStats.lpHeal) + "%";
 
   elements.outputs.redMp.textContent = Math.floor(character.finalStats.redMp);
   elements.outputs.incMp.textContent = Math.floor(character.finalStats.incMp);
 
-  elements.outputs.frontAtk.textContent = Math.floor(character.finalStats.frontAtk);
-  elements.outputs.backAtk.textContent = Math.floor(character.finalStats.backAtk);
+  elements.outputs.frontAtk.textContent = Math.floor(
+    character.finalStats.frontAtk,
+  );
+  elements.outputs.backAtk.textContent = Math.floor(
+    character.finalStats.backAtk,
+  );
 
-  elements.outputs.frontDef.textContent = Math.floor(character.finalStats.frontDef);
-  elements.outputs.backDef.textContent = Math.floor(character.finalStats.backDef);
+  elements.outputs.frontDef.textContent = Math.floor(
+    character.finalStats.frontDef,
+  );
+  elements.outputs.backDef.textContent = Math.floor(
+    character.finalStats.backDef,
+  );
 
-  elements.outputs.phyRes.textContent = Math.floor(character.finalStats.phyRes) + "%";
-  elements.outputs.magRes.textContent = Math.floor(character.finalStats.magRes) + "%";
+  elements.outputs.phyRes.textContent =
+    Math.floor(character.finalStats.phyRes) + "%";
+  elements.outputs.magRes.textContent =
+    Math.floor(character.finalStats.magRes) + "%";
 
-  elements.outputs.criD.textContent = Math.floor(character.finalStats.criD) + "%";
-  elements.outputs.criRes.textContent = Math.floor(character.finalStats.criRes) + "%";
-  elements.outputs.cdamRes.textContent = Math.floor(character.finalStats.cdamRes) + "%";
+  elements.outputs.criD.textContent =
+    Math.floor(character.finalStats.criD) + "%";
+  elements.outputs.criRes.textContent =
+    Math.floor(character.finalStats.criRes) + "%";
+  elements.outputs.cdamRes.textContent =
+    Math.floor(character.finalStats.cdamRes) + "%";
 
-  elements.outputs.melEva.textContent = Math.floor(character.finalStats.melEva) + "%";
-  elements.outputs.ranEva.textContent = Math.floor(character.finalStats.ranEva) + "%";
-  elements.outputs.magEva.textContent = Math.floor(character.finalStats.magEva) + "%";
+  elements.outputs.melEva.textContent =
+    Math.floor(character.finalStats.melEva) + "%";
+  elements.outputs.ranEva.textContent =
+    Math.floor(character.finalStats.ranEva) + "%";
+  elements.outputs.magEva.textContent =
+    Math.floor(character.finalStats.magEva) + "%";
 
   elements.outputs.melee.textContent = character.finalStats.melee;
   elements.outputs.range.textContent = character.finalStats.range;
 
-  elements.outputs.atkSpd.textContent = Math.floor(character.finalStats.atkSpd) + "%";
-  elements.outputs.castSpd.textContent = Math.floor(character.finalStats.castSpd) + "%";
-  elements.outputs.castTime.textContent = Math.floor(character.finalStats.castTime) + "%";
+  elements.outputs.atkSpd.textContent =
+    Math.floor(character.finalStats.atkSpd) + "%";
+  elements.outputs.castSpd.textContent =
+    Math.floor(character.finalStats.castSpd) + "%";
+  elements.outputs.castTime.textContent =
+    Math.floor(character.finalStats.castTime) + "%";
 
-  elements.outputs.cooldown.textContent = Math.floor(character.finalStats.cooldown) + "%";
+  elements.outputs.cooldown.textContent =
+    Math.floor(character.finalStats.cooldown) + "%";
 
-  elements.outputs.fireR.textContent = Math.floor(character.finalStats.fireR) + "%";
-  elements.outputs.iceR.textContent = Math.floor(character.finalStats.iceR) + "%";
-  elements.outputs.thundR.textContent = Math.floor(character.finalStats.thundR) + "%";
-  elements.outputs.poisonR.textContent = Math.floor(character.finalStats.poisonR) + "%";
-  elements.outputs.charmR.textContent = Math.floor(character.finalStats.charmR) + "%";
-  elements.outputs.lightR.textContent = Math.floor(character.finalStats.lightR) + "%";
-  elements.outputs.darkR.textContent = Math.floor(character.finalStats.darkR) + "%";
+  elements.outputs.fireR.textContent =
+    Math.floor(character.finalStats.fireR) + "%";
+  elements.outputs.iceR.textContent =
+    Math.floor(character.finalStats.iceR) + "%";
+  elements.outputs.thundR.textContent =
+    Math.floor(character.finalStats.thundR) + "%";
+  elements.outputs.poisonR.textContent =
+    Math.floor(character.finalStats.poisonR) + "%";
+  elements.outputs.charmR.textContent =
+    Math.floor(character.finalStats.charmR) + "%";
+  elements.outputs.lightR.textContent =
+    Math.floor(character.finalStats.lightR) + "%";
+  elements.outputs.darkR.textContent =
+    Math.floor(character.finalStats.darkR) + "%";
 
-  elements.outputs.tripR.textContent = Math.floor(character.finalStats.tripR) + "%";
-  elements.outputs.stunR.textContent = Math.floor(character.finalStats.stunR) + "%";
-  elements.outputs.freezeR.textContent = Math.floor(character.finalStats.freezeR) + "%";
-  elements.outputs.burnR.textContent = Math.floor(character.finalStats.burnR) + "%";
-  elements.outputs.sleepR.textContent = Math.floor(character.finalStats.sleepR) + "%";
-  elements.outputs.weakR.textContent = Math.floor(character.finalStats.weakR) + "%";
-  elements.outputs.curseR.textContent = Math.floor(character.finalStats.curseR) + "%";
-  elements.outputs.bleedR.textContent = Math.floor(character.finalStats.bleedR) + "%";
-  elements.outputs.knockdownR.textContent = Math.floor(character.finalStats.knockdownR) + "%";
-  elements.outputs.knockbackR.textContent = Math.floor(character.finalStats.knockbackR) + "%";
-  elements.outputs.ailmentR.textContent = Math.floor(character.finalStats.ailmentR) + "%";
-  elements.outputs.disorderR.textContent = Math.floor(character.finalStats.disorderR) + "%";
+  elements.outputs.tripR.textContent =
+    Math.floor(character.finalStats.tripR) + "%";
+  elements.outputs.stunR.textContent =
+    Math.floor(character.finalStats.stunR) + "%";
+  elements.outputs.freezeR.textContent =
+    Math.floor(character.finalStats.freezeR) + "%";
+  elements.outputs.burnR.textContent =
+    Math.floor(character.finalStats.burnR) + "%";
+  elements.outputs.sleepR.textContent =
+    Math.floor(character.finalStats.sleepR) + "%";
+  elements.outputs.weakR.textContent =
+    Math.floor(character.finalStats.weakR) + "%";
+  elements.outputs.curseR.textContent =
+    Math.floor(character.finalStats.curseR) + "%";
+  elements.outputs.bleedR.textContent =
+    Math.floor(character.finalStats.bleedR) + "%";
+  elements.outputs.knockdownR.textContent =
+    Math.floor(character.finalStats.knockdownR) + "%";
+  elements.outputs.knockbackR.textContent =
+    Math.floor(character.finalStats.knockbackR) + "%";
+  elements.outputs.ailmentR.textContent =
+    Math.floor(character.finalStats.ailmentR) + "%";
+  elements.outputs.disorderR.textContent =
+    Math.floor(character.finalStats.disorderR) + "%";
 
-  elements.outputs.moveSpd.textContent = Math.floor(character.finalStats.moveSpd) + "%";
-  elements.outputs.townMsp.textContent = Math.floor(character.finalStats.townMsp) + "%";
+  elements.outputs.moveSpd.textContent =
+    Math.floor(character.finalStats.moveSpd) + "%";
+  elements.outputs.townMsp.textContent =
+    Math.floor(character.finalStats.townMsp) + "%";
 
   elements.points.stat.textContent = `${character.points.totalStat - character.points.spentStat}/${character.points.totalStat}`;
   elements.points.stat.classList.toggle(
@@ -2529,6 +2745,14 @@ function handleJobRaceChange() {
     // Update the input field value and min attribute
     elements.addedStatInputs[stat].value = totalStat;
     elements.addedStatInputs[stat].min = baseStat;
+  }
+
+  // Update equipment selectors to reflect new job restrictions
+  // Only repopulate if equipment data is already loaded
+  if (Object.keys(globalEquipmentData).length > 0) {
+    populateEquipmentSelectors().catch(error => {
+      console.error("Error updating equipment selectors for job change:", error);
+    });
   }
 
   // Run the rest of the calculations
@@ -2607,7 +2831,9 @@ function calculateUnlockedSkills() {
     }
 
     // Check if any skill in this category has maxPotential > 0 for this job
-    const hasAccessToCategory = jobCategoryData.skills.some(skill => skill.maxPotential > 0);
+    const hasAccessToCategory = jobCategoryData.skills.some(
+      (skill) => skill.maxPotential > 0,
+    );
     if (!hasAccessToCategory) {
       continue; // Job has no potential in this skill category
     }
@@ -2615,7 +2841,7 @@ function calculateUnlockedSkills() {
     const categoryName = jobCategoryData.name;
     unlockedSkills[categoryName] = {
       name: categoryName,
-      skills: []
+      skills: [],
     };
 
     // Process each skill tree in this category
@@ -2638,11 +2864,11 @@ function calculateUnlockedSkills() {
         let isUnlocked = false;
         let requirementText = "";
 
-        if (typeof skillData.reqPoints === 'number') {
+        if (typeof skillData.reqPoints === "number") {
           // Simple number requirement - check against current skill level in this tree
           isUnlocked = currentSkillLevel >= skillData.reqPoints;
           requirementText = `${skillTreeName} ${skillData.reqPoints}`;
-        } else if (typeof skillData.reqPoints === 'object') {
+        } else if (typeof skillData.reqPoints === "object") {
           // Multiple skill requirements
           isUnlocked = true;
           const requirements = [];
@@ -2654,7 +2880,9 @@ function calculateUnlockedSkills() {
             let reqSkillId = null;
             for (const catId in gameData.skills) {
               const category = gameData.skills[catId];
-              const skill = category.skills.find(s => s.name === reqSkillName);
+              const skill = category.skills.find(
+                (s) => s.name === reqSkillName,
+              );
               if (skill) {
                 reqSkillId = skill.id;
                 break;
@@ -2662,7 +2890,8 @@ function calculateUnlockedSkills() {
             }
 
             if (reqSkillId) {
-              const currentReqSkillLevel = character.skills[reqSkillId]?.adeptness || 0;
+              const currentReqSkillLevel =
+                character.skills[reqSkillId]?.adeptness || 0;
               if (currentReqSkillLevel < reqLevel) {
                 isUnlocked = false;
               }
@@ -2682,7 +2911,7 @@ function calculateUnlockedSkills() {
           castTime: skillData.castTime,
           cooldown: skillData.cooldown,
           duration: skillData.duration,
-          skillTree: skillTreeName
+          skillTree: skillTreeName,
         });
       }
     }
@@ -2702,7 +2931,7 @@ function calculateUnlockedSkills() {
     if (!unlockedSkills[categoryName]) {
       unlockedSkills[categoryName] = {
         name: categoryName,
-        skills: []
+        skills: [],
       };
     }
 
@@ -2719,10 +2948,10 @@ function calculateUnlockedSkills() {
         requirementText = `Level ${skillData.reqLevel}`;
       } else if (skillData.reqPoints !== undefined) {
         // Skill point requirements (similar to other skills)
-        if (typeof skillData.reqPoints === 'number') {
+        if (typeof skillData.reqPoints === "number") {
           // This shouldn't happen for class skills, but handle it just in case
           requirementText = `Unknown requirement ${skillData.reqPoints}`;
-        } else if (typeof skillData.reqPoints === 'object') {
+        } else if (typeof skillData.reqPoints === "object") {
           // Multiple skill requirements
           isUnlocked = true;
           const requirements = [];
@@ -2734,7 +2963,9 @@ function calculateUnlockedSkills() {
             let reqSkillId = null;
             for (const catId in gameData.skills) {
               const category = gameData.skills[catId];
-              const skill = category.skills.find(s => s.name === reqSkillName);
+              const skill = category.skills.find(
+                (s) => s.name === reqSkillName,
+              );
               if (skill) {
                 reqSkillId = skill.id;
                 break;
@@ -2742,7 +2973,8 @@ function calculateUnlockedSkills() {
             }
 
             if (reqSkillId) {
-              const currentReqSkillLevel = character.skills[reqSkillId]?.adeptness || 0;
+              const currentReqSkillLevel =
+                character.skills[reqSkillId]?.adeptness || 0;
               if (currentReqSkillLevel < reqLevel) {
                 isUnlocked = false;
               }
@@ -2771,7 +3003,7 @@ function calculateUnlockedSkills() {
         castTime: skillData.castTime,
         cooldown: skillData.cooldown,
         duration: skillData.duration,
-        skillTree: "Class Specific"
+        skillTree: "Class Specific",
       });
     }
 
@@ -2806,7 +3038,7 @@ function calculateUnlockedSkills() {
         duration: skillData.duration,
         skillTree: "Proficiency",
         currentProficiency: currentProficiency,
-        requiredProficiency: skillData.requiredProficiency
+        requiredProficiency: skillData.requiredProficiency,
       });
     }
 
@@ -2814,7 +3046,7 @@ function calculateUnlockedSkills() {
       const displayCategoryName = `${categoryName.charAt(0).toUpperCase() + categoryName.slice(1)} Mastery`;
       unlockedSkills[displayCategoryName] = {
         name: displayCategoryName,
-        skills: availableSkills
+        skills: availableSkills,
       };
     }
   }
@@ -2868,28 +3100,38 @@ function displayUnlockedSkills() {
                      <h4>${treeName} Skills</h4>`;
 
             for (const skill of skillsByTree[treeName]) {
-              const statusClass = skill.isUnlocked ? 'unlocked' : 'locked';
-              const reqClass = skill.isUnlocked ? 'met' : 'not-met';
+              const statusClass = skill.isUnlocked ? "unlocked" : "locked";
+              const reqClass = skill.isUnlocked ? "met" : "not-met";
 
               // Get detailed skill data for stats calculation
               const detailedSkillData = getDetailedSkillData(skill.name);
-              let skillStatsHtml = '';
+              let skillStatsHtml = "";
 
               if (detailedSkillData) {
                 // Build base stats (always show for all skills)
                 let baseStatsParts = [];
-                if (detailedSkillData.mpCost > 0) baseStatsParts.push(`MP: ${detailedSkillData.mpCost}`);
-                if (detailedSkillData.castTime > 0) baseStatsParts.push(`Cast: ${detailedSkillData.castTime.toFixed(1)}s`);
-                if (detailedSkillData.cooldown > 0) baseStatsParts.push(`Cooldown: ${detailedSkillData.cooldown.toFixed(1)}s`);
-                if (detailedSkillData.duration > 0) baseStatsParts.push(`Duration: ${detailedSkillData.duration}s`);
+                if (detailedSkillData.mpCost > 0)
+                  baseStatsParts.push(`MP: ${detailedSkillData.mpCost}`);
+                if (detailedSkillData.castTime > 0)
+                  baseStatsParts.push(
+                    `Cast: ${detailedSkillData.castTime.toFixed(1)}s`,
+                  );
+                if (detailedSkillData.cooldown > 0)
+                  baseStatsParts.push(
+                    `Cooldown: ${detailedSkillData.cooldown.toFixed(1)}s`,
+                  );
+                if (detailedSkillData.duration > 0)
+                  baseStatsParts.push(
+                    `Duration: ${detailedSkillData.duration}s`,
+                  );
 
-                let baseStatsHtml = '';
+                let baseStatsHtml = "";
                 if (baseStatsParts.length > 0) {
-                  baseStatsHtml = `<div class="skill-modal-stats-base">Base: ${baseStatsParts.join(' | ')}</div>`;
+                  baseStatsHtml = `<div class="skill-modal-stats-base">Base: ${baseStatsParts.join(" | ")}</div>`;
                 }
 
                 // For unlocked skills, also show modified stats
-                let modifiedStatsHtml = '';
+                let modifiedStatsHtml = "";
                 if (skill.isUnlocked) {
                   // Calculate bonuses for this skill calculation
                   const bonuses = { description: [], stats: {} };
@@ -2899,25 +3141,49 @@ function displayUnlockedSkills() {
                   applySkillBuffEffects(bonuses);
 
                   // Calculate effective values
-                  const effectiveMp = calculateEffectiveMpCost(detailedSkillData.mpCost, bonuses);
-                  const effectiveCastTime = calculateEffectiveCastTime(detailedSkillData.castTime, bonuses);
-                  const effectiveCooldown = calculateEffectiveCooldown(detailedSkillData.cooldown, bonuses);
+                  const effectiveMp = calculateEffectiveMpCost(
+                    detailedSkillData.mpCost,
+                    bonuses,
+                  );
+                  const effectiveCastTime = calculateEffectiveCastTime(
+                    detailedSkillData.castTime,
+                    bonuses,
+                  );
+                  const effectiveCooldown = calculateEffectiveCooldown(
+                    detailedSkillData.cooldown,
+                    bonuses,
+                  );
                   const duration = detailedSkillData.duration || 0;
 
                   // Build modified stats string (only if different from base)
                   let modifiedStatsParts = [];
-                  if (detailedSkillData.mpCost > 0 && effectiveMp !== detailedSkillData.mpCost) {
+                  if (
+                    detailedSkillData.mpCost > 0 &&
+                    effectiveMp !== detailedSkillData.mpCost
+                  ) {
                     modifiedStatsParts.push(`MP: ${effectiveMp}`);
                   }
-                  if (detailedSkillData.castTime > 0 && Math.abs(effectiveCastTime - detailedSkillData.castTime) > 0.01) {
-                    modifiedStatsParts.push(`Cast: ${effectiveCastTime.toFixed(1)}s`);
+                  if (
+                    detailedSkillData.castTime > 0 &&
+                    Math.abs(effectiveCastTime - detailedSkillData.castTime) >
+                      0.01
+                  ) {
+                    modifiedStatsParts.push(
+                      `Cast: ${effectiveCastTime.toFixed(1)}s`,
+                    );
                   }
-                  if (detailedSkillData.cooldown > 0 && Math.abs(effectiveCooldown - detailedSkillData.cooldown) > 0.01) {
-                    modifiedStatsParts.push(`Cooldown: ${effectiveCooldown.toFixed(1)}s`);
+                  if (
+                    detailedSkillData.cooldown > 0 &&
+                    Math.abs(effectiveCooldown - detailedSkillData.cooldown) >
+                      0.01
+                  ) {
+                    modifiedStatsParts.push(
+                      `Cooldown: ${effectiveCooldown.toFixed(1)}s`,
+                    );
                   }
 
                   if (modifiedStatsParts.length > 0) {
-                    modifiedStatsHtml = `<div class="skill-modal-stats">Modified: ${modifiedStatsParts.join(' | ')}</div>`;
+                    modifiedStatsHtml = `<div class="skill-modal-stats">Modified: ${modifiedStatsParts.join(" | ")}</div>`;
                   }
                 }
 
@@ -2925,10 +3191,19 @@ function displayUnlockedSkills() {
               }
 
               // Add proficiency progress for proficiency-based skills
-              let proficiencyProgressHtml = '';
-              if (skill.skillTree === 'Proficiency' && skill.currentProficiency !== undefined && skill.requiredProficiency !== undefined) {
-                const progressPercent = Math.min(100, (skill.currentProficiency / skill.requiredProficiency) * 100);
-                const progressClass = skill.isUnlocked ? 'completed' : 'incomplete';
+              let proficiencyProgressHtml = "";
+              if (
+                skill.skillTree === "Proficiency" &&
+                skill.currentProficiency !== undefined &&
+                skill.requiredProficiency !== undefined
+              ) {
+                const progressPercent = Math.min(
+                  100,
+                  (skill.currentProficiency / skill.requiredProficiency) * 100,
+                );
+                const progressClass = skill.isUnlocked
+                  ? "completed"
+                  : "incomplete";
                 proficiencyProgressHtml = `
                 <div class="proficiency-progress">
                   <div class="proficiency-progress-text">
@@ -2964,8 +3239,9 @@ function displayUnlockedSkills() {
 
     elements.unlockedSkillsDisplay.innerHTML = html;
   } catch (error) {
-    console.error('Error displaying unlocked skills:', error);
-    elements.unlockedSkillsDisplay.innerHTML = '<div class="error-message">Error loading skills. Please check the console for details.</div>';
+    console.error("Error displaying unlocked skills:", error);
+    elements.unlockedSkillsDisplay.innerHTML =
+      '<div class="error-message">Error loading skills. Please check the console for details.</div>';
   }
 }
 
@@ -2997,46 +3273,46 @@ function closeSkillPreviewModal() {
  * Gets the SPI breakpoints for a skill with spiValues.
  */
 function getSpiBreakpoints(spiData) {
-  return spiData.map(tier => tier.value).sort((a, b) => a - b);
+  return spiData.map((tier) => tier.value).sort((a, b) => a - b);
 }
 
 /**
  * Populates the buffs modal with skill buffs.
  */
 function populateBuffsModal() {
-  const buffsDisplay = document.getElementById('buffs-display');
+  const buffsDisplay = document.getElementById("buffs-display");
   const skillBuffs = getAllSkillBuffs();
 
-  let html = '';
+  let html = "";
 
   // Skill buffs section
   if (skillBuffs.length > 0) {
     html += '<div class="buff-section">';
-    html += '<h3>Skill Buffs</h3>';
+    html += "<h3>Skill Buffs</h3>";
     html += '<div class="buff-grid">';
 
     for (const skillBuff of skillBuffs) {
-      const isChecked = character.buffs[skillBuff.buffId] ? 'checked' : '';
+      const isChecked = character.buffs[skillBuff.buffId] ? "checked" : "";
       const hasSpiValues = skillBuff.buffEffectTable.spiValues;
 
       const effectsText = Object.entries(skillBuff.buffEffectTable)
         .map(([stat, value]) => {
           if (PRIMARY_STATS.includes(stat)) {
             return `+${value} ${stat.toUpperCase()}`;
-          } else if (stat === 'castTime') {
+          } else if (stat === "castTime") {
             return `${value}% Cast Time`;
-          } else if (stat === 'lp') {
-            if (typeof value === 'string' && value.includes('+')) {
+          } else if (stat === "lp") {
+            if (typeof value === "string" && value.includes("+")) {
               return `LP: ${value}`;
             } else {
               return `+${value} LP`;
             }
-          } else if (stat === 'spiValues') {
+          } else if (stat === "spiValues") {
             return `(SPI-based)`;
           }
           return `${stat}: ${value}`;
         })
-        .join(', ');
+        .join(", ");
 
       html += `
         <div class="buff-item-container">
@@ -3047,9 +3323,15 @@ function populateBuffsModal() {
       `;
 
       // Add SPI dropdown for skills with spiValues (Prayer category skills)
-      if (hasSpiValues && (skillBuff.category === 'Blessing' || skillBuff.category === 'Hymn')) {
-        const spiBreakpoints = getSpiBreakpoints(skillBuff.buffEffectTable.spiValues);
-        const currentSpi = character.enchanterSpi[skillBuff.buffId] || spiBreakpoints[0];
+      if (
+        hasSpiValues &&
+        (skillBuff.category === "Blessing" || skillBuff.category === "Hymn")
+      ) {
+        const spiBreakpoints = getSpiBreakpoints(
+          skillBuff.buffEffectTable.spiValues,
+        );
+        const currentSpi =
+          character.enchanterSpi[skillBuff.buffId] || spiBreakpoints[0];
 
         html += `
           <div class="enchanter-spi-controls" style="margin-left: 20px; margin-top: 5px;">
@@ -3058,7 +3340,7 @@ function populateBuffsModal() {
         `;
 
         for (const spiValue of spiBreakpoints) {
-          const selected = spiValue === currentSpi ? 'selected' : '';
+          const selected = spiValue === currentSpi ? "selected" : "";
           html += `<option value="${spiValue}" ${selected}>${spiValue}</option>`;
         }
 
@@ -3068,22 +3350,24 @@ function populateBuffsModal() {
         `;
       }
 
-      html += '</div>';
+      html += "</div>";
     }
 
-    html += '</div></div>';
+    html += "</div></div>";
   }
 
   buffsDisplay.innerHTML = html;
 
   // Add event listeners for all buff checkboxes
-  buffsDisplay.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-    checkbox.addEventListener('change', handleBuffChange);
-  });
+  buffsDisplay
+    .querySelectorAll('input[type="checkbox"]')
+    .forEach((checkbox) => {
+      checkbox.addEventListener("change", handleBuffChange);
+    });
 
   // Add event listeners for SPI dropdowns
-  buffsDisplay.querySelectorAll('select[id^="spi-"]').forEach(dropdown => {
-    dropdown.addEventListener('change', handleEnchanterSpiChange);
+  buffsDisplay.querySelectorAll('select[id^="spi-"]').forEach((dropdown) => {
+    dropdown.addEventListener("change", handleEnchanterSpiChange);
   });
 }
 
@@ -3146,17 +3430,17 @@ function closeEquipmentModal() {
  */
 function toggleHorsemanship() {
   character.isMounted = !character.isMounted;
-  
+
   // Update button appearance
   const button = elements.horsmanshipToggle;
   if (character.isMounted) {
-    button.classList.add('active');
-    button.innerHTML = '<span>🐎 Dismount</span>';
+    button.classList.add("active");
+    button.innerHTML = "<span>🐎 Dismount</span>";
   } else {
-    button.classList.remove('active');
-    button.innerHTML = '<span>🐎 Mount</span>';
+    button.classList.remove("active");
+    button.innerHTML = "<span>🐎 Mount</span>";
   }
-  
+
   // Recalculate stats with new horsemanship state
   runCalculations();
   updateSkillPreviewModal();
@@ -3184,14 +3468,16 @@ function exportCharacter() {
     level: character.level,
     race: gameData.races[character.raceId]?.name || "Unknown",
     job: gameData.jobs[character.jobId]?.name || "Unknown",
-    racialSkill: gameData.racialSkills[character.raceId]?.skills?.[character.racialSkillId]?.name || "Unknown",
+    racialSkill:
+      gameData.racialSkills[character.raceId]?.skills?.[character.racialSkillId]
+        ?.name || "Unknown",
     statusPoints: {
       sta: character.finalStats.sta,
       str: character.finalStats.str,
       agi: character.finalStats.agi,
       dex: character.finalStats.dex,
       spi: character.finalStats.spi,
-      int: character.finalStats.int
+      int: character.finalStats.int,
     },
     equipment: {
       weapon: character.equipment.weapon,
@@ -3207,7 +3493,7 @@ function exportCharacter() {
       necklace: character.equipment.necklace,
       belt: character.equipment.belt,
       ring1: character.equipment.ring1,
-      ring2: character.equipment.ring2
+      ring2: character.equipment.ring2,
     },
     abilityPoints: {},
     derivedStats: {
@@ -3244,23 +3530,25 @@ function exportCharacter() {
       castTime: Math.round(character.finalStats.castTime || 0),
       cooldown: Math.round(character.finalStats.cooldown || 0),
       lpHealPercent: Math.round(character.finalStats.lpHeal || 0),
-      potionEfficiency: Math.round(character.finalStats.pot || 0)
+      potionEfficiency: Math.round(character.finalStats.pot || 0),
     },
-    skills: {}
+    skills: {},
   };
 
   // Populate ability points with actual skill names and adeptness levels
   const jobSkillData = skills[character.jobId];
   if (jobSkillData) {
     for (const categoryId in jobSkillData) {
-      if (categoryId === 'name') continue;
+      if (categoryId === "name") continue;
 
       const category = jobSkillData[categoryId];
       for (const skillData of category.skills) {
         const skillId = skillData.id;
         const skillLevel = character.skills[skillId]?.adeptness || 0;
         // Use skill name as the key (lowercase, no spaces)
-        const skillName = (skillData.name || skillId).toLowerCase().replace(/\s+/g, '');
+        const skillName = (skillData.name || skillId)
+          .toLowerCase()
+          .replace(/\s+/g, "");
         exportData.abilityPoints[skillName] = skillLevel;
       }
     }
@@ -3293,9 +3581,9 @@ function exportCharacter() {
   const jsonString = JSON.stringify(exportData, null, 4);
 
   // Create and download the file
-  const blob = new Blob([jsonString], { type: 'application/json' });
+  const blob = new Blob([jsonString], { type: "application/json" });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
+  const a = document.createElement("a");
   a.href = url;
   a.download = `character_export_${Date.now()}.json`;
   document.body.appendChild(a);
@@ -3306,7 +3594,7 @@ function exportCharacter() {
 
 /**
  * Handles stat button actions for +1/+5/MAX and -1/-5/MIN
-*/
+ */
 function handleStatButton(stat, action, amount) {
   // Ensure current inputs are read
   readInputs();
@@ -3324,11 +3612,12 @@ function handleStatButton(stat, action, amount) {
     return gameData.statPointCosts[nextLevel]?.[0] || 0;
   };
 
-  const getRemaining = () => (character.points.totalStat - character.points.spentStat);
+  const getRemaining = () =>
+    character.points.totalStat - character.points.spentStat;
 
-  if (action === 'inc') {
+  if (action === "inc") {
     let steps = amount;
-    while (steps > 0 && (base + added) < maxStat) {
+    while (steps > 0 && base + added < maxStat) {
       const cost = getNextCost(base + added);
       if (cost <= getRemaining()) {
         added += 1;
@@ -3338,19 +3627,22 @@ function handleStatButton(stat, action, amount) {
         break;
       }
     }
-  } else if (action === 'dec') {
+  } else if (action === "dec") {
     let steps = amount;
     while (steps > 0 && added > 0) {
       // Refund using previous level cost
       const prevTotal = base + added; // current total
       const prevCost = gameData.statPointCosts[prevTotal]?.[0] || 0;
       added -= 1;
-      character.points.spentStat = Math.max(0, character.points.spentStat - prevCost);
+      character.points.spentStat = Math.max(
+        0,
+        character.points.spentStat - prevCost,
+      );
       steps -= 1;
     }
-  } else if (action === 'max') {
+  } else if (action === "max") {
     // Increase until we run out of points or reach cap
-    while ((base + added) < maxStat) {
+    while (base + added < maxStat) {
       const cost = getNextCost(base + added);
       if (cost <= getRemaining()) {
         added += 1;
@@ -3359,13 +3651,16 @@ function handleStatButton(stat, action, amount) {
         break;
       }
     }
-  } else if (action === 'min') {
+  } else if (action === "min") {
     // Reset to racial+job base
     while (added > 0) {
       const prevTotal = base + added;
       const prevCost = gameData.statPointCosts[prevTotal]?.[0] || 0;
       added -= 1;
-      character.points.spentStat = Math.max(0, character.points.spentStat - prevCost);
+      character.points.spentStat = Math.max(
+        0,
+        character.points.spentStat - prevCost,
+      );
     }
   }
 
@@ -3420,7 +3715,7 @@ for (const statInput of Object.values(elements.addedStatInputs)) {
     // Don't run calculations immediately while typing
     // Only validate for extremely high values that would break things
     const inputValue = event.target.value.trim();
-    if (inputValue !== '' && !isNaN(parseInt(inputValue))) {
+    if (inputValue !== "" && !isNaN(parseInt(inputValue))) {
       const value = parseInt(inputValue);
       // Only enforce a reasonable upper limit to prevent extreme values
       if (value > 999) {
@@ -3435,7 +3730,7 @@ for (const statInput of Object.values(elements.addedStatInputs)) {
     inputTimeout = setTimeout(() => {
       const finalValue = event.target.value.trim();
 
-      if (finalValue === '' || isNaN(parseInt(finalValue))) {
+      if (finalValue === "" || isNaN(parseInt(finalValue))) {
         // Don't run calculations for empty/invalid values
         return;
       }
@@ -3455,7 +3750,7 @@ for (const statInput of Object.values(elements.addedStatInputs)) {
     const inputValue = event.target.value.trim();
 
     // If empty or invalid, reset to minimum
-    if (inputValue === '' || isNaN(parseInt(inputValue))) {
+    if (inputValue === "" || isNaN(parseInt(inputValue))) {
       const min = parseInt(event.target.min) || 0;
       event.target.value = min;
       runCalculations();
@@ -3481,8 +3776,8 @@ for (const statInput of Object.values(elements.addedStatInputs)) {
 for (const equipSelector of Object.values(elements.equipmentSelectors)) {
   equipSelector.addEventListener("change", (event) => {
     // Update enhancement dropdown for this slot
-    const slot = Object.keys(elements.equipmentSelectors).find(key =>
-      elements.equipmentSelectors[key] === event.target
+    const slot = Object.keys(elements.equipmentSelectors).find(
+      (key) => elements.equipmentSelectors[key] === event.target,
     );
 
     if (slot && elements.enhancementSelectors[slot]) {
@@ -3502,7 +3797,9 @@ for (const equipSelector of Object.values(elements.equipmentSelectors)) {
 }
 
 // Add event listeners for enhancement selectors
-for (const [slot, enhancementSelector] of Object.entries(elements.enhancementSelectors)) {
+for (const [slot, enhancementSelector] of Object.entries(
+  elements.enhancementSelectors,
+)) {
   if (enhancementSelector) {
     enhancementSelector.addEventListener("change", (event) => {
       const itemId = character.equipment[slot];
@@ -3523,7 +3820,10 @@ for (const [slot, enhancementSelector] of Object.entries(elements.enhancementSel
 
 // Add event listeners for reset buttons
 elements.resetButtons.statusPoints.addEventListener("click", resetStatusPoints);
-elements.resetButtons.abilityPoints.addEventListener("click", resetAbilityPoints);
+elements.resetButtons.abilityPoints.addEventListener(
+  "click",
+  resetAbilityPoints,
+);
 
 // Add event listeners for modals
 elements.skillPreviewButton.addEventListener("click", openSkillPreviewModal);
@@ -3535,7 +3835,9 @@ elements.equipmentModalButton.addEventListener("click", openEquipmentModal);
 elements.horsmanshipToggle.addEventListener("click", toggleHorsemanship);
 
 // Add event listener for export button
-document.getElementById("export-character").addEventListener("click", exportCharacter);
+document
+  .getElementById("export-character")
+  .addEventListener("click", exportCharacter);
 
 // Event delegation for stat control buttons
 document.addEventListener("click", (event) => {
@@ -3545,7 +3847,7 @@ document.addEventListener("click", (event) => {
 
   const stat = target.dataset.stat;
   const action = target.dataset.action;
-  const amount = parseInt(target.dataset.amount || '0', 10);
+  const amount = parseInt(target.dataset.amount || "0", 10);
 
   if (!PRIMARY_STATS.includes(stat)) return;
 
@@ -3566,7 +3868,7 @@ window.addEventListener("click", (event) => {
 });
 
 // Add close button listeners for new modals
-document.querySelectorAll(".modal .close").forEach(closeButton => {
+document.querySelectorAll(".modal .close").forEach((closeButton) => {
   closeButton.addEventListener("click", (event) => {
     const modal = event.target.closest(".modal");
     modal.style.display = "none";
