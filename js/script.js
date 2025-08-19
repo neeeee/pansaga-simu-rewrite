@@ -181,6 +181,10 @@ const elements = {
     // Additional derived stats
     pot: document.getElementById("pot"),
     lpHeal: document.getElementById("lp-heal"),
+    lpRecovery: document.getElementById("lp-recovery"),
+    mpRecovery: document.getElementById("mp-recovery"),
+    lpPer2Sec: document.getElementById("lp-per-2sec"),
+    mpPer2Sec: document.getElementById("mp-per-2sec"),
     redMp: document.getElementById("red-mp"),
     incMp: document.getElementById("inc-mp"),
 
@@ -2148,6 +2152,55 @@ function calculateDerivedStats(bonuses = {}, uncappedStats = null) {
     stats.lpHeal += bonuses.lpHeal;
   }
 
+  // LP Recovery Amount - natural LP recovery per tick
+  let lpRecovery = Math.floor(stats.lp / 35) + Math.floor(calculationStats.sta / 3);
+  
+  // Apply equipment bonuses for LP recovery
+  if (bonuses.lpRecovery) {
+    lpRecovery += bonuses.lpRecovery;
+  }
+  
+  stats.lpRecovery = lpRecovery;
+
+  // MP Recovery Amount - natural MP recovery per tick
+  let mpRecovery = Math.floor(stats.mp / 25) + Math.floor(calculationStats.spi / 3);
+  
+  // Apply equipment bonuses for MP recovery
+  if (bonuses.mpRecovery) {
+    mpRecovery += bonuses.mpRecovery;
+  }
+  
+  stats.mpRecovery = mpRecovery;
+
+  // LP per 2 seconds - recovery from skills/effects over time
+  let lpPer2Sec = 0;
+  
+  // Reclaim skill effect (placeholder for skill implementation)
+  // tmp[1] += (Flag['13_7']) ? 15 + Math.floor(Number($('InBuff_0').value) / 10) + Math.floor((Status['Skill'][13][0] + Status['Skill'][13][1]) / 10): 0;
+  
+  // Restoration skill effect (placeholder for skill implementation)  
+  // tmp[1] += (Flag['13_9']) ? 7 + Math.floor(Number($('InBuff_0').value) / 5) + Math.floor((Status['Skill'][13][0] + Status['Skill'][13][1]) / 10): 0;
+  
+  // Apply equipment bonuses for LP per 2 sec
+  if (bonuses.lpPer2Sec) {
+    lpPer2Sec += bonuses.lpPer2Sec;
+  }
+  
+  stats.lpPer2Sec = lpPer2Sec;
+
+  // MP per 2 seconds - recovery from skills/effects over time
+  let mpPer2Sec = 0;
+  
+  // Rex Naturalis skill effect (placeholder for skill implementation)
+  // tmp[1] += (Flag['15_0']) ? 5: 0;
+  
+  // Apply equipment bonuses for MP per 2 sec
+  if (bonuses.mpPer2Sec) {
+    mpPer2Sec += bonuses.mpPer2Sec;
+  }
+  
+  stats.mpPer2Sec = mpPer2Sec;
+
   // Calculate MP cost reduction from both racial skills and set bonuses
   let totalMpReduction = 0;
 
@@ -2607,6 +2660,23 @@ function updateUI(bonuses) {
   elements.outputs.pot.textContent = Math.floor(character.finalStats.pot);
   elements.outputs.lpHeal.textContent =
     Math.floor(character.finalStats.lpHeal) + "%";
+  
+  // Only update recovery stats if the elements exist (might not be in HTML yet)
+  if (elements.outputs.lpRecovery) {
+    elements.outputs.lpRecovery.textContent = Math.floor(character.finalStats.lpRecovery || 0);
+  }
+  
+  if (elements.outputs.mpRecovery) {
+    elements.outputs.mpRecovery.textContent = Math.floor(character.finalStats.mpRecovery || 0);
+  }
+  
+  if (elements.outputs.lpPer2Sec) {
+    elements.outputs.lpPer2Sec.textContent = Math.floor(character.finalStats.lpPer2Sec || 0);
+  }
+  
+  if (elements.outputs.mpPer2Sec) {
+    elements.outputs.mpPer2Sec.textContent = Math.floor(character.finalStats.mpPer2Sec || 0);
+  }
 
   elements.outputs.redMp.textContent = Math.floor(character.finalStats.redMp);
   elements.outputs.incMp.textContent = Math.floor(character.finalStats.incMp);
