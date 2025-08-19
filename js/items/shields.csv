@@ -1,4 +1,5 @@
 name,lvlreq,def,slot,stats,effects,equipclass,setbonus,description
+None,0,0,0,,,warrior;gladiator;knight;juggernaut;dragoon;warlord;paladin;scout;archer;provocateur;sniper;hunter;assassin;saboteur;acolyte;priest;ascetic;cleric;enchanter;monk;exorcist;mage;wizard;sorcerer;warlock;conjurer;shadowblade;corruptor,,,
 Egmarine Shield,1,5,0,,redMp-1%;fireres-10%;iceres-10%;thundres-10%;poisonres-10%;charmreses-10%;darkres-10%;lightres-10%,warrior;gladiator;knight;juggernaut;dragoon;warlord;paladin;scout;archer;provocateur;sniper;hunter;assassin;saboteur;acolyte;priest;ascetic;cleric;enchanter;monk;exorcist;mage;wizard;sorcerer;warlock;conjurer;shadowblade;corruptor,Egmarine Set,
 Adharga,3,3,1,,,warrior;gladiator;knight;juggernaut;dragoon;warlord;paladin;scout;archer;provocateur;sniper;hunter;assassin;saboteur;acolyte;priest;ascetic;cleric;enchanter;monk;exorcist;shadowblade,,
 Buckler,7,5,1,,,warrior;gladiator;knight;juggernaut;dragoon;warlord;paladin;scout;archer;provocateur;sniper;hunter;assassin;saboteur;acolyte;priest;ascetic;cleric;enchanter;monk;exorcist;shadowblade,
