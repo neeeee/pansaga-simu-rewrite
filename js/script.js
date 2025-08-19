@@ -1399,9 +1399,12 @@ function runCalculations() {
   applySkillBuffEffects(bonuses);
   applyPrayerProficiencySpiBonus(bonuses);
 
+  // Calculate uncapped stats for derived stat calculations
+  const uncappedStats = {};
   for (const stat of PRIMARY_STATS) {
     const total =
       baseStats[stat] + character.addedStats[stat] + (bonuses.stats[stat] || 0);
+    uncappedStats[stat] = total;
     character.finalStats[stat] = Math.min(gameData.maxStatValue, total);
   }
 
@@ -1420,7 +1423,7 @@ function runCalculations() {
     }
   }
 
-  calculateDerivedStats(bonuses);
+  calculateDerivedStats(bonuses, uncappedStats);
 
   updateStatCostIndicators(); // Update cost indicators for stat increases
   updateUI(bonuses);
@@ -2057,9 +2060,13 @@ function getAgilityDodgeBonus(agility) {
 }
 /**
  * Calculates derived stats based on the final primary stats.
+ * @param {Object} bonuses - The bonuses object containing equipment/skill bonuses
+ * @param {Object} uncappedStats - The uncapped stat values for calculations that should go beyond 99
  */
-function calculateDerivedStats(bonuses = {}) {
+function calculateDerivedStats(bonuses = {}, uncappedStats = null) {
   const stats = character.finalStats;
+  // Use uncapped stats for calculations that should go beyond 99, fall back to capped stats if not provided
+  const calculationStats = uncappedStats || stats;
   const level = character.level;
   const mod =
     gameData.jobModifiers[character.jobId] || gameData.jobModifiers[0];
@@ -2067,7 +2074,7 @@ function calculateDerivedStats(bonuses = {}) {
   // LP Calculation
   const levelLPComponent = Math.ceil(level * (100 / mod[2]));
   const staMultiplier = Math.ceil(100 / mod[4]);
-  const staLPComponent = Math.ceil(stats.sta * staMultiplier);
+  const staLPComponent = Math.ceil(calculationStats.sta * staMultiplier);
   let totalLp = mod[0] + levelLPComponent + staLPComponent;
 
   // Apply LP buff from skills (e.g., Divine Aid)
@@ -2091,7 +2098,7 @@ function calculateDerivedStats(bonuses = {}) {
   // MP Calculation
   const levelMPComponent = Math.ceil(level * (100 / mod[3]));
   const spiMultiplier = Math.ceil(100 / mod[5]);
-  const spiMPComponent = Math.ceil(stats.spi * spiMultiplier);
+  const spiMPComponent = Math.ceil(calculationStats.spi * spiMultiplier);
   let totalMp = mod[1] + levelMPComponent + spiMPComponent;
 
   // Apply MP bonus from equipment
@@ -2105,7 +2112,7 @@ function calculateDerivedStats(bonuses = {}) {
   let potValue = 100; // Base 100%
 
   // STA bonus: Math.floor((STA^2 * 2) / 1000)
-  const staBonus = Math.floor((Math.pow(stats.sta, 2) * 2) / 1000);
+  const staBonus = Math.floor((Math.pow(calculationStats.sta, 2) * 2) / 1000);
   potValue += staBonus;
 
   // Warrior class bonus: +10% for all warrior classes
@@ -2162,7 +2169,7 @@ function calculateDerivedStats(bonuses = {}) {
   }
 
   // ATK Calculations
-  stats.atk = Math.floor(stats.str / 2); // STR/2 only, gear added separately when equipped
+  stats.atk = Math.floor(calculationStats.str / 2); // STR/2 only, gear added separately when equipped
   for (const slot in character.equipment) {
     const itemId = character.equipment[slot];
 
@@ -2190,8 +2197,8 @@ function calculateDerivedStats(bonuses = {}) {
   let matkValue = 100;
 
   // INT bonus to MATK - approximately 0.376% per INT point
-  if (stats.int >= 5) {
-    matkValue += (stats.int - 4) * 0.376;
+  if (calculationStats.int >= 5) {
+    matkValue += (calculationStats.int - 4) * 0.376;
   }
 
   if (character.jobId >= 22 && character.jobId <= 24) {
@@ -2252,11 +2259,11 @@ function calculateDerivedStats(bonuses = {}) {
   }
 
   // Accuracy
-  stats.acc = level + stats.dex;
+  stats.acc = level + calculationStats.dex;
   stats.accFront = stats.acc; // Same as acc, only changes with gear
 
   // Critical calculations
-  stats.crit = 1 + Math.floor(stats.dex / 10);
+  stats.crit = 1 + Math.floor(calculationStats.dex / 10);
 
   // Apply racial skill bonus for critical hit chance
   if (bonuses.criticalHitChance) {
@@ -2301,7 +2308,7 @@ function calculateDerivedStats(bonuses = {}) {
   stats.atkSpd = 100;
 
   // Cast Speed - starts at 100%, increases by 5% every 10 DEX
-  stats.castSpd = 100 + Math.floor(stats.dex / 10) * 5;
+  stats.castSpd = 100 + Math.floor(calculationStats.dex / 10) * 5;
 
   // Apply cast speed bonuses from equipment
   if (bonuses.castspeed) {
@@ -2318,7 +2325,7 @@ function calculateDerivedStats(bonuses = {}) {
   stats.castTime = baseCastTime;
 
   // Cooldown - -2% every 10 INT (base 100%)
-  stats.cooldown = Math.max(0, 100 - Math.floor(stats.int / 10) * 2);
+  stats.cooldown = Math.max(0, 100 - Math.floor(calculationStats.int / 10) * 2);
 
   // Movement Speed - base 100%
   stats.moveSpd = 100;
@@ -2345,8 +2352,8 @@ function calculateDerivedStats(bonuses = {}) {
   stats.curseR = 0;
   stats.weakR = 0;
   stats.silenceR = 0;
-  stats.ailmentR = Math.floor(stats.sta / 28) * 7;
-  stats.disorderR = Math.floor(stats.spi / 28) * 7;
+  stats.ailmentR = Math.floor(calculationStats.sta / 28) * 7;
+  stats.disorderR = Math.floor(calculationStats.spi / 28) * 7;
 
   // Apply resistance bonuses directly to stats
   const resistanceKeyMap = {
@@ -2549,14 +2556,18 @@ function updateUI(bonuses) {
     if (totalElement) {
       const combinedBase = getCombinedBaseStats()[stat]; // Get base stat after race/job modifiers
       const added = character.addedStats[stat];
-      const final = character.finalStats[stat];
+      const final = character.finalStats[stat]; // This is capped at 99
+      
+      // Calculate uncapped final total for display
+      const totalStat = combinedBase + added;
+      const gearBonus = bonuses.stats[stat] || 0;
+      const uncappedFinal = totalStat + gearBonus;
 
       // Set the input field to show the total stat (base + additional)
-      const totalStat = combinedBase + added;
       inputElement.value = totalStat;
 
-      // Display as "Allocated (Final)" where Allocated = base + additional and Final = after gear
-      totalElement.innerHTML = `${totalStat} (${final})`;
+      // Display as "Allocated (Final)" where Allocated = base + additional and Final = after gear (uncapped)
+      totalElement.innerHTML = `${totalStat} (${uncappedFinal})`;
     }
 
     // Update buff bonus display
