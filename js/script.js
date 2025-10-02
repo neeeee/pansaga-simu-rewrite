@@ -926,8 +926,10 @@ async function populateDropdowns() {
           weaponSelector.value = `weapon-none`;
         } else {
           // Filter items based on job compatibility
-          const compatibleItems = items.filter(item => isItemEquippableByCurrentJob(item));
-          
+          const compatibleItems = items.filter((item) =>
+            isItemEquippableByCurrentJob(item),
+          );
+
           if (compatibleItems.length === 0) {
             weaponSelector.disabled = true;
             weaponSelector.innerHTML = `<option value="weapon-none">No compatible weapons</option>`;
@@ -966,8 +968,12 @@ async function populateDropdowns() {
       // Mirror the filtered items into a generic weapon slot list so downstream lookups work
       // Consumers of globalEquipmentData expect weapon items under the 'weapon' slot.
       const allWeaponItems = globalEquipmentData[selectedTypeKey] || [];
-      const compatibleWeaponItems = allWeaponItems.filter(item => isItemEquippableByCurrentJob(item));
-      globalEquipmentData.weapon = compatibleWeaponItems.map((item) => ({ ...item }));
+      const compatibleWeaponItems = allWeaponItems.filter((item) =>
+        isItemEquippableByCurrentJob(item),
+      );
+      globalEquipmentData.weapon = compatibleWeaponItems.map((item) => ({
+        ...item,
+      }));
 
       // Update state and recalc
       if (weaponSelector) {
@@ -1030,7 +1036,9 @@ function isItemEquippableByCurrentJob(item) {
   const normalizedJobName = currentJob.name.trim().toLowerCase();
 
   // Parse equipclass - it's a semicolon-separated list
-  const allowedClasses = item.equipclass.split(';').map(cls => cls.trim().toLowerCase());
+  const allowedClasses = item.equipclass
+    .split(";")
+    .map((cls) => cls.trim().toLowerCase());
 
   // Check if current job is in the allowed classes
   return allowedClasses.includes(normalizedJobName);
@@ -1178,8 +1186,10 @@ async function populateEquipmentSelectors() {
 
       if (equipmentData[slot] && equipmentData[slot].length > 0) {
         // Filter items based on job compatibility
-        const compatibleItems = equipmentData[slot].filter(item => isItemEquippableByCurrentJob(item));
-        
+        const compatibleItems = equipmentData[slot].filter((item) =>
+          isItemEquippableByCurrentJob(item),
+        );
+
         // Sort items so "None" options appear first
         const sortedItems = compatibleItems.sort((a, b) => {
           if (a.name === "None") return -1;
@@ -1194,16 +1204,18 @@ async function populateEquipmentSelectors() {
                 `<option value="${item.id}">${item.name} (${item.slots ?? 0} slots)</option>`,
             )
             .join("");
-          
+
           // Check if current equipment is still valid for this job
           const currentItemId = character.equipment[slot] || `${slot}-none`;
-          const isCurrentItemValid = sortedItems.some(item => item.id === currentItemId);
-          
+          const isCurrentItemValid = sortedItems.some(
+            (item) => item.id === currentItemId,
+          );
+
           if (isCurrentItemValid) {
             selector.value = currentItemId;
           } else {
             // Current item is not compatible with job, default to None or first available
-            const noneOption = sortedItems.find(item => item.name === "None");
+            const noneOption = sortedItems.find((item) => item.name === "None");
             selector.value = noneOption ? noneOption.id : sortedItems[0].id;
             character.equipment[slot] = selector.value; // Update character state
           }
@@ -2042,27 +2054,6 @@ function applyRacialSkillEffects(bonuses) {
   }
 }
 /**
- * @param {number} agility The character's final Agility stat.
- * @returns {number} The bonus dodge points.
- */
-function getAgilityDodgeBonus(agility) {
-  if (agility >= 140) return 98;
-  if (agility >= 130) return 85;
-  if (agility >= 120) return 72;
-  if (agility >= 110) return 61;
-  if (agility >= 100) return 50;
-  if (agility >= 90) return 41;
-  if (agility >= 80) return 32;
-  if (agility >= 70) return 25;
-  if (agility >= 60) return 18;
-  if (agility >= 50) return 13;
-  if (agility >= 40) return 8;
-  if (agility >= 30) return 5;
-  if (agility >= 20) return 2;
-  if (agility >= 10) return 1;
-  return 0;
-}
-/**
  * Calculates derived stats based on the final primary stats.
  * @param {Object} bonuses - The bonuses object containing equipment/skill bonuses
  * @param {Object} uncappedStats - The uncapped stat values for calculations that should go beyond 99
@@ -2153,52 +2144,54 @@ function calculateDerivedStats(bonuses = {}, uncappedStats = null) {
   }
 
   // LP Recovery Amount - natural LP recovery per tick
-  let lpRecovery = Math.floor(stats.lp / 35) + Math.floor(calculationStats.sta / 3);
-  
+  let lpRecovery =
+    Math.floor(stats.lp / 35) + Math.floor(calculationStats.sta / 3);
+
   // Apply equipment bonuses for LP recovery
   if (bonuses.lpRecovery) {
     lpRecovery += bonuses.lpRecovery;
   }
-  
+
   stats.lpRecovery = lpRecovery;
 
   // MP Recovery Amount - natural MP recovery per tick
-  let mpRecovery = Math.floor(stats.mp / 25) + Math.floor(calculationStats.spi / 3);
-  
+  let mpRecovery =
+    Math.floor(stats.mp / 25) + Math.floor(calculationStats.spi / 3);
+
   // Apply equipment bonuses for MP recovery
   if (bonuses.mpRecovery) {
     mpRecovery += bonuses.mpRecovery;
   }
-  
+
   stats.mpRecovery = mpRecovery;
 
   // LP per 2 seconds - recovery from skills/effects over time
   let lpPer2Sec = 0;
-  
+
   // Reclaim skill effect (placeholder for skill implementation)
   // tmp[1] += (Flag['13_7']) ? 15 + Math.floor(Number($('InBuff_0').value) / 10) + Math.floor((Status['Skill'][13][0] + Status['Skill'][13][1]) / 10): 0;
-  
-  // Restoration skill effect (placeholder for skill implementation)  
+
+  // Restoration skill effect (placeholder for skill implementation)
   // tmp[1] += (Flag['13_9']) ? 7 + Math.floor(Number($('InBuff_0').value) / 5) + Math.floor((Status['Skill'][13][0] + Status['Skill'][13][1]) / 10): 0;
-  
+
   // Apply equipment bonuses for LP per 2 sec
   if (bonuses.lpPer2Sec) {
     lpPer2Sec += bonuses.lpPer2Sec;
   }
-  
+
   stats.lpPer2Sec = lpPer2Sec;
 
   // MP per 2 seconds - recovery from skills/effects over time
   let mpPer2Sec = 0;
-  
+
   // Rex Naturalis skill effect (placeholder for skill implementation)
   // tmp[1] += (Flag['15_0']) ? 5: 0;
-  
+
   // Apply equipment bonuses for MP per 2 sec
   if (bonuses.mpPer2Sec) {
     mpPer2Sec += bonuses.mpPer2Sec;
   }
-  
+
   stats.mpPer2Sec = mpPer2Sec;
 
   // Calculate MP cost reduction from both racial skills and set bonuses
@@ -2333,7 +2326,32 @@ function calculateDerivedStats(bonuses = {}, uncappedStats = null) {
   stats.cdamRes = 100; // Critical damage resistance - base 100%
 
   // Dodge - base 5
-  stats.dodge = 5;
+  function calculateDodge() {
+    let totalAgi = character.finalStats.agi;
+    console.log(character.finalStats);
+    let dodge = character.level + totalAgi;
+    let bonus = 0;
+    if (totalAgi >= 140) bonus = 98;
+    else if (totalAgi >= 130) bonus = 85;
+    else if (totalAgi >= 120) bonus = 72;
+    else if (totalAgi >= 110) bonus = 61;
+    else if (totalAgi >= 100) bonus = 50;
+    else if (totalAgi >= 90) bonus = 41;
+    else if (totalAgi >= 80) bonus = 32;
+    else if (totalAgi >= 70) bonus = 25;
+    else if (totalAgi >= 60) bonus = 18;
+    else if (totalAgi >= 50) bonus = 13;
+    else if (totalAgi >= 40) bonus = 8;
+    else if (totalAgi >= 30) bonus = 5;
+    else if (totalAgi >= 20) bonus = 2;
+    else if (totalAgi >= 10) bonus = 1;
+
+    console.log(`dodge: ${dodge}`);
+    console.log(`bonus: ${bonus}`);
+    console.log(dodge + bonus);
+    return dodge + bonus;
+  }
+  stats.dodge = calculateDodge();
 
   // Apply racial skill bonus for dodge chance
   if (bonuses.dodgeChance) {
@@ -2610,7 +2628,7 @@ function updateUI(bonuses) {
       const combinedBase = getCombinedBaseStats()[stat]; // Get base stat after race/job modifiers
       const added = character.addedStats[stat];
       const final = character.finalStats[stat]; // This is capped at 99
-      
+
       // Calculate uncapped final total for display
       const totalStat = combinedBase + added;
       const gearBonus = bonuses.stats[stat] || 0;
@@ -2660,22 +2678,30 @@ function updateUI(bonuses) {
   elements.outputs.pot.textContent = Math.floor(character.finalStats.pot);
   elements.outputs.lpHeal.textContent =
     Math.floor(character.finalStats.lpHeal) + "%";
-  
+
   // Only update recovery stats if the elements exist (might not be in HTML yet)
   if (elements.outputs.lpRecovery) {
-    elements.outputs.lpRecovery.textContent = Math.floor(character.finalStats.lpRecovery || 0);
+    elements.outputs.lpRecovery.textContent = Math.floor(
+      character.finalStats.lpRecovery || 0,
+    );
   }
-  
+
   if (elements.outputs.mpRecovery) {
-    elements.outputs.mpRecovery.textContent = Math.floor(character.finalStats.mpRecovery || 0);
+    elements.outputs.mpRecovery.textContent = Math.floor(
+      character.finalStats.mpRecovery || 0,
+    );
   }
-  
+
   if (elements.outputs.lpPer2Sec) {
-    elements.outputs.lpPer2Sec.textContent = Math.floor(character.finalStats.lpPer2Sec || 0);
+    elements.outputs.lpPer2Sec.textContent = Math.floor(
+      character.finalStats.lpPer2Sec || 0,
+    );
   }
-  
+
   if (elements.outputs.mpPer2Sec) {
-    elements.outputs.mpPer2Sec.textContent = Math.floor(character.finalStats.mpPer2Sec || 0);
+    elements.outputs.mpPer2Sec.textContent = Math.floor(
+      character.finalStats.mpPer2Sec || 0,
+    );
   }
 
   elements.outputs.redMp.textContent = Math.floor(character.finalStats.redMp);
@@ -2831,8 +2857,11 @@ function handleJobRaceChange() {
   // Update equipment selectors to reflect new job restrictions
   // Only repopulate if equipment data is already loaded
   if (Object.keys(globalEquipmentData).length > 0) {
-    populateEquipmentSelectors().catch(error => {
-      console.error("Error updating equipment selectors for job change:", error);
+    populateEquipmentSelectors().catch((error) => {
+      console.error(
+        "Error updating equipment selectors for job change:",
+        error,
+      );
     });
   }
 
